@@ -1,0 +1,548 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分页插件-PageHelper | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PageHelper是国内非常优秀的一款开源的mybatis分页插件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分页插件-PageHelper">
+<meta property="og:url" content="https://fulsun.github.io/p/67817846">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="PageHelper是国内非常优秀的一款开源的mybatis分页插件">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/002.webp">
+<meta property="article:published_time" content="2021-05-15T19:18:33.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.102Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="分页插件">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/002.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/67817846"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分页插件-PageHelper',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/002.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">分页插件-PageHelper</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-15T19:18:33.000Z" title="发表于 2021-05-15 19:18:33">2021-05-15</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.102Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringBoot/">SpringBoot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>20分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="分页插件-PageHelper"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><ul>
+<li>PageHelper是国内非常优秀的一款开源的mybatis分页插件，它支持基本主流与常用的数据库，例如mysql、 oracle、mariaDB、DB2、SQLite、Hsqldb等。</li>
+<li>项目在 github 的项目地址：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/pagehelper/Mybatis-PageHelper">https://github.com/pagehelper/Mybatis-PageHelper</a></li>
+<li>在gitee的地址：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://gitee.com/free/Mybatis_PageHelper">https://gitee.com/free/Mybatis_PageHelper</a></li>
+<li>API文档 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://apidoc.gitee.com/free/Mybatis_PageHelper/">https://apidoc.gitee.com/free/Mybatis_PageHelper/</a></li>
+<li>使用文档： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md">https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/HowToUse.md</a></li>
+</ul>
+<h2 id="集成方式"><a href="#集成方式" class="headerlink" title="集成方式"></a>集成方式</h2><ul>
+<li>两种集成的方式</li>
+</ul>
+<h3 id="引jar包的方式"><a href="#引jar包的方式" class="headerlink" title="引jar包的方式"></a>引jar包的方式</h3><ul>
+<li><p>你可以从下面的地址中下载最新版本的 jar 包：</p>
+<ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://repo1.maven.org/maven2/com/github/pagehelper/pagehelper/">https://repo1.maven.org/maven2/com/github/pagehelper/pagehelper/</a></li>
+</ul>
+</li>
+<li><p>由于使用了sql 解析工具，你还需要下载 jsqlparser.jar：</p>
+<ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://repo1.maven.org/maven2/com/github/jsqlparser/jsqlparser/0.9.5/">https://repo1.maven.org/maven2/com/github/jsqlparser/jsqlparser/0.9.5/</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="使用Maven-主要"><a href="#使用Maven-主要" class="headerlink" title="使用Maven(主要)"></a>使用Maven(主要)</h3><ul>
+<li><p>pom.xml中引入依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>最新版本<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="配置说明"><a href="#配置说明" class="headerlink" title="配置说明"></a>配置说明</h2><ul>
+<li><p>特别注意，<strong>新版拦截器</strong>是 <code>com.github.pagehelper.PageInterceptor</code> 。</p>
+</li>
+<li><p><code>com.github.pagehelper.PageHelper </code>是一个特殊的 <code>dialect </code>（方言）实现类，是分页插件的默认实现类，提供了和以前相同的用法。</p>
+</li>
+<li><p>下面二种方式选一个即可</p>
+</li>
+</ul>
+<h3 id="MyBatis配置拦截器插件"><a href="#MyBatis配置拦截器插件" class="headerlink" title="MyBatis配置拦截器插件"></a>MyBatis配置拦截器插件</h3><ul>
+<li><p>配置如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--plugins在配置文件中的位置必须符合要求，否则会报错，顺序如下:</span></span><br><span class="line"><span class="comment">        properties?, settings?,</span></span><br><span class="line"><span class="comment">        typeAliases?, typeHandlers?,</span></span><br><span class="line"><span class="comment">        objectFactory?,objectWrapperFactory?,</span></span><br><span class="line"><span class="comment">     	plugins?,</span></span><br><span class="line"><span class="comment">        environments?, databaseIdProvider?, mappers?</span></span><br><span class="line"><span class="comment">--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- com.github.pagehelper为PageHelper类所在包名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">interceptor</span>=<span class="string">&quot;com.github.pagehelper.PageInterceptor&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 使用下面的方式配置参数，后面会有所有的参数介绍 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;param1&quot;</span> <span class="attr">value</span>=<span class="string">&quot;value1&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Spring配置拦截器插件"><a href="#Spring配置拦截器插件" class="headerlink" title="Spring配置拦截器插件"></a>Spring配置拦截器插件</h3><ul>
+<li><p>使用 <strong>spring 的属性配置方式</strong>，可以使用 plugins 属性像下面这样配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">bean</span> <span class="attr">id</span>=<span class="string">&quot;sqlSessionFactory&quot;</span> <span class="attr">class</span>=<span class="string">&quot;org.mybatis.spring.SqlSessionFactoryBean&quot;</span>&gt;</span></span><br><span class="line">   <span class="comment">&lt;!-- 注意其他配置 --&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;plugins&quot;</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;<span class="name">array</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;<span class="name">bean</span> <span class="attr">class</span>=<span class="string">&quot;com.github.pagehelper.PageInterceptor&quot;</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;properties&quot;</span>&gt;</span></span><br><span class="line">                   <span class="comment">&lt;!--使用下面的方式配置参数，一行配置一个 --&gt;</span></span><br><span class="line">                   <span class="tag">&lt;<span class="name">value</span>&gt;</span>params=value1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">               <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">           <span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br><span class="line">       <span class="tag">&lt;/<span class="name">array</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">bean</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="配置拦截器参数"><a href="#配置拦截器参数" class="headerlink" title="配置拦截器参数"></a>配置拦截器参数</h3><ul>
+<li><p>想要使用参数方式，需要配置 <code>supportMethodsArguments</code> 参数为 <code>true</code>，同时要配置 <code>params</code> 参数。 例如下面的配置：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">plugins</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- com.github.pagehelper为PageHelper类所在包名 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">plugin</span> <span class="attr">interceptor</span>=<span class="string">&quot;com.github.pagehelper.PageInterceptor&quot;</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 使用下面的方式配置参数，后面会有所有的参数介绍 --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;supportMethodsArguments&quot;</span> <span class="attr">value</span>=<span class="string">&quot;true&quot;</span>/&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">property</span> <span class="attr">name</span>=<span class="string">&quot;params&quot;</span> <span class="attr">value</span>=<span class="string">&quot;pageNum=pageNumKey;pageSize=pageSizeKey;&quot;</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">plugin</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">plugins</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在 MyBatis 方法中：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; <span class="title function_">selectByPageNumSize</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;user&quot;)</span> User user,</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;pageNumKey&quot;)</span> <span class="type">int</span> pageNum,</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;pageSizeKey&quot;)</span> <span class="type">int</span> pageSize)</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当调用这个方法时，由于同时发现了 <code>pageNumKey</code> 和 <code>pageSizeKey</code> 参数，这个方法就会被分页。params 提供的几个参数都可以这样使用。</p>
+</li>
+<li><p>除了上面这种方式外，如果 User 对象中包含这两个参数值，也可以有下面的方法：</p>
+<ul>
+<li>当从 User 中同时发现了 <code>pageNumKey</code> 和 <code>pageSizeKey</code> 参数，这个方法就会被分页。</li>
+<li>注意：<code>pageNum</code> 和 <code>pageSize</code> 两个属性同时存在才会触发分页操作，在这个前提下，其他的分页参数才会生效。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; <span class="title function_">selectByPageNumSize</span><span class="params">(User user)</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Spring-Boot-集成"><a href="#Spring-Boot-集成" class="headerlink" title="Spring Boot 集成"></a>Spring Boot 集成</h2><ul>
+<li>示例查看：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/abel533/MyBatis-Spring-Boot">https://github.com/abel533/MyBatis-Spring-Boot</a></li>
+</ul>
+<h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><ul>
+<li><p>添加pom依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- MyBatis 分页插件 PageHelper --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pagehelper.version</span>&gt;</span>5.2.0<span class="tag">&lt;/<span class="name">pagehelper.version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">pagehelper-springboot.version</span>&gt;</span>1.3.0<span class="tag">&lt;/<span class="name">pagehelper-springboot.version</span>&gt;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- PageHelper --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;pagehelper.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;pagehelper-springboot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-autoconfigure<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;pagehelper-springboot.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="依赖说明"><a href="#依赖说明" class="headerlink" title="依赖说明"></a>依赖说明</h3><ul>
+<li><p>基本依赖如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.1.4<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这样的话就可以用直接使用分页了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">PageHelper.startPage(page,limit);</span><br><span class="line">List&lt;HashMap&lt;String, Object&gt;&gt; list = xxxBiz.selectAll();</span><br><span class="line">PageInfo&lt;HashMap&lt;String, Object&gt;&gt; pageInfo = <span class="keyword">new</span> <span class="title class_">PageInfo</span>&lt;&gt;(list);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>想要以下一下扩展功能的话需要添加依赖</p>
+<ul>
+<li><p>依赖如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- https://mvnrepository.com/artifact/com.github.pagehelper/pagehelper-spring-boot-starter --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-autoconfigure<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>扩展功能如下</p>
+<ul>
+<li>helper-dialect：指定数据库，不指定的话会默认自动检测数据库类型</li>
+<li>reasonable：是否启用分页合理化。<ul>
+<li>如果启用，当pagenum&lt;1时，会自动查询第一页的数据，</li>
+<li>当pagenum&gt;pages时，自动查询最后一页数据；</li>
+<li>不启用的，以上两种情况都会返回空数据</li>
+</ul>
+</li>
+<li>support-methods-arguments：默认值false，分页插件会通过Mapper接口参数来传递分页参数，方法的参数值中，自动根据上面 params 配置的字段中取值，查找到合适的值时就会自动分页。</li>
+<li>params：用于从对象中根据属性名取值， 可以配置 pageNum,pageSize,count,pageSizeZero,reasonable，<ul>
+<li>不配置映射的用默认值， 默认值为<code>pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero</code></li>
+</ul>
+</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pagehelper:</span></span><br><span class="line">  <span class="attr">helper-dialect:</span> <span class="string">mysql</span></span><br><span class="line">  <span class="attr">reasonable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">support-methods-arguments:</span> <span class="literal">true</span></span><br><span class="line">  <span class="comment"># Map中发现了countSql属性，就会作为count参数使用。</span></span><br><span class="line">  <span class="attr">params:</span> <span class="string">count=countSql</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="分页插件介绍"><a href="#分页插件介绍" class="headerlink" title="分页插件介绍"></a>分页插件介绍</h2><h3 id="配置参数"><a href="#配置参数" class="headerlink" title="配置参数"></a>配置参数</h3><ol>
+<li><p><strong>helperDialect</strong>:分页插件会自动检测当前的数据库链接，自动选择合适的分页方式。</p>
+<ul>
+<li>你可以配置helperDialect属性来指定分页插件使用哪种方言。</li>
+<li>配置时，可以使用下面的缩写值:oracle , mysql , mariadb , sqlite , hsqldb , postgresql , db2 , sqlserver , informix , h2 , sqlserver2012 , derby</li>
+<li>特别注意:使用SqlServer2012数据库时，需要手动指定为sqlserver2012，否则会使用SqlServer2005的方式进行分页。</li>
+<li>你也可以实现(AbstractHelperDialect，然后配置该属性为实现类的全限定名称即可使用自定义的实现方法。</li>
+</ul>
+</li>
+<li><p>offsetAsPageNum:默认值为false，该参数对使用RowBounds作为分页参数时有效。</p>
+<ul>
+<li>当该参数设置为true时，会将[RowBounds中的offset参数当成pageNum使用，可以用页码和页面大小两个参数进行分页。</li>
+</ul>
+</li>
+<li><p>rowBoundswithCount :默认值为false，该参数对使用RowBounds 作为分页参数时有效。</p>
+<ul>
+<li>当该参数设置为true时，使用RowBounds分页会进行count查询。</li>
+</ul>
+</li>
+<li><p>pageSizeZero:默认值为false，</p>
+<ul>
+<li>当该参数设置为true时，如果<code>pageSize=0</code>或者<code>RowBounds.limit =0</code>就会查询出全部的结果(相当于没有执行分页查询，但是返回结果仍然是Page类型)。</li>
+</ul>
+</li>
+<li><p><strong>reasonable</strong>:分页合理化参数，默认值为false。当该参数设置为true时，pageNum&lt;&#x3D;0时会查询第一页，pageNum&gt;pages(超过总数时)，会查询最后一页。默认 false时，直接根据参数进行查询。</p>
+</li>
+<li><p>params :为了支持startPage(object params)方法，增加了该参数来配置参数映射，用于从对象中根据属性名取值，</p>
+<ul>
+<li>可以配置（pageNum,pageSize ,count,pageSizezero,reasonable，不配置映射的用默认值，</li>
+<li>默认值为<code>pageNum=pageNum;pageSize=pageSize;count=countSql;reasonable=reasonable;pageSizeZero=pageSizeZero</code>。</li>
+</ul>
+</li>
+<li><p><strong>supportNethodsArguments</strong> :支持通过Mapper接口参数来传递分页参数，默认值false，</p>
+<ul>
+<li>分页插件会从查询方法的参数值中，自动根据上面params配置的字段中取值，查找到合适的值时就会自动分页。</li>
+<li>使用方法可以参考测试代码中的com.github.pagehelper.test.basic包下的ArgumentsMapTest和ArgumentsobjTest 。</li>
+</ul>
+</li>
+<li><p>autoRuntimeDialect:默认值为false。</p>
+<ul>
+<li>设置为true时，允许在<strong>运行时根据多数据源自动识别</strong>对应方言的分页(不支持自动选择sqlserver2012，只能使用sqlserver)，用法和注意事项参考下面的场景五。</li>
+</ul>
+</li>
+<li><p>closeConn:默认值为true。当使用运行时动态数据源或没有设置<code>helperDialect</code>属性自动获取数据库类型时，会自动获取一个数据库连接，通过该属性来设置是否关闭获取的这个连接，默认true关闭，设置为false后，不会关闭获取的连接，这个参数的设置要根据自己选择的数据源来决定。</p>
+</li>
+<li><p><strong>重要提示：</strong>当 <code>offsetAsPageNum=false</code> 的时候，由于 <code>PageNum</code> 问题，<code>RowBounds</code>查询的时候 <code>reasonable</code> 会强制为 <code>false</code>。使用 <code>PageHelper.startPage</code> 方法不受影响。</p>
+</li>
+</ol>
+<h3 id="使用场景"><a href="#使用场景" class="headerlink" title="使用场景"></a>使用场景</h3><ul>
+<li>单独看每个参数的说明可能是一件让人不爽的事情，这里列举一些可能会用到某些参数的情况。</li>
+</ul>
+<h4 id="场景一"><a href="#场景一" class="headerlink" title="场景一"></a>场景一</h4><ul>
+<li>如果你仍然在用类似ibatis式的命名空间调用方式，你也许会用到<code>rowBoundsWithCount</code>， 分页插件对<code>RowBounds</code>支持和 MyBatis 默认的方式是一致，默认情况下不会进行 count 查询，如果你想<strong>在分页查询时进行 count 查询</strong>， 以及使用更强大的 <code>PageInfo</code> 类，你需要设置该参数为 <code>true</code>。</li>
+<li><strong>注：</strong> <code>PageRowBounds</code> 想要查询总数也需要配置该属性为 <code>true</code>。</li>
+</ul>
+<h4 id="场景二"><a href="#场景二" class="headerlink" title="场景二"></a>场景二</h4><ul>
+<li>如果你仍然在用类似ibatis式的命名空间调用方式，你觉得 <code>RowBounds</code> 中的两个参数 <code>offset,limit</code> 不如 <code>pageNum,pageSize</code> 容易理解</li>
+<li>你可以使用 <code>offsetAsPageNum</code> 参数，将该参数设置为 <code>true</code> 后，<code>offset</code>会当成 <code>pageNum</code> 使用，<code>limit</code> 和 <code>pageSize</code> 含义相同。</li>
+</ul>
+<h4 id="场景三"><a href="#场景三" class="headerlink" title="场景三"></a>场景三</h4><ul>
+<li>如果觉得某个地方使用分页后，你仍然想<strong>通过控制参数查询全部的结果</strong>，你可以配置 <code>pageSizeZero</code> 为 <code>true</code>，</li>
+<li>配置后，当 <code>pageSize=0</code> 或者 <code>RowBounds.limit = 0</code> 就会查询出全部的结果。</li>
+</ul>
+<h4 id="场景四"><a href="#场景四" class="headerlink" title="场景四"></a>场景四</h4><ul>
+<li>如果你分页插件使用于类似分页查看列表式的数据，如新闻列表，软件列表， 你希望用户输入的<strong>页数不在合法范围</strong>（第一页到最后一页之外）时能够正确的响应到正确的结果页面，</li>
+<li>那么你可以配置 <code>reasonable</code> 为 <code>true</code>，这时如果 <code>pageNum&lt;=0</code> 会查询第一页，如果 <code>pageNum&gt;总页数</code> 会查询最后一页。</li>
+</ul>
+<h4 id="场景五"><a href="#场景五" class="headerlink" title="场景五"></a>场景五</h4><ul>
+<li><p>如果你在 Spring 中配置了<strong>动态数据源，并且连接不同类型的数据库</strong>，这时你可以配置 <code>autoRuntimeDialect</code> 为 <code>true</code></p>
+</li>
+<li><p>这样在使用不同数据源时，会使用匹配的分页进行查询。</p>
+</li>
+<li><p>这种情况下，你还需要特别注意 <code>closeConn</code> 参数，由于获取数据源类型会获取一个数据库连接，所以需要通过这个参数来控制获取连接后，是否关闭该连接。</p>
+<ul>
+<li><p>默认为 <code>true</code>，有些数据库连接关闭后就没法进行后续的数据库操作。而有些数据库连接不关闭就会很快由于连接数用完而导致数据库无响应。</p>
+</li>
+<li><p>所以在使用该功能时，特别需要注意你使用的数据源是否需要关闭数据库连接。</p>
+</li>
+<li><p>当不使用动态数据源而只是自动获取 <code>helperDialect</code> 时，数据库连接只会获取一次，所以不需要担心占用的这一个连接是否会导致数据库出错，但是最好也根据数据源的特性选择是否关闭连接。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="PageInfo属性"><a href="#PageInfo属性" class="headerlink" title="PageInfo属性"></a>PageInfo属性</h3><ul>
+<li><p>属性如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PageInfo</span>&lt;T&gt; <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line">    <span class="comment">//当前页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> pageNum;</span><br><span class="line">    <span class="comment">//每页的数量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> pageSize;</span><br><span class="line">    <span class="comment">//当前页的数量</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> size;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//由于startRow和endRow不常用，这里说个具体的用法</span></span><br><span class="line">    <span class="comment">//可以在页面中&quot;显示startRow到endRow 共size条数据&quot;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//当前页面第一个元素在数据库中的行号</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> startRow;</span><br><span class="line">    <span class="comment">//当前页面最后一个元素在数据库中的行号</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> endRow;</span><br><span class="line">    <span class="comment">//总记录数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">long</span> total;</span><br><span class="line">    <span class="comment">//总页数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> pages;</span><br><span class="line">    <span class="comment">//结果集</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;T&gt; list;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//前一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> prePage;</span><br><span class="line">    <span class="comment">//下一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> nextPage;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//是否为第一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">isFirstPage</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//是否为最后一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">isLastPage</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//是否有前一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">hasPreviousPage</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//是否有下一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">hasNextPage</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line">    <span class="comment">//导航页码数</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> navigatePages;</span><br><span class="line">    <span class="comment">//所有导航页号</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span>[] navigatepageNums;</span><br><span class="line">    <span class="comment">//导航条上的第一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> navigateFirstPage;</span><br><span class="line">    <span class="comment">//导航条上的最后一页</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> navigateLastPage;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    ...各类方法</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h2><ul>
+<li><p>PageHelper的基本使用有6种，大家可以查看文档，最常用的有两种</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//第一种，RowBounds方式的调用</span></span><br><span class="line">List&lt;User&gt; list = sqlSession.selectList(<span class="string">&quot;x.y.selectIf&quot;</span>, <span class="literal">null</span>, <span class="keyword">new</span> <span class="title class_">RowBounds</span>(<span class="number">0</span>, <span class="number">10</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">//第二种，Mapper接口方式的调用，推荐这种使用方式。</span></span><br><span class="line">PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">List&lt;User&gt; list = userMapper.selectIf(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//第三种，Mapper接口方式的调用，推荐这种使用方式。</span></span><br><span class="line">PageHelper.offsetPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">List&lt;User&gt; list = userMapper.selectIf(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//第四种，参数方法调用</span></span><br><span class="line"><span class="comment">//存在以下 Mapper 接口方法，你不需要在 xml 处理后两个参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">CountryMapper</span> &#123;</span><br><span class="line">    List&lt;User&gt; <span class="title function_">selectByPageNumSize</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;user&quot;)</span> User user,</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;pageNum&quot;)</span> <span class="type">int</span> pageNum,</span></span><br><span class="line"><span class="params">        <span class="meta">@Param(&quot;pageSize&quot;)</span> <span class="type">int</span> pageSize)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//配置supportMethodsArguments=true</span></span><br><span class="line"><span class="comment">//在代码中直接调用：</span></span><br><span class="line">List&lt;User&gt; list = userMapper.selectByPageNumSize(user, <span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//第五种，参数对象</span></span><br><span class="line"><span class="comment">//如果 pageNum 和 pageSize 存在于 User 对象中，只要参数有值，也会被分页</span></span><br><span class="line"><span class="comment">//有如下 User 对象</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="comment">//其他fields</span></span><br><span class="line">    <span class="comment">//下面两个参数名和 params 配置的名字一致</span></span><br><span class="line">    <span class="keyword">private</span> Integer pageNum;</span><br><span class="line">    <span class="keyword">private</span> Integer pageSize;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//存在以下 Mapper 接口方法，你不需要在 xml 处理后两个参数</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">CountryMapper</span> &#123;</span><br><span class="line">    List&lt;User&gt; <span class="title function_">selectByPageNumSize</span><span class="params">(User user)</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//当 user 中的 pageNum!= null &amp;&amp; pageSize!= null 时，会自动分页</span></span><br><span class="line">List&lt;User&gt; list = userMapper.selectByPageNumSize(user);</span><br><span class="line"></span><br><span class="line"><span class="comment">//第六种，ISelect 接口方式</span></span><br><span class="line"><span class="comment">//jdk6,7用法，创建接口</span></span><br><span class="line">Page&lt;User&gt; page = PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>).doSelectPage(<span class="keyword">new</span> <span class="title class_">ISelect</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSelect</span><span class="params">()</span> &#123;</span><br><span class="line">        userMapper.selectGroupBy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//jdk8 lambda用法</span></span><br><span class="line">Page&lt;User&gt; page = PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>).doSelectPage(()-&gt; userMapper.selectGroupBy());</span><br><span class="line"></span><br><span class="line"><span class="comment">//也可以直接返回PageInfo，注意doSelectPageInfo方法和doSelectPage</span></span><br><span class="line">pageInfo = PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>).doSelectPageInfo(<span class="keyword">new</span> <span class="title class_">ISelect</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSelect</span><span class="params">()</span> &#123;</span><br><span class="line">        userMapper.selectGroupBy();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//对应的lambda用法</span></span><br><span class="line">pageInfo = PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>).doSelectPageInfo(() -&gt; userMapper.selectGroupBy());</span><br><span class="line"></span><br><span class="line"><span class="comment">//count查询，返回一个查询语句的count数</span></span><br><span class="line"><span class="type">long</span> <span class="variable">total</span> <span class="operator">=</span> PageHelper.count(<span class="keyword">new</span> <span class="title class_">ISelect</span>() &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doSelect</span><span class="params">()</span> &#123;</span><br><span class="line">        userMapper.selectLike(user);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//lambda</span></span><br><span class="line">total = PageHelper.count(()-&gt;userMapper.selectLike(user));</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="RowBounds方式-了解"><a href="#RowBounds方式-了解" class="headerlink" title="RowBounds方式(了解)"></a>RowBounds方式(了解)</h3><ul>
+<li><p>使用这种调用方式时，你可以使用RowBounds参数进行分页，这种方式侵入性最小，我们可以看到，通过 RowBounds方式调用只是使用了这个参数，并没有增加其他任何内容。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; list = sqlSession.selectList(<span class="string">&quot;x.y.selectIf&quot;</span>, <span class="literal">null</span>, <span class="keyword">new</span> <span class="title class_">RowBounds</span>(<span class="number">0</span>, <span class="number">10</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>分页插件检测到使用了RowBounds参数时，就会对该查询进行<strong>物理分页</strong>, 查询结果，就是我们分页后的结果，性能是最好</p>
+</li>
+<li><p>关于这种方式的调用，有两个特殊的参数是针对<code>RowBounds</code>的，你可以参看上面的分页插件参数介绍</p>
+</li>
+<li><p><strong>注意：</strong></p>
+<ul>
+<li><p>认情况下的 RowBounds 无法获取查询总数，分页插件提供了一个继承自 RowBounds 的 PageRowBounds ，这个对象中增加了 total 属性，执行分页查询后，可以从该属性得到查询总数。</p>
+</li>
+<li><p>不只有命名空间方式可以用RowBounds，使用接口的时候也可以增加RowBounds参数，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//这种情况下也会进行物理分页查询</span></span><br><span class="line">List&lt;Country&gt; <span class="title function_">selectAll</span><span class="params">(RowBounds rowBounds)</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="静态方法调用（重点）"><a href="#静态方法调用（重点）" class="headerlink" title="静态方法调用（重点）"></a>静态方法调用（重点）</h3><ul>
+<li><p>在你需要进行分页的 MyBatis 查询方法前调用<code>PageHelper.startPage 静态方法</code>即可，紧跟在这个方法后的<code>第一个MyBatis 查询方法</code>会被进行分页。</p>
+</li>
+<li><p>例一：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取第1页，10条内容，默认查询总数count</span></span><br><span class="line">PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line"><span class="comment">//紧跟着的第一个select方法会被分页</span></span><br><span class="line">List&lt;User&gt; list = userMapper.selectIf(<span class="number">1</span>);</span><br><span class="line">assertEquals(<span class="number">2</span>, list.get(<span class="number">0</span>).getId());</span><br><span class="line">assertEquals(<span class="number">10</span>, list.size());</span><br><span class="line"><span class="comment">//分页时，实际返回的结果list类型是Page&lt;E&gt;，如果想取出分页信息，需要强制转换为Page&lt;E&gt;</span></span><br><span class="line">assertEquals(<span class="number">182</span>, ((Page) list).getTotal());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例二：请求参数带分页信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//request: url?pageNum=1&amp;pageSize=10</span></span><br><span class="line"><span class="comment">//支持 ServletRequest,Map,POJO 对象，需要配合 params 参数</span></span><br><span class="line">PageHelper.startPage(request);</span><br><span class="line"><span class="comment">//紧跟着的第一个select方法会被分页</span></span><br><span class="line">List&lt;User&gt; list = userMapper.selectIf(<span class="number">1</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//后面的不会被分页，除非再次调用PageHelper.startPage</span></span><br><span class="line">List&lt;User&gt; list2 = userMapper.selectIf(<span class="literal">null</span>);</span><br><span class="line"><span class="comment">//list1</span></span><br><span class="line">assertEquals(<span class="number">2</span>, list.get(<span class="number">0</span>).getId());</span><br><span class="line">assertEquals(<span class="number">10</span>, list.size());</span><br><span class="line"><span class="comment">//分页时，实际返回的结果list类型是Page&lt;E&gt;，如果想取出分页信息，需要强制转换为Page&lt;E&gt;，</span></span><br><span class="line"><span class="comment">//或者使用PageInfo类（下面的例子有介绍）</span></span><br><span class="line">assertEquals(<span class="number">182</span>, ((Page) list).getTotal());</span><br><span class="line"><span class="comment">//list2</span></span><br><span class="line">assertEquals(<span class="number">1</span>, list2.get(<span class="number">0</span>).getId());</span><br><span class="line">assertEquals(<span class="number">182</span>, list2.size());</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例三：<code>PageInfo</code>使用：实际返回的结果list类型是<code>Page&lt;E&gt;</code>，可以通过构造方法创建PageInfo对象</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//获取第1页，10条内容，默认查询总数count</span></span><br><span class="line">PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">List&lt;User&gt; list = userMapper.selectAll();</span><br><span class="line"><span class="comment">//用PageInfo对结果进行包装</span></span><br><span class="line"><span class="type">PageInfo</span> <span class="variable">page</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PageInfo</span>(list);</span><br><span class="line"><span class="comment">//测试PageInfo全部属性</span></span><br><span class="line"><span class="comment">//PageInfo包含了非常全面的分页属性</span></span><br><span class="line">assertEquals(<span class="number">1</span>, page.getPageNum());</span><br><span class="line">assertEquals(<span class="number">10</span>, page.getPageSize());</span><br><span class="line">assertEquals(<span class="number">1</span>, page.getStartRow());</span><br><span class="line">assertEquals(<span class="number">10</span>, page.getEndRow());</span><br><span class="line">assertEquals(<span class="number">183</span>, page.getTotal());</span><br><span class="line">assertEquals(<span class="number">19</span>, page.getPages());</span><br><span class="line">assertEquals(<span class="number">1</span>, page.getFirstPage());</span><br><span class="line">assertEquals(<span class="number">8</span>, page.getLastPage());</span><br><span class="line">assertEquals(<span class="literal">true</span>, page.isFirstPage());</span><br><span class="line">assertEquals(<span class="literal">false</span>, page.isLastPage());</span><br><span class="line">assertEquals(<span class="literal">false</span>, page.isHasPreviousPage());</span><br><span class="line">assertEquals(<span class="literal">true</span>, page.isHasNextPage());</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="PageHelper-调用安全"><a href="#PageHelper-调用安全" class="headerlink" title="PageHelper 调用安全"></a><code>PageHelper</code> 调用安全</h3><ul>
+<li><p>极其安全</p>
+<ol>
+<li>使用 <code>RowBounds</code> 和 <code>PageRowBounds</code> 参数方式是极其<strong>安全</strong>的</li>
+<li>使用<strong>参数方式</strong>是极其<strong>安全</strong>的</li>
+<li>使用 <strong>ISelect 接口</strong>调用是极其<strong>安全</strong>的</li>
+</ol>
+</li>
+<li><p>ISelect 接口方式除了可以保证安全外，还特别实现了将查询转换为单纯的 count 查询方式，这个方法可以将任意的查询方法，变成一个 <code>select count(*)</code> 的查询方法。</p>
+</li>
+<li><p>不安全的分页</p>
+<ol>
+<li><code>PageHelper</code> 方法使用了静态的 <code>ThreadLocal</code> 参数，分页参数和线程是绑定的。</li>
+<li>只要你可以保证在 <code>PageHelper</code> 方法调用后紧跟 MyBatis 查询方法，这就是安全的。因为 <code>PageHelper</code> 在 <code>finally</code> 代码段中自动清除了 <code>ThreadLocal</code> 存储的对象。</li>
+<li>如果代码在进入 <code>Executor</code> 前发生异常，就会导致线程不可用，这属于人为的 Bug（例如接口方法和 XML 中的不匹配，导致找不到 <code>MappedStatement</code> 时）， 这种情况由于线程不可用，也不会导致 <code>ThreadLocal</code> 参数被错误的使用。</li>
+</ol>
+</li>
+<li><p>但是如果你写出下面这样的代码，就是不安全的用法：</p>
+<ul>
+<li><p>这种情况下由于 param1 存在 null 的情况，就会<strong>导致 PageHelper 生产了一个分页参数，但是没有被消费</strong></p>
+</li>
+<li><p>这个参数就会一直保留在这个线程上。当这个线程再次被使用时，就可能导致不该分页的方法去消费这个分页参数，这就产生了莫名其妙的分页。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">List&lt;User&gt; list;</span><br><span class="line"><span class="keyword">if</span>(param1 != <span class="literal">null</span>)&#123;</span><br><span class="line">    list = userMapper.selectIf(param1);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;User&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上面这个代码，应该写成下面这个样子：这种写法就能保证安全。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; list;</span><br><span class="line"><span class="keyword">if</span>(param1 != <span class="literal">null</span>)&#123;</span><br><span class="line">    PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">    list = userMapper.selectIf(param1);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;User&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果你对此不放心，你可以手动清理 <code>ThreadLocal</code> 存储的分页参数，可以像下面这样使用：这么写很不好看，而且没有必要。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List&lt;User&gt; list;</span><br><span class="line"><span class="keyword">if</span>(param1 != <span class="literal">null</span>)&#123;</span><br><span class="line">    PageHelper.startPage(<span class="number">1</span>, <span class="number">10</span>);</span><br><span class="line">    <span class="keyword">try</span>&#123;</span><br><span class="line">        list = userMapper.selectAll();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        PageHelper.clearPage();</span><br><span class="line">    &#125;</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    list = <span class="keyword">new</span> <span class="title class_">ArrayList</span>&lt;User&gt;();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="整合案例"><a href="#整合案例" class="headerlink" title="整合案例"></a>整合案例</h2><ol>
+<li><p><code>pom.xml</code>添加如下依赖</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- pagehelper分页插件依赖 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.github.pagehelper<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>pagehelper-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2.5<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置文件<code>application.yml</code>中添加：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">pagehelper:</span></span><br><span class="line">  <span class="attr">helper-dialect:</span> <span class="string">mysql</span></span><br><span class="line">  <span class="attr">reasonable:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">support-methods-arguments:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">params:</span> <span class="string">count=countsql</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写Controller</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/getAllPerson&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">getAllPerson</span><span class="params">(Model model,<span class="meta">@RequestParam(defaultValue = &quot;1&quot;,value = &quot;pageNum&quot;)</span> Integer pageNum)</span>&#123;</span><br><span class="line">    PageHelper.startPage(pageNum,<span class="number">5</span>);</span><br><span class="line">    List&lt;Person&gt; list = personService.getAllPerson();</span><br><span class="line">    PageInfo&lt;Person&gt; pageInfo = <span class="keyword">new</span> <span class="title class_">PageInfo</span>&lt;Person&gt;(list);</span><br><span class="line">    model.addAttribute(<span class="string">&quot;pageInfo&quot;</span>,pageInfo);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;list&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>其中：<code>PageHelper.startPage(int PageNum,int PageSize)</code>:用来设置页面的位置和展示的数据条目数，我们设置每页展示5条数据。</p>
+</li>
+<li><p>PageInfo用来封装页面信息，返回给前台界面。PageInfo中的一些我们需要用到的参数如下表：</p>
+<table>
+<thead>
+<tr>
+<th>PageInfo.list</th>
+<th>结果集</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PageInfo.pageNum</td>
+<td>当前页码</td>
+</tr>
+<tr>
+<td>PageInfo.pageSize</td>
+<td>当前页面显示的数据条目</td>
+</tr>
+<tr>
+<td>PageInfo.pages</td>
+<td>总页数</td>
+</tr>
+<tr>
+<td>PageInfo.total</td>
+<td>数据的总条目数</td>
+</tr>
+<tr>
+<td>PageInfo.prePage</td>
+<td>上一页</td>
+</tr>
+<tr>
+<td>PageInfo.nextPage</td>
+<td>下一页</td>
+</tr>
+<tr>
+<td>PageInfo.isFirstPage</td>
+<td>是否为第一页</td>
+</tr>
+<tr>
+<td>PageInfo.isLastPage</td>
+<td>是否为最后一页</td>
+</tr>
+<tr>
+<td>PageInfo.hasPreviousPage</td>
+<td>是否有上一页</td>
+</tr>
+<tr>
+<td>PageHelper.hasNextPage</td>
+<td>是否有下一页</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ol>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li><p><code>PageHelper.startPage</code>方法只有紧跟在<code>PageHelper.startPage</code>方法后的<strong>第一个</strong>Mybatis的<strong>查询（Select）</strong>方法会被分页。</p>
+</li>
+<li><p>请不要在系统中配置多个分页插件</p>
+<ul>
+<li>使用Spring时,<code>mybatis-config.xml</code>和<code>Spring&lt;bean&gt;</code>配置方式，请选择其中一种，不要同时配置多个分页插件！</li>
+</ul>
+</li>
+<li><p>分页插件不支持带有<code>for update</code>语句的分页</p>
+<ul>
+<li>对于带有<code>for update</code>的sql，会抛出运行时异常，对于这样的sql建议手动分页，毕竟这样的sql需要重视。</li>
+</ul>
+</li>
+<li><p>分页插件不支持嵌套结果映射</p>
+<ul>
+<li>由于嵌套结果方式会导致结果集被折叠，因此分页查询的结果在折叠后总数会减少，所以无法保证分页结果数量正确。</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/67817846">https://fulsun.github.io/p/67817846</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a><a class="post-meta__tags" href="/tags/%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6/">分页插件</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/002.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/544f483d" title="安装Redis"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">安装Redis</div></div></a></div><div class="next-post pull-right"><a href="/p/41f15683" title="Maven使用教程"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Maven使用教程</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/a8182ef2" title="微服务（Microservices）——Martin Flower"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-21</div><div class="title">微服务（Microservices）——Martin Flower</div></div></a></div><div><a href="/p/19af5078" title="认识SpringBoot2.X"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-22</div><div class="title">认识SpringBoot2.X</div></div></a></div><div><a href="/p/47ae80c7" title="SpringBoot运行原理"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-23</div><div class="title">SpringBoot运行原理</div></div></a></div><div><a href="/p/c690db69" title="Springboot热部署"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-12</div><div class="title">Springboot热部署</div></div></a></div><div><a href="/p/627ee5dd" title="Springboot的自动配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/012.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-27</div><div class="title">Springboot的自动配置</div></div></a></div><div><a href="/p/f4f1dd7c" title="Springboot文件上传和下载"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-18</div><div class="title">Springboot文件上传和下载</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9B%86%E6%88%90%E6%96%B9%E5%BC%8F"><span class="toc-text">集成方式</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95jar%E5%8C%85%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="toc-text">引jar包的方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Maven-%E4%B8%BB%E8%A6%81"><span class="toc-text">使用Maven(主要)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E8%AF%B4%E6%98%8E"><span class="toc-text">配置说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MyBatis%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E6%8F%92%E4%BB%B6"><span class="toc-text">MyBatis配置拦截器插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Spring%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E6%8F%92%E4%BB%B6"><span class="toc-text">Spring配置拦截器插件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%8F%82%E6%95%B0"><span class="toc-text">配置拦截器参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot-%E9%9B%86%E6%88%90"><span class="toc-text">Spring Boot 集成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="toc-text">添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E8%AF%B4%E6%98%8E"><span class="toc-text">依赖说明</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%86%E9%A1%B5%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D"><span class="toc-text">分页插件介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%8F%82%E6%95%B0"><span class="toc-text">配置参数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">使用场景</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%80"><span class="toc-text">场景一</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%8C"><span class="toc-text">场景二</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%B8%89"><span class="toc-text">场景三</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E5%9B%9B"><span class="toc-text">场景四</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E4%BA%94"><span class="toc-text">场景五</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PageInfo%E5%B1%9E%E6%80%A7"><span class="toc-text">PageInfo属性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RowBounds%E6%96%B9%E5%BC%8F-%E4%BA%86%E8%A7%A3"><span class="toc-text">RowBounds方式(了解)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%99%E6%80%81%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8%EF%BC%88%E9%87%8D%E7%82%B9%EF%BC%89"><span class="toc-text">静态方法调用（重点）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PageHelper-%E8%B0%83%E7%94%A8%E5%AE%89%E5%85%A8"><span class="toc-text">PageHelper 调用安全</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B4%E5%90%88%E6%A1%88%E4%BE%8B"><span class="toc-text">整合案例</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-text">注意事项</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

@@ -1,0 +1,529 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>配置Centos7 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="CentOS配置静态IP和YUM源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置Centos7">
+<meta property="og:url" content="https://fulsun.github.io/p/a11a1bfa">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="CentOS配置静态IP和YUM源。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/009.webp">
+<meta property="article:published_time" content="2018-09-24T12:52:53.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.354Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Centos配置">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/009.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/a11a1bfa"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '配置Centos7',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/009.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">配置Centos7</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-09-24T12:52:53.000Z" title="发表于 2018-09-24 12:52:53">2018-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.354Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>21分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="配置Centos7"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="查看操作系统相关信息"><a href="#查看操作系统相关信息" class="headerlink" title="查看操作系统相关信息"></a>查看操作系统相关信息</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">uname</span> -a    //查看到的是瞬态的（Tansient hostname）</span><br><span class="line"><span class="built_in">cat</span> /etc/redhat-release    //查看操作系统环境</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h2><ul>
+<li><p>静态的（Static hostname）</p>
+<p>“静态”主机名也称为内核主机名，是系统在启动时从&#x2F;etc&#x2F;hostname自动初始化的主机名。</p>
+</li>
+<li><p>瞬态的（Tansient hostname）</p>
+<p>“瞬态”主机名是在系统运行时临时分配的主机名，例如，通过DHCP或mDNS服务器分配。</p>
+</li>
+<li><p>灵活的（Pretty hostname）</p>
+<p>“灵活”主机名也有人叫做“别名”主机名。<br>“灵活”主机名则允许使用自由形式（包括特殊&#x2F;空白字符）的主机名，以展示给终端用户（如xh01@f5）。<br>“静态”主机名和“瞬态”主机名都遵从作为互联网域名同样的字符限制规则。</p>
+</li>
+<li><p>在CentOS 7中，有个叫hostnamectl的命令行工具，它允许你查看或修改与主机名相关的配置。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">//查看一下当前主机名的情况，查看全部三种主机名</span><br><span class="line">hostnamectl</span><br><span class="line"></span><br><span class="line">//或者，查看全部三种主机名</span><br><span class="line">hostnamectl status</span><br><span class="line"></span><br><span class="line">//只查看静态、瞬态或灵活主机名，分别使用--static，--transient或--pretty选项</span><br><span class="line">[root@xh00 ~]# hostnamectl --static</span><br><span class="line"></span><br><span class="line">xh00</span><br><span class="line">[root@xh00 ~]# hostnamectl --transient</span><br><span class="line"></span><br><span class="line">xh01</span><br><span class="line">[root@xh00 ~]# hostnamectl --pretty</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//或者，查看到的是瞬态的（Tansient hostname）</span><br><span class="line">hostname</span><br><span class="line"></span><br><span class="line">//或者查看主机名配置文件，查看到的是静态的（Static hostname）</span><br><span class="line"><span class="built_in">cat</span> /etc/hostname</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="临时有效"><a href="#临时有效" class="headerlink" title="临时有效"></a>临时有效</h3><ul>
+<li><p>只能临时修改的主机名，当重启机器后，主机名称又变回来了。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hostname 主机名</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="永久生效：hostnamectl"><a href="#永久生效：hostnamectl" class="headerlink" title="永久生效：hostnamectl"></a>永久生效：hostnamectl</h3><ul>
+<li><p>一旦修改了静态主机名，&#x2F;etc&#x2F;hostname 将被自动更新。然而，&#x2F;etc&#x2F;hosts 不会更新以保存所做的修改，所以你每次在修改主机名后一定要手动更新&#x2F;etc&#x2F;hosts，之后再重启CentOS 7。否则系统再启动时会很慢。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//永久性的修改主机名称，重启(注销重新登录后可查看)后能保持修改后的。</span><br><span class="line">hostnamectl set-hostname xxx</span><br><span class="line"></span><br><span class="line">//删除hostname</span><br><span class="line">hostnamectl set-hostname <span class="string">&quot;&quot;</span></span><br><span class="line">hostnamectl set-hostname <span class="string">&quot;&quot;</span> --static</span><br><span class="line">hostnamectl set-hostname <span class="string">&quot;&quot;</span> --pretty</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="永久生效：修改配置文件"><a href="#永久生效：修改配置文件" class="headerlink" title="永久生效：修改配置文件"></a>永久生效：修改配置文件</h3><ul>
+<li><p>修改配置文件&#x2F;etc&#x2F;hostname来实现主机名的修改。把该文件内容第一行替换成自己想要的主机名重启即可。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop01 hadoop]# <span class="built_in">cat</span> /etc/hostname</span><br><span class="line">hadoop01</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="永久生效-nmtui"><a href="#永久生效-nmtui" class="headerlink" title="永久生效: nmtui"></a>永久生效: nmtui</h3><ul>
+<li><p>通过nmtui修改，之后重启hostnamed</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nmcli general hostname servername</span><br><span class="line">systemctl restart systemd-hostnamed</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>还可以通过nmtui进入图形界面来修改主机名。将光标通过键盘的上下键移动到“设定系统主机名”菜单处，按下回车键。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/a11a1bfa/d02ae5611ccecb3dab98edb6966b9e08.jpg"></p>
+<p>此时，屏幕出现“设定主机名”选项卡，输入需要设定的主机名，通过键盘方向键将光标移动到“确定”处，回车键确定即可完成主机名的修改。</p>
+</li>
+</ul>
+<h2 id="修改主机名与ip映射"><a href="#修改主机名与ip映射" class="headerlink" title="修改主机名与ip映射"></a>修改主机名与ip映射</h2><ul>
+<li><p>域名和ip地址的映射</p>
+<ul>
+<li><p>windows C:\Windows\System32\drivers\etc</p>
+</li>
+<li><p>linux:<code>vi /etc/hosts</code></p>
+</li>
+</ul>
+</li>
+<li><p>添加</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">192.168.61.101 hdp1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试:<code>ping hdp1</code></p>
+</li>
+</ul>
+<h2 id="Centos7配置静态IP"><a href="#Centos7配置静态IP" class="headerlink" title="Centos7配置静态IP"></a>Centos7配置静态IP</h2><blockquote>
+<p>在rhel8(含centos8)上，在&#x2F;etc&#x2F;sysconfig&#x2F;network-scripts&#x2F;里也看不到任何脚本文件，没有传统的network.service。因此只能通过其它方法进行网络配置，包括NM命令工具集。换言之，在rhel8上，必须开启NM，否则无法使用网络。</p>
+</blockquote>
+<ul>
+<li><p>手动配置文件静态IP</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@centos ~]# cat /etc/sysconfig/network-scripts/ifcfg-eth0</span><br><span class="line">TYPE=&quot;Ethernet&quot;</span><br><span class="line">PROXY_METHOD=&quot;none&quot;</span><br><span class="line">BROWSER_ONLY=&quot;no&quot;</span><br><span class="line"><span class="deletion">- BOOTPROTO=&quot;dhcp&quot;</span></span><br><span class="line"><span class="addition">+ BOOTPROTO=&quot;static&quot;</span></span><br><span class="line">DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV4_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6INIT=&quot;yes&quot;</span><br><span class="line">IPV6_AUTOCONF=&quot;yes&quot;</span><br><span class="line">IPV6_DEFROUTE=&quot;yes&quot;</span><br><span class="line">IPV6_FAILURE_FATAL=&quot;no&quot;</span><br><span class="line">IPV6_ADDR_GEN_MODE=&quot;stable-privacy&quot;</span><br><span class="line">NAME=&quot;eth0&quot;</span><br><span class="line">UUID=&quot;c3766d2e-1c20-4ff0-a984-c8f2b6ba61fd&quot;</span><br><span class="line">DEVICE=&quot;eth0&quot;</span><br><span class="line">ONBOOT=&quot;yes&quot;</span><br><span class="line"><span class="addition">+ IPADDR=192.168.61.45</span></span><br><span class="line"><span class="addition">+ NETMASK=255.255.255.0</span></span><br><span class="line"><span class="addition">+ GATEWAY=192.168.61.2</span></span><br><span class="line"><span class="addition">+ DNS1=192.168.61.2</span></span><br><span class="line"><span class="addition">+ DNS2=8.8.5.5</span></span><br><span class="line"><span class="addition">+ PREFIX=24</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启网卡</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">service 方式重启网络服务</span></span><br><span class="line">service network restart</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Centos8 重新回载网络配置</span></span><br><span class="line">[root@centos ~]# nmcli c reload</span><br><span class="line">[root@centos ~]# nmcli c #查看</span><br><span class="line">NAME     UUID                                  TYPE      DEVICE</span><br><span class="line">docker0  a2b07a6c-142a-4f39-b13e-1b1a2f5cdff0  bridge    docker0</span><br><span class="line">eth0     c3766d2e-1c20-4ff0-a984-c8f2b6ba61fd  ethernet  eth0</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Centos8重启网卡"><a href="#Centos8重启网卡" class="headerlink" title="Centos8重启网卡"></a>Centos8重启网卡</h2><ul>
+<li><p>不能使用service和systemctl</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/a11a1bfa/2c733e7c07f8dccc32f280eb6dfbb154.jpg"></p>
+</li>
+<li><p>方法：<code>nmcli c reload</code> +网卡名 例：<code>nmcli c reload eth0</code></p>
+</li>
+<li><p>如果不行，可尝试以下命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 重载所有ifcfg或route到connection（不会立即生效）</span></span><br><span class="line">nmcli c reload ifcfg-xxx</span><br><span class="line"><span class="comment"># 重载指定ifcfg或route到connection（不会立即生效）</span></span><br><span class="line">nmcli c load /etc/sysconfig/network-scripts/ifcfg-ethX</span><br><span class="line">nmcli c load /etc/sysconfig/network-scripts/route-ethX</span><br><span class="line"><span class="comment"># 立即生效connection，有3种方法</span></span><br><span class="line">nmcli c up ethX</span><br><span class="line">nmcli d reapply ethX</span><br><span class="line">nmcli d connect ethX</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启主机后发现网卡不能开机自启，需要手动启动网卡：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nmcli connection modify ens33 connection.autoconnect <span class="built_in">yes</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="防火墙"><a href="#防火墙" class="headerlink" title="防火墙"></a>防火墙</h2><h3 id="打开防火墙"><a href="#打开防火墙" class="headerlink" title="打开防火墙"></a>打开防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl start firewalld         <span class="comment"># 启动,</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl stop firewalld          <span class="comment"># 关闭</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="重启防火墙"><a href="#重启防火墙" class="headerlink" title="重启防火墙"></a>重启防火墙</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">service firewalld restart 				<span class="comment">#重启</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="设置开机启动"><a href="#设置开机启动" class="headerlink" title="设置开机启动"></a>设置开机启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">enable</span> firewalld        <span class="comment"># 开机启动</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="取消开机启动"><a href="#取消开机启动" class="headerlink" title="取消开机启动"></a>取消开机启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">systemctl <span class="built_in">disable</span> firewalld       <span class="comment"># 取消开机启动</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="查看防火墙状态"><a href="#查看防火墙状态" class="headerlink" title="查看防火墙状态"></a>查看防火墙状态</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --state</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看防火墙规则"><a href="#查看防火墙规则" class="headerlink" title="查看防火墙规则"></a>查看防火墙规则</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --list-all</span><br></pre></td></tr></table></figure>
+
+<h3 id="防火墙中添加应用"><a href="#防火墙中添加应用" class="headerlink" title="防火墙中添加应用"></a>防火墙中添加应用</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd --add-service=postgresql --permanent</span><br></pre></td></tr></table></figure>
+
+<h3 id="防火墙添加端口"><a href="#防火墙添加端口" class="headerlink" title="防火墙添加端口"></a>防火墙添加端口</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd  --add-port=9527/tcp --permanent</span><br></pre></td></tr></table></figure>
+
+<p>添加参数介绍</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">firewall-cmd：是Linux提供的操作firewall的一个工具；</span><br><span class="line">--permanent：表示设置为持久；</span><br><span class="line">--add-port：标识添加的端口；</span><br><span class="line">--add-service: 标识添加的服务</span><br></pre></td></tr></table></figure>
+
+<h2 id="系统的启动级别"><a href="#系统的启动级别" class="headerlink" title="系统的启动级别"></a>系统的启动级别</h2><ul>
+<li><p>查看当前的系统启动级别(0-6) : <code>runlevel</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&gt; 0:关机</span><br><span class="line"></span><br><span class="line">&gt; 1:单用户</span><br><span class="line"></span><br><span class="line">&gt; 2:多用户,不能访问网络</span><br><span class="line"></span><br><span class="line">&gt; 3:多用户,能访问网络(全功能,不带图形界面,速度快)</span><br><span class="line"></span><br><span class="line">&gt; 4:未使用</span><br><span class="line"></span><br><span class="line">&gt; 5:带有图形界面系统模式</span><br><span class="line"></span><br><span class="line">&gt; 6.重启</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改启动级别</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vim /etc/inittab</span></span><br><span class="line"><span class="built_in">id</span>:3:initdefault:</span><br><span class="line"><span class="comment"># 重启</span></span><br><span class="line">reboot</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="selinux"><a href="#selinux" class="headerlink" title="selinux"></a>selinux</h2><p>SELinux 主要作用就是最大限度地减小系统中服务进程可访问的资源（最小权限原则）。</p>
+<h3 id="关闭"><a href="#关闭" class="headerlink" title="关闭"></a>关闭</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#查看</span></span><br><span class="line"><span class="built_in">cat</span> /etc/selinux/config</span><br><span class="line"><span class="comment">#sed -i &quot;s/查找字段/替换字段/g&quot;  文件名</span></span><br><span class="line"><span class="comment">#永久关闭，必须重启</span></span><br><span class="line">sed -i <span class="string">&#x27;s/SELINUX=enforcing/SELINUX=disabled/g&#x27;</span> /etc/selinux/config</span><br><span class="line"><span class="comment">#临时关闭</span></span><br><span class="line">setenforce 0</span><br></pre></td></tr></table></figure>
+
+<h3 id="查看SELinux状态"><a href="#查看SELinux状态" class="headerlink" title="查看SELinux状态"></a>查看SELinux状态</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># getenforce 用这个命令检查</span></span><br><span class="line">getenforce</span><br><span class="line"></span><br><span class="line"><span class="comment">##如果SELinux status参数为enabled即为开启状态</span></span><br><span class="line">/usr/sbin/sestatus -v</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Enforcing：强制模式。代表SELinux在运行中，且已经开始限制domain&#x2F;type之间的验证关系</p>
+</li>
+<li><p>Permissive：宽容模式。代表SELinux在运行中，不过不会限制domain&#x2F;type之间的验证关系，即使验证不正确，进程仍可以对文件进行操作。不过如果验证不正确会发出警告</p>
+</li>
+<li><p>Disabled：关闭模式。SELinux并没有实际运行</p>
+</li>
+</ul>
+<h2 id="目录挂载"><a href="#目录挂载" class="headerlink" title="目录挂载"></a>目录挂载</h2><ul>
+<li><p>将一个文件系统的顶层目录挂到另一个文件系统的子目录上，使它们成为一个整体，称为挂载。把该子目录称为挂载点。</p>
+<ul>
+<li>挂载源:设备文件</li>
+<li>挂载点: 存在的目录</li>
+</ul>
+</li>
+<li><p>临时挂载:<code>mount -t iso9660 -o ro/loop 挂载源 挂载点</code></p>
+</li>
+<li><p>永久挂载:<code>vim /etc/fstab</code></p>
+</li>
+<li><p>卸载: umount 挂载点</p>
+</li>
+<li><p>注意：</p>
+<ol>
+<li>挂载点必须是一个目录。</li>
+<li>一个分区挂载在一个已存在的目录上，这个目录可以不为空，但挂载后这个目录下以前的内容将不可用。</li>
+<li>mount命令没有建立挂载点的功能，因此你应该确保执行mount命令时，挂载点已经存在。（不懂？说白了点就是你要把文件系统挂载到哪，首先要先建上个目录。）</li>
+</ol>
+</li>
+</ul>
+<h3 id="挂载命令"><a href="#挂载命令" class="headerlink" title="挂载命令"></a>挂载命令</h3><ul>
+<li><p>格式：<code>mount [-参数][设备名称][挂载点]</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -t &lt;文件系统类型&gt; 指定设备的文件系统类型，常见的有：　　　　</span></span><br><span class="line">    minix 	linux最早使用的文件系统　　　　</span><br><span class="line">    ext2 	linux目前常用的文件系统　　　　</span><br><span class="line">    msdos 	MS-DOS的fat，就是fat16 　　　　</span><br><span class="line">    vfat 	windows98常用的fat32 　　　　</span><br><span class="line">    nfs 	网络文件系统　　　　</span><br><span class="line">    iso9660 CD-ROM光盘标准文件系统　　　-&gt; 挂载镜像文件</span><br><span class="line">    ntfs 	windows NT 2000的文件系统　　　　</span><br><span class="line">    hpfs 	OS/2文件系统　　　　</span><br><span class="line">    auto 	自动检测文件系统</span><br><span class="line"></span><br><span class="line"><span class="comment"># -o&lt;选项&gt; 指定挂载文件系统时的选项。有些也可用在/etc/fstab中。常用的有　</span></span><br><span class="line">    codepage=XXX 代码页	codepage指定文件系统的代码页，简体中文中文代码是936；</span><br><span class="line">    iocharset=XXX 字符集	iocharset指定字符集，简体中文一般用cp936或gb2312。 　　　　</span><br><span class="line">	ro 以只读方式挂载</span><br><span class="line">	rw 以读写方式挂载</span><br><span class="line">	nouser 使一般用户无法挂载</span><br><span class="line">	user 可以让一般用户挂载设备</span><br><span class="line"></span><br><span class="line"><span class="comment"># 例子</span></span><br><span class="line">mount -t iso9660 /dev/cdrom /mnt/cdrom</span><br><span class="line">mount -o ro /dev/hda1 /mnt</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="自动挂载"><a href="#自动挂载" class="headerlink" title="自动挂载"></a>自动挂载</h3><ul>
+<li>在&#x2F;etc目录下有个fstab文件，它里面列出了linux开机时自动挂载的文件系统的列表。</li>
+<li><strong>第一列</strong>：**&#x2F;dev&#x2F;cdrom**：挂载源，要挂在的磁盘分区或者存储设备，或者文件系统</li>
+<li><strong>第二列</strong>：**&#x2F;mnt&#x2F;cdrom**：挂载点，挂载位置</li>
+<li><strong>第三列</strong>：<strong>iso9660</strong>：文件系统类型，ext4文件系统，swap表示交换分区，……</li>
+<li><strong>第四列</strong>：<strong>defaults</strong>：挂载参数</li>
+<li><strong>第五列</strong>：<strong>0</strong>：表示dump选项，dump工具通过这个选项位置上的数字来决定文件系统是否需要备份。如果是0，dump就会被忽略，事实上大多数的dump设置都是0</li>
+<li><strong>第六列</strong>：<strong>0</strong>：读取文件系统时候的检查顺序，允许的数字是0,1,2，根目录应当获得最高的优先权 1, 其它所有需要被检查的设备设置为2，0表示不检查</li>
+</ul>
+<h2 id="启动apache-http"><a href="#启动apache-http" class="headerlink" title="启动apache http"></a>启动apache http</h2><ul>
+<li><p>apache http服务器</p>
+<ul>
+<li>默认端口80</li>
+<li>资源文件的根目录 <code>/var/www/html </code></li>
+<li>配置文件<code>/etc/httpd/</code></li>
+</ul>
+</li>
+<li><p>下载</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">yum install -y httpd</span><br><span class="line"><span class="comment"># 服务的启动与关闭</span></span><br><span class="line">service httpd start/stop http</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看httpd服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service --status-all | grep httpd</span><br><span class="line"></span><br><span class="line">service httpd status</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="本地yum-源"><a href="#本地yum-源" class="headerlink" title="本地yum 源"></a>本地yum 源</h2><ul>
+<li><p>yum仓库服务器本质上就是一台http服务器，服务器的目录中放置了rpm包，及rpm包的索引信息文件，即可为yum客户端提供rpm文件下载</p>
+</li>
+<li><p>准备一个apache http服务器, 在httpd服务的web目录中放入rpm库，</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将centos安装光盘中的rpm库放入：</span></span><br><span class="line"><span class="built_in">mkdir</span> /var/www/html/centos</span><br><span class="line"><span class="comment"># 拷贝</span></span><br><span class="line"><span class="built_in">cp</span> -r /mnt/cdrom/ /var/www/html/centos/</span><br><span class="line"><span class="comment"># 上面这种方式比较浪费空间，可以不用拷贝，其实只要创建一个软连接即可</span></span><br><span class="line"><span class="built_in">ln</span> -s /mnt/cdrom  /var/www/html/centos</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用浏览器访问一下httpd服务，看看是不是能看到这些东西<br>地址：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://192.168.123.202/centos">http://192.168.123.202/centos</a></p>
+</li>
+<li><p>配置yum客户端repo地址文件,将本地http服务器加入repo地址</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /etc/yum.repos.d/</span><br><span class="line"><span class="comment"># 将内置的源全部disable掉</span></span><br><span class="line">rename .repo .repo.bak *</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>新建一个repo源</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vi  CentOS-Local.repo</span><br><span class="line">[CentOS-Local]</span><br><span class="line">   name=CentOS-Local</span><br><span class="line">   baseurl=http://192.168.123.202/centos/cdrom0</span><br><span class="line">           http://192.168.123.202/centos/cdrom1</span><br><span class="line">   gpgcheck=0</span><br><span class="line">   enabled=1</span><br><span class="line">   gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-6</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查我们自定义的源是否生效，使用命令：<code>yum repolist</code></p>
+</li>
+<li><p>再接下来，就可以使用yum像从公网安装软件一样在内网服务器上下载软件进行安装了</p>
+</li>
+</ul>
+<h2 id="ssh"><a href="#ssh" class="headerlink" title="ssh"></a>ssh</h2><p><code>Secure Shell</code>（安全外壳协议，简称<code>SSH</code>）是一种加密的网络传输协议，可在不安全的网络中为网络服务提供安全的传输环境。<code>SSH</code>通过在网络中创建安全隧道来实现<code>SSH</code>客户端与服务器之间的连接。虽然任何网络服务都可以通过<code>SSH</code>实现安全传输，<code>SSH</code>最常见的用途是远程登录系统，人们通常利用<code>SSH</code>来传输命令行界面和远程执行命令。<code>telnet</code>使用<code>23</code>号端口，所有的信息，包括用户名和密码都是明文传输；而<code>ssh</code>使用<code>22</code>号端口，所有的信息都会被加密传输，安全性得到了很大的提高。</p>
+<ul>
+<li><p><code>ssh</code>使用十分简单，选择以什么用户连接哪台机器，然后输入密码即可：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ssh</span> user@hostname</span><br><span class="line">user@hostname<span class="string">&#x27;s password:</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="加密方式"><a href="#加密方式" class="headerlink" title="加密方式"></a>加密方式</h3><p><code>ssh</code>的主要有点就是安全性，安全性依赖于加密方式，现在主要的加密方式有两种：对称加密和非对称加密。</p>
+<ul>
+<li>对称加密使用同一个密钥来进行加密和解密，这样在传输时是安全可靠的，但是如何安全的保存密钥呢，在集群中，客户端的数量巨大，一旦任意一个客户端的密钥被窃取，那么整个系统的安全性也不复存在。</li>
+<li>由于对称加密的这个弊端，产生了非对称加密，非对称加密中有两个密钥：公钥和私钥。公钥由私钥产生，但却无法推算出私钥；公钥加密后的密文，只能通过对应的私钥来解密。</li>
+</ul>
+<h3 id="非对称加密的登录流程"><a href="#非对称加密的登录流程" class="headerlink" title="非对称加密的登录流程"></a>非对称加密的登录流程</h3><p>初始状态：终端要登录<code>Server</code>服务器，发起连接请求<code>ssh work@server.com</code></p>
+<ol>
+<li>服务端运行有<code>ssh</code>服务，并持续监听<code>22</code>号端口，因此可以生成一对公钥和私钥；此时将公钥返回给客户端</li>
+<li>客户端使用公钥，对登录密码进行加密，（如服务器<code>work</code>用户密码为<code>xxx</code>），生成公钥加密字符串</li>
+<li>客户端将公钥加密字符串发送给服务端</li>
+<li>服务端使用私钥，解密公钥加密字符串，得到原始密码</li>
+<li>校验密码是否合法（此为本机<code>work</code>密码）</li>
+<li>返回登录结果给客户端：成功登录或密码错误</li>
+</ol>
+<p>在非对称加密中，由于只有公钥会被传输，而私钥是服务端本地保存，因此即便公钥被监听，也无法拿到原始密码，从而登录服务器。</p>
+<h3 id="中间人攻击"><a href="#中间人攻击" class="headerlink" title="中间人攻击"></a>中间人攻击</h3><p>在非对称加密中可以有效保护登录密码不被泄漏，但这是在建立连接到真实服务器的情况下。设想一下，如果供给者并不监听密码或公钥，而是直接伪装成服务器呢.</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/a11a1bfa/de80784d898480bec7808cbe0726862f.png"></p>
+<p>存在<code>Hacker</code>服务器劫持了你的<code>ssh</code>建连请求（如通过<code>DNS</code>劫持等方式），导致你与<code>Hacker</code>机器的连接一切正常，因此它能拿到你的明文密码，并通过明文密码来攻击真实的服务端。</p>
+<blockquote>
+<p><code>SSH</code>采用了非对称的加密方式，是怎么解决这个问题的呢？</p>
+</blockquote>
+<ul>
+<li><p>通过让我们<strong>肉眼比对</strong>来判断目标服务器是否是真实服务器</p>
+</li>
+<li><p>用<code>fingerprint</code>（公钥指纹）代替<code>key</code>，主要是<code>key</code>过于长（<code>RSA</code>算法生成的公钥有<code>1024</code>位），很难直接比较。所以，对公钥进行<code>hash</code>生成一个<code>128</code>位的指纹，这样就方便比较了。</p>
+</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop01 hadoop]# ssh  hadoop@192.168.61.45</span><br><span class="line"><span class="comment"># 无法确定主机“server.com(10.10.10.24)”的真实性。</span></span><br><span class="line">The authenticity of host <span class="string">&#x27;192.168.61.45 (192.168.61.45)&#x27;</span> can<span class="string">&#x27;t be established.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is SHA256:3Pv+hrn4MBRZu6wy0Wr9Y1PdQDmF+oZmZAwkcbxOwbA.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is MD5:32:b1:c0:b0:db:1b:db:34:34:59:69:0b:63:86:d2:0a.</span></span><br><span class="line"><span class="string"># 知道它的公钥指纹，是否继续连接？</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)? yes</span></span><br><span class="line"><span class="string"># 输入yes继续连接后，就会确认该服务器为可信任服务器，然后添加到known_hosts文件中，下次不用再次确认，然后跳转到输入密码的验证阶段。</span></span><br><span class="line"><span class="string">Warning: Permanently added &#x27;</span>192.168.61.45<span class="string">&#x27; (ECDSA) to the list of known hosts.</span></span><br><span class="line"><span class="string">hadoop@192.168.61.45&#x27;</span>s password:</span><br><span class="line">Last login: Sat Jul 25 01:45:34 2020 from 192.168.61.1</span><br></pre></td></tr></table></figure>
+
+<h3 id="SSH免密登录"><a href="#SSH免密登录" class="headerlink" title="SSH免密登录"></a>SSH免密登录</h3><ul>
+<li><p>使用<code>ssh</code>登录远程服务器了，但是每次登录都要输入密码，比较麻烦。<code>ssh</code>提供一种免密登录的方式：公钥登录。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/a11a1bfa/e57e48c9b1d9138bc45a33c9c01222f7.jpg"></p>
+</li>
+<li><p>登录流程</p>
+<ol>
+<li>在客户端使用<code>ssh-keygen</code>生成一对密钥：公钥+私钥</li>
+<li>将客户端公钥追加到服务端的<code>authorized_key</code>文件中，完成公钥认证操作</li>
+<li>认证完成后，客户端向服务端发起登录请求，并传递公钥到服务端</li>
+<li>服务端检索<code>authorized_key</code>文件，确认该公钥是否存在</li>
+<li>如果存在该公钥，则生成随机数<code>R</code>，并用公钥来进行加密，生成公钥加密字符串<code>pubKey(R)</code></li>
+<li>将公钥加密字符串传递给客户端</li>
+<li>客户端使用私钥解密公钥加密字符串，得到<code>R</code></li>
+<li>服务端和客户端通信时会产生一个会话<code>ID(sessionKey)</code>，用<code>MD5</code>对<code>R和SessionKey</code>进行加密，生成摘要（即<code>MD5</code>加密字符串）</li>
+<li>客户端将生成的<code>MD5</code>加密字符串传给服务端</li>
+<li>服务端同样生成<code>MD5(R,SessionKey)</code>加密字符串</li>
+<li>如果客户端传来的加密字符串等于服务端自身生成的加密字符串，则认证成功此时不用输入密码，即完成建连，可以开始远程执行<code>shell</code>命令了</li>
+</ol>
+</li>
+<li><p>ssh-genkey</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">ssh-genkey是生成密钥的工具，执行完成后生成公钥和密钥，这两个文件会默认保存在~/.ssh/路径下。常用的参数为：</span><br><span class="line">-t: 指定生成密钥类型（rsa、dsa）。默认为rsa</span><br><span class="line">-f: 指定存放私钥的文件，公钥文件名为私钥文件名加.pub后缀。默认为id_rsa</span><br><span class="line">-P: 指定passphrase（私钥的密码），用于确保私钥的安全。默认为空</span><br><span class="line">-C: 备注。默认为user@hostname</span><br><span class="line"></span><br><span class="line">我们直接执行来生成密钥，所有的参数都可以为空，也就是一直回车确认：</span><br><span class="line">$ ssh-keygen</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/home/hadoop/.ssh/id_rsa):</span><br><span class="line">Created directory <span class="string">&#x27;/home/hadoop/.ssh&#x27;</span>.</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /home/hadoop/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /home/hadoop/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:DFFUH19Nv9PkOpZ3HpvttCawBXJrKFttIWHYQLeBjTg hadoop@hadoop01</span><br><span class="line"></span><br><span class="line"><span class="comment">## 此时，生成的文件在~/.ssh/目录下，我们会看到这些文件：</span></span><br><span class="line">id_rsa    // 私钥文件</span><br><span class="line">id_rsa.pub    // 公钥文件</span><br><span class="line">authorized_keys    // 存放客户端公钥的文件</span><br><span class="line">known_hosts    // 确认过公钥指纹的可信服务器列表的文件</span><br><span class="line">config    // 指定不同域名使用哪个密钥的配置文件</span><br><span class="line"></span><br><span class="line"><span class="comment">## 因为一台机器即能是客户端，又能是服务端，因此同时存在authorized_keys（在该机器为服务端时使用）和Known_hosts（在该机器为客户端时使用）。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>例子</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 第一步:在本地机器上使用ssh-keygen产生公钥私钥对</span></span><br><span class="line">[hadoop@hadoop01 ~]$ ssh-keygen -t rsa -P password</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/home/hadoop/.ssh/id_rsa):</span><br><span class="line">/home/hadoop/.ssh/id_rsa already exists.</span><br><span class="line">Overwrite (y/n)? y</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /home/hadoop/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /home/hadoop/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:ld27QVjFQSpPw5YeQFArbZoQrXzWxRDMGaRbJuUozCk hadoop@hadoop01</span><br><span class="line">The key<span class="string">&#x27;s randomart image is:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 第二步:用ssh-copy-id将公钥复制到远程机器中,第一次需要密码登录</span></span><br><span class="line"><span class="string">[hadoop@hadoop01 ~]$ ssh-copy-id username@hostname</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># ERROR: No identities found</span></span><br><span class="line"><span class="string"># 当没有值传递的时候或者 如果 ~/.ssh/identity.pub 文件不可访问（不存在）, ssh-copy-id 将显示上述的错误信息</span></span><br><span class="line"><span class="string"># ssh-copy-id -i ~/.ssh/id_rsa.pub -p 23 username@hostname</span></span><br><span class="line"><span class="string"># -p 制定端口</span></span><br><span class="line"><span class="string"># -i 指定公钥文件</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="对不同服务器的配置"><a href="#对不同服务器的配置" class="headerlink" title="对不同服务器的配置"></a>对不同服务器的配置</h3><p>我们的服务器会有很多的用户，如果所有的用户都用同一份密钥，可能就没办法划分权限或者区分用户，如多个用户提交<code>git</code>就需要按照用户名来生成密钥，用于区分用户。同时你可能也希望针对不同的服务器使用不同的密钥对，因此需要<code>config</code>配置文件来配置针对不同服务器的配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$vim ~/.ssh/config</span><br><span class="line">Host a.baidu.com</span><br><span class="line">User work</span><br><span class="line">IdentityFile ~/.ssh/id_rsa</span><br><span class="line"></span><br><span class="line">Host b.baidu.com</span><br><span class="line">User zhaoshuaiqiang</span><br><span class="line">IdentityFile ~/.ssh/zhaoshuaiqiang</span><br></pre></td></tr></table></figure>
+
+<p>这样在连接不同的服务器时，就会使用不同的密钥文件来登录。在客户端生成密钥对之后，将公钥追加到服务器的<code>authorized_keys</code>文件中即可。此时，即可免密登录服务器。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"> 15 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAn30bjwtkLW82vTlLMQnI/a42J2g7o+HBCpSzBgNG+xfZuSNQOAU8+FNKQvriT4AL7ToiTtrZDLOEGqyQzaxQejuNnWG6aQ9ETh96qXhVLecWidaBieFGuv+F</span><br><span class="line">    uXz6x551xtFXx64AzG+706dhnv1nOACYlrnfvXhi5kZzWzprET+CxMIeYhJQwwc19pF5zCWeU9QUvd1mOu0n8JVycevmuXRdVx9WpXq2+aaaaaaaa3uYGMBxvSLtT40O1AiEZ+k9EeYCnTEV</span><br><span class="line">    tnGoVWCyxpwv6rR/GDOtJL/d+/Wb6I0HEKxxe087yZz8GWpQN5TEIAjq3oEjI/aiGw== work@a.baidu.com</span><br><span class="line"> 16 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAzRmK+CAVLnryXqQwweu8Yji8bGAvqzf8PSDzYn1nmE6ZeDkBbrWvFlVZ2yOip3IX8RjvuPc28mTCr0LsIOOmpvET0SzOkt0hzLBPiyCN/QvbKU/RbUv8v5y2</span><br><span class="line">    hEAlbUkMEzv7qOHQEruGEvA5y99gf/nYjK5OFKVpmg838OScUV3i88Xbqk8rtcuRZHWuZLnuB5spBsEE5r1UrnH/Ik7frZr8Vb4X6aZWbAp1yc0SqZ8JXVbmOiakqq0WqkLm+zqhEwr+Ooh2guH23x9zjMqY</span><br><span class="line">    Uy+aaaaaBEBC+LepCvskArBt/SRwJDJkcItz8T7kBC3CP0Y0X4hB+6k6/yM/pup5w== work@b.baidu.com</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="私钥的安全性"><a href="#私钥的安全性" class="headerlink" title="私钥的安全性"></a>私钥的安全性</h3><p>假设你已经实现了服务器集群的免密登录，那么如果你的一台客户端被攻击成功了，那么整个集群的安全性便荡然无存了。因此，我们有时还需要对密钥做安全性保障，即设置私钥密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">// 使用rsa方法加密，生成test密钥对，私钥密码为123456</span><br><span class="line">ssh-keygen -t rsa -f test -P 123456</span><br></pre></td></tr></table></figure>
+
+<p>此时，各机器仍然是免密登录，但是需要你输入私钥密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ssh work@a.baidu.com</span><br><span class="line">Enter passphrase for key &#x27;/home/work/.ssh/test&#x27;:</span><br></pre></td></tr></table></figure>
+
+<h2 id="scp传输文件"><a href="#scp传输文件" class="headerlink" title="scp传输文件"></a>scp传输文件</h2><p><code>scp(secure copy)</code>是<code>linux</code>系统下基于<code>ssh</code>登录进行安全的远程文件拷贝的命令。与<code>scp</code>相似的命令是<code>cp</code>，但是<code>cp</code>只能本机拷贝而不能跨服务器，因此需要与<code>ssh</code>合作构成<code>scp</code>命令。远程拷贝的命令还有<code>rsync</code>，<code>scp</code>消耗资源少，不会提高多少系统负荷，在这一点上，<code>rsync</code>就远远不及它了。<code>rsync</code>比<code>scp</code>会快一点，但当小文件多的情况下，<code>rsync</code>会导致硬盘<code>I/O</code>非常高，而<code>scp</code>基本不影响系统正常使用。</p>
+<ul>
+<li><p>传递文件到远程</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp local_file remote_username@remote_ip:remote_file</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>传递文件夹到远程</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp -r local_folder remote_username@remote_ip:remote_folder</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>复制远程文件到本地(只是调换下文件参数位置即可)</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scp remote_username@remote_ip:remote_file local_file</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们直接使用<code>scp</code>来跨机器拷贝文件，会提示输入密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 提示输入server端服务器的work用户密码</span><br><span class="line">[work@client.com ~]$ scp test.php work@server.com:/home/work</span><br><span class="line">work@server.com&#x27;s password:</span><br></pre></td></tr></table></figure>
+
+<p><code>scp</code>是先使用<code>ssh</code>连接服务端机器后，再使用网络来执行远程拷贝<code>(cp)</code>。</p>
+</li>
+<li><p>参考<code>ssh</code>的过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 同样的提示输入server端服务器的work用户密码</span><br><span class="line">[work@client.com ~]$ ssh work@server.com</span><br><span class="line">work@server.com&#x27;s password:</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="加入sudo权限"><a href="#加入sudo权限" class="headerlink" title="加入sudo权限"></a>加入sudo权限</h2><ul>
+<li><p>CentOS7给普通用户配置sudo权限,即<strong>把普通用户加入wheel用户组</strong></p>
+<ul>
+<li><p>在CentOS系统中，默认情况下，wheel用户组成员被授予sudo权限。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# <span class="built_in">cat</span> /etc/sudoers</span><br><span class="line"><span class="comment">## Allows people in group wheel to run all commands</span></span><br><span class="line">%wheel  ALL=(ALL)       ALL</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>授予 sudo 权限</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">usermod -aG wheel user</span><br><span class="line"><span class="comment"># -g&lt;群组&gt; 　修改用户所属的群组。</span></span><br><span class="line"><span class="comment"># -G&lt;群组&gt; 　修改用户所属的附加群组。</span></span><br><span class="line"><span class="comment"># -a 表示在原来所属组的基础上追加</span></span><br><span class="line">-G 修改当前次要组</span><br><span class="line">-G -a是增加新的次要组</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查用户是否添加进 wheel 组</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ lid -g wheel</span><br><span class="line"><span class="comment"># 显示用户id和组id信息</span></span><br><span class="line"><span class="comment"># id 命令可以显示真实有效的用户 ID(UID) 和组 ID(GID)。</span></span><br><span class="line"><span class="comment"># UID 是对一个用户的单一身份标识。组 ID（GID）则对应多个UID。</span></span><br><span class="line">$ <span class="built_in">id</span> username</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>修改sudo配置文件，在root下执行，否则请加sudo</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开sudo配置文件</span></span><br><span class="line">visudo</span><br><span class="line"><span class="comment"># 找到下面这两行，并在下面新增红色部分</span></span><br><span class="line">root ALL=(ALL) ALL</span><br><span class="line">username ALL=(ALL) ALL</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="JDK安装"><a href="#JDK安装" class="headerlink" title="JDK安装"></a>JDK安装</h2><ul>
+<li><p>查询自带的jdk</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa | grep java</span><br><span class="line">rpm -e java-1.6.0-openjdk-1.6.0.35-1.13.7.1.el6_6.x86_64 --nodeps</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载JDK文件，解压:<code>/usr/loc</code>   | <code>/opt</code></p>
+</li>
+<li><p>配置环境变量:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/profile</span><br><span class="line"><span class="built_in">export</span> JAVA_HOME=/usr/local/jdk1.8.0_73</span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$JAVA_HOME</span>/bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>执行配置文件<code>source /etc/profile</code></p>
+</li>
+</ul>
+<h2 id="安装Mysql"><a href="#安装Mysql" class="headerlink" title="安装Mysql"></a>安装Mysql</h2><ul>
+<li><p>查询卸载已安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rpm -qa | grep -i mysql</span><br><span class="line">rpm -e 程序名</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装服务器端</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh MySQL-server-5.6.26-1.linux_glibc2.5.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装客户端</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rpm -ivh MySQL-client-5.6.26-1.linux_glibc2.5.x86_64.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">service mysql start</span><br><span class="line"><span class="comment"># 查看网络接口</span></span><br><span class="line">netstat -nltp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 获取初始密码</span></span><br><span class="line"><span class="built_in">cat</span>  /root/.mysql_secret</span><br><span class="line"><span class="comment"># mysql配置文件</span></span><br><span class="line"><span class="built_in">cp</span> /use/my.cnf /etc/my.cnf</span><br><span class="line"><span class="comment"># 启动mysql, 设置密码</span></span><br><span class="line"><span class="built_in">set</span> PASSWORD=PASSWORD(<span class="string">&#x27;root&#x27;</span>);</span><br><span class="line"><span class="comment"># 增加远程登录权限</span></span><br><span class="line">GRANT ALL PRIVILEGES ON *.* TO <span class="string">&#x27;root&#x27;</span>@<span class="string">&#x27;%&#x27;</span> IDENTIFIED BY <span class="string">&#x27;root&#x27;</span> WITH GRANT OPTION;</span><br><span class="line"><span class="comment"># 刷新权限</span></span><br><span class="line">FLUSH PRIVILEGES;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/a11a1bfa">https://fulsun.github.io/p/a11a1bfa</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Centos%E9%85%8D%E7%BD%AE/">Centos配置</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/009.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/9da1ef6b" title="Linux 命令"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 命令</div></div></a></div><div class="next-post pull-right"><a href="/p/f9a8da1b" title="VMware安装Centos7"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/006.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">VMware安装Centos7</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9B%B8%E5%85%B3%E4%BF%A1%E6%81%AF"><span class="toc-text">查看操作系统相关信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%BB%E6%9C%BA%E5%90%8D"><span class="toc-text">修改主机名</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%B4%E6%97%B6%E6%9C%89%E6%95%88"><span class="toc-text">临时有效</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B8%E4%B9%85%E7%94%9F%E6%95%88%EF%BC%9Ahostnamectl"><span class="toc-text">永久生效：hostnamectl</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B8%E4%B9%85%E7%94%9F%E6%95%88%EF%BC%9A%E4%BF%AE%E6%94%B9%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">永久生效：修改配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B0%B8%E4%B9%85%E7%94%9F%E6%95%88-nmtui"><span class="toc-text">永久生效: nmtui</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E4%B8%BB%E6%9C%BA%E5%90%8D%E4%B8%8Eip%E6%98%A0%E5%B0%84"><span class="toc-text">修改主机名与ip映射</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Centos7%E9%85%8D%E7%BD%AE%E9%9D%99%E6%80%81IP"><span class="toc-text">Centos7配置静态IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Centos8%E9%87%8D%E5%90%AF%E7%BD%91%E5%8D%A1"><span class="toc-text">Centos8重启网卡</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">防火墙</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">打开防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">关闭防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%90%AF%E9%98%B2%E7%81%AB%E5%A2%99"><span class="toc-text">重启防火墙</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="toc-text">设置开机启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%96%E6%B6%88%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8"><span class="toc-text">取消开机启动</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E9%98%B2%E7%81%AB%E5%A2%99%E7%8A%B6%E6%80%81"><span class="toc-text">查看防火墙状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E9%98%B2%E7%81%AB%E5%A2%99%E8%A7%84%E5%88%99"><span class="toc-text">查看防火墙规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%BA%94%E7%94%A8"><span class="toc-text">防火墙中添加应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%81%AB%E5%A2%99%E6%B7%BB%E5%8A%A0%E7%AB%AF%E5%8F%A3"><span class="toc-text">防火墙添加端口</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E7%9A%84%E5%90%AF%E5%8A%A8%E7%BA%A7%E5%88%AB"><span class="toc-text">系统的启动级别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#selinux"><span class="toc-text">selinux</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%97%AD"><span class="toc-text">关闭</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8BSELinux%E7%8A%B6%E6%80%81"><span class="toc-text">查看SELinux状态</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E6%8C%82%E8%BD%BD"><span class="toc-text">目录挂载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%82%E8%BD%BD%E5%91%BD%E4%BB%A4"><span class="toc-text">挂载命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E6%8C%82%E8%BD%BD"><span class="toc-text">自动挂载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8apache-http"><span class="toc-text">启动apache http</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0yum-%E6%BA%90"><span class="toc-text">本地yum 源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ssh"><span class="toc-text">ssh</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E5%AF%86%E6%96%B9%E5%BC%8F"><span class="toc-text">加密方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86%E7%9A%84%E7%99%BB%E5%BD%95%E6%B5%81%E7%A8%8B"><span class="toc-text">非对称加密的登录流程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BA%BA%E6%94%BB%E5%87%BB"><span class="toc-text">中间人攻击</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSH%E5%85%8D%E5%AF%86%E7%99%BB%E5%BD%95"><span class="toc-text">SSH免密登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E4%B8%8D%E5%90%8C%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">对不同服务器的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%81%E9%92%A5%E7%9A%84%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-text">私钥的安全性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#scp%E4%BC%A0%E8%BE%93%E6%96%87%E4%BB%B6"><span class="toc-text">scp传输文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A0%E5%85%A5sudo%E6%9D%83%E9%99%90"><span class="toc-text">加入sudo权限</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDK%E5%AE%89%E8%A3%85"><span class="toc-text">JDK安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Mysql"><span class="toc-text">安装Mysql</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

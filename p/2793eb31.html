@@ -1,0 +1,527 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Nginx日志管理 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Nginx的日志管理是一个重要的功能，它允许用户跟踪和监控Nginx服务器的运行状态和性能">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx日志管理">
+<meta property="og:url" content="https://fulsun.github.io/p/2793eb31">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="Nginx的日志管理是一个重要的功能，它允许用户跟踪和监控Nginx服务器的运行状态和性能">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/010.webp">
+<meta property="article:published_time" content="2019-07-09T19:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.334Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/010.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/2793eb31"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Nginx日志管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/010.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Nginx日志管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-07-09T19:00:00.000Z" title="发表于 2019-07-09 19:00:00">2019-07-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.334Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Nginx/">Nginx</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">5.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>19分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Nginx日志管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h2><p> Nginx的日志管理是一个重要的功能，它允许用户跟踪和监控Nginx服务器的运行状态和性能。以下是Nginx日志管理的关键点：</p>
+<ol>
+<li><strong>日志类型：</strong><ul>
+<li>访问日志（Access Log）：记录每个请求的信息，包括客户端IP、请求时间、请求方法、URI、状态码、发送字节数等。通过访问日志，得到用户地域来源、跳转来源、使用终端、某个URL访问量等相关信息。</li>
+<li>错误日志（Error Log）：记录Nginx服务运行期间发生的错误信息和警告信息。通过错误日志，得到系统某个服务或server的性能瓶颈等信息。</li>
+</ul>
+</li>
+<li><strong>日志配置：</strong><ul>
+<li>通过修改Nginx的配置文件（通常是nginx.conf）来定义日志的位置和格式。例如，使用access_log和error_log指令来分别指定访问日志和错误日志的文件路径。</li>
+<li>Nginx还允许通过log_format指令定义自定义的日志格式。根据需要记录特定的信息。</li>
+<li>Nginx允许我们根据需要定义自定义的日志变量和字段。记录与特定请求或响应相关的特定信息，以便后续分析和调试。</li>
+</ul>
+</li>
+<li><strong>日志轮转、压缩与删除：</strong><ul>
+<li>为了管理旧的日志文件并节省磁盘空间，结合使用logrotate工具来定期压缩和删除旧的日志文件。</li>
+<li>logrotate可以根据需求配置为每天、每周或每月执行一次压缩和删除操作。</li>
+<li>Nginx支持日志轮转功能，这意味着它可以在达到一定的文件大小或时间限制时自动创建新的日志文件。这有助于防止日志文件变得过大并耗尽磁盘空间。</li>
+</ul>
+</li>
+<li><strong>日志分析：</strong><ul>
+<li>可以使用各种日志分析工具（如ELK Stack、Graylog等）来分析和可视化Nginx的日志数据。</li>
+<li>这些工具可以让我们更好地理解Nginx的运行状态、性能瓶颈以及用户行为等。</li>
+</ul>
+</li>
+<li><strong>安全性：</strong><ul>
+<li>确保Nginx的日志文件仅对需要访问它们的用户开放。不要将日志文件暴露给未经授权的用户或攻击者。</li>
+<li>使用适当的权限设置来保护日志文件，以防止未经授权的访问和修改。</li>
+</ul>
+</li>
+</ol>
+<p>  总之，Nginx的日志管理功能非常强大和灵活，可以帮助我们更好地了解Nginx的运行状态、性能以及用户行为。通过合理配置和分析日志数据，可以及时发现和解决问题，优化Nginx的性能和安全性。</p>
+<h2 id="Nginx日志配置"><a href="#Nginx日志配置" class="headerlink" title="Nginx日志配置"></a>Nginx日志配置</h2><ul>
+<li><p>我们进入到<code>nginx</code>目录下的<code>log</code>目录中，可以看到里面存放着三个文件，分别是<code>access.log</code>，<code>error.log</code>和<code>nginx.pid</code>文件，其中<code>nginx.pid</code>是用来记录当前nginx进程的pid号的，不属于日志文件。真正属于日志文件的是另外两个文件。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# <span class="built_in">ls</span> /usr/local/nginx/logs/</span><br><span class="line">access.log  error.log  nginx.pid</span><br><span class="line"><span class="comment"># 访问日志    错误日志</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问日志（Access Log）：记录每个请求的信息，包括客户端IP、请求时间、请求方法、URI、状态码、发送字节数等。通过访问日志，得到用户地域来源、跳转来源、使用终端、某个URL访问量等相关信息。</p>
+</li>
+<li><p>错误日志（Error Log）：记录Nginx服务运行期间发生的错误信息和警告信息。通过错误日志，得到系统某个服务或server的性能瓶颈等信息。</p>
+</li>
+</ul>
+<h3 id="log-format日志格式"><a href="#log-format日志格式" class="headerlink" title="log_format日志格式"></a>log_format日志格式</h3><p>官方说明：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format">http://nginx.org/en/docs/http/ngx_http_log_module.html#log_format</a></p>
+<p>nginx自带了一些变量，让我们能够作为日志输出格式进行配置，方便我们对用户的请求进行查询和统计。当然了，nginx其实默认的日志输出格式其实就已经把一些重要的请求参数保存到访问日志里面了，基本满足我们日常使用了，如果有需要可以根据下面的表单自定义配置所需要的日志格式。</p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">说明</th>
+<th align="left">示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">$remote_addr</td>
+<td align="left">客户端地址</td>
+<td align="left">211.28.65.253</td>
+</tr>
+<tr>
+<td align="left">$remote_user</td>
+<td align="left">客户端用户名称</td>
+<td align="left">–</td>
+</tr>
+<tr>
+<td align="left">$time_local</td>
+<td align="left">访问时间和时区</td>
+<td align="left">18&#x2F;Jul&#x2F;2012:17:00:01 +0800</td>
+</tr>
+<tr>
+<td align="left">$request</td>
+<td align="left">请求的URI和HTTP协议</td>
+<td align="left">“GET &#x2F;article-10000.html HTTP&#x2F;1.1”</td>
+</tr>
+<tr>
+<td align="left">$http_host</td>
+<td align="left">请求地址，即浏览器中你输入的地址（IP或域名）</td>
+<td align="left"><a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.wang.com/">www.wang.com</a> 192.168.100.100</td>
+</tr>
+<tr>
+<td align="left">$status</td>
+<td align="left">HTTP请求状态</td>
+<td align="left">200</td>
+</tr>
+<tr>
+<td align="left">$upstream_status</td>
+<td align="left">upstream状态</td>
+<td align="left">200</td>
+</tr>
+<tr>
+<td align="left">$body_bytes_sent</td>
+<td align="left">从服务端响应给客户端内容大小</td>
+<td align="left">1547</td>
+</tr>
+<tr>
+<td align="left">$http_referer</td>
+<td align="left">url跳转来源, 防盗链、用户行为分析</td>
+<td align="left"><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.baidu.com/">https://www.baidu.com/</a></td>
+</tr>
+<tr>
+<td align="left">$http_user_agent</td>
+<td align="left">用户终端浏览器等信息</td>
+<td align="left">“Mozilla&#x2F;4.0 (compatible; MSIE 8.0; Windows NT 5.1; Trident&#x2F;4.0; SV1; GTB7.0; .NET4.0C;</td>
+</tr>
+<tr>
+<td align="left">$ssl_protocol</td>
+<td align="left">SSL协议版本</td>
+<td align="left">TLSv1</td>
+</tr>
+<tr>
+<td align="left">$ssl_cipher</td>
+<td align="left">交换数据中的算法</td>
+<td align="left">RC4-SHA</td>
+</tr>
+<tr>
+<td align="left">$upstream_addr</td>
+<td align="left">后台upstream的地址，即真正提供服务的主机地址</td>
+<td align="left">10.10.10.100:80</td>
+</tr>
+<tr>
+<td align="left">$request_time</td>
+<td align="left">整个请求的总时间</td>
+<td align="left">0.205</td>
+</tr>
+<tr>
+<td align="left">$upstream_response_time</td>
+<td align="left">请求过程中，upstream响应时间</td>
+<td align="left">0.002</td>
+</tr>
+<tr>
+<td align="left">$http_x_forwarded_for</td>
+<td align="left">http请求携带的http信息 可用来表示 HTTP请求端真实IP</td>
+<td align="left">101.251.xxx.192, 100.97.xxx.187 [用户真实ip，proxy ip]</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>log_format 有一个默认的无需设置的 <code>combined</code> 日志格式，相当于apache 的 combined 日志格式，如下所示：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">log_format combined <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &#x27;</span></span><br><span class="line"><span class="string">&#x27; &quot;$request&quot; $status $body_bytes_sent &#x27;</span></span><br><span class="line"><span class="string">&#x27; &quot;$http_referer&quot; &quot;$http_user_agent&quot; &#x27;</span>;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用默认 combined 格式记录日志：</span></span><br><span class="line">access_log logs/access.log combined;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="access-log日志文件"><a href="#access-log日志文件" class="headerlink" title="access.log日志文件"></a>access.log日志文件</h3><ul>
+<li><p>官方说明：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_log_module.html#access_log">http://nginx.org/en/docs/http/ngx_http_log_module.html#access_log</a></p>
+</li>
+<li><p>access文件用于存放每个用户访问网站的请求日志，开发运维人员通过访问日志来分析用户的浏览器行为。默认情况下，nginx会在<code>log</code>目录下生成该文件，无需用户配置。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">[</span>root@RockyLinux9 nginx<span class="punctuation">]</span># cat conf/nginx.conf</span><br><span class="line">...</span><br><span class="line">#error_log  logs/error.log;</span><br><span class="line">#error_log  logs/error.log  notice;</span><br><span class="line">#error_log  logs/error.log  info;</span><br><span class="line">...</span><br><span class="line">http <span class="punctuation">&#123;</span></span><br><span class="line">    ...</span><br><span class="line">    #log_format  main  &#x27;$remote_addr - $remote_user <span class="punctuation">[</span>$time_local<span class="punctuation">]</span> <span class="string">&quot;$request&quot;</span> &#x27;</span><br><span class="line">    #                  &#x27;$status $body_bytes_sent <span class="string">&quot;$http_referer&quot;</span> &#x27;</span><br><span class="line">    #                  &#x27;<span class="string">&quot;$http_user_agent&quot;</span> <span class="string">&quot;$http_x_forwarded_for&quot;</span>&#x27;;</span><br><span class="line"></span><br><span class="line">    #access_log  logs/access.log  main;</span><br><span class="line">    ...</span><br><span class="line">    server <span class="punctuation">&#123;</span></span><br><span class="line">        ...</span><br><span class="line">        #access_log  logs/host.access.log  main;</span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>我们可以在<code>$nginx_home/conf/nginx.conf</code>配置文件中对nginx请求日志进行配置。配置的格式为：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">    access_log    &lt;FILE&gt;    &lt;NAME&gt;;</span><br><span class="line">    关键字         日志文件   格式标签</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    关键字：其中关键字error_log不能改变</span><br><span class="line">    日志文件：可以指定任意存放日志的目录</span><br><span class="line">    格式标签：给日志文件套用指定的日志格式</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">其他语法：</span><br><span class="line"></span><br><span class="line">    access_log    off;  #关闭access_log，即不记录访问日志</span><br><span class="line">    access_log path <span class="punctuation">[</span>format <span class="punctuation">[</span>buffer=size <span class="punctuation">[</span>flush=time<span class="punctuation">]</span><span class="punctuation">]</span> <span class="punctuation">[</span>if=condition<span class="punctuation">]</span><span class="punctuation">]</span>;</span><br><span class="line">    access_log path format gzip<span class="punctuation">[</span>=level<span class="punctuation">]</span> <span class="punctuation">[</span>buffer=size<span class="punctuation">]</span> <span class="punctuation">[</span>flush=time<span class="punctuation">]</span> <span class="punctuation">[</span>if=condition<span class="punctuation">]</span>;</span><br><span class="line">    access_log syslog<span class="punctuation">:</span>server=address<span class="punctuation">[</span><span class="punctuation">,</span>parameter=value<span class="punctuation">]</span> <span class="punctuation">[</span>format <span class="punctuation">[</span>if=condition<span class="punctuation">]</span><span class="punctuation">]</span>;</span><br><span class="line"></span><br><span class="line">    说明：</span><br><span class="line">    buffer=size  #为存放访问日志的缓冲区大小</span><br><span class="line">    flush=time  #为缓冲区的日志刷到磁盘的时间</span><br><span class="line">    gzip<span class="punctuation">[</span>=level<span class="punctuation">]</span>  #表示压缩级别</span><br><span class="line">    <span class="punctuation">[</span>if = condition<span class="punctuation">]</span>  #表示其他条件</span><br><span class="line">    </span><br><span class="line">作用域（参数的标签段位置）   <span class="punctuation">:</span> http<span class="punctuation">,</span> server<span class="punctuation">,</span> location<span class="punctuation">,</span> if in location<span class="punctuation">,</span> limit_except</span><br></pre></td></tr></table></figure>
+
+
+
+<ul>
+<li><code>access_log</code>是关键字，表示接下来的配置是关于access日志的配置</li>
+<li><code>path</code>为该日志文件的存储路径，后面还可以对日志输出格式、是否压缩、日志刷新时间等设置进行配置。</li>
+<li>可能有读者会留意到，默认用例在<code>path</code>后面写上了<code>main</code>，其实这里的<code>main</code>并不是什么关键字，而是nginx默认定义好的一个日志格式名称，我们可以在<code>log_format</code>中看到，nginx默认定义了一个名为<code>main</code>的日志输出格式。</li>
+</ul>
+</li>
+<li><p>关闭访问日志的记录 只需要配置<code>access_log</code>为<code>off</code>即可</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">location / <span class="punctuation">&#123;</span></span><br><span class="line">           root html;</span><br><span class="line">            access_log off;</span><br><span class="line"> <span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>自定义一个日志输出格式</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在http标签下新增一个log_format格式</span></span><br><span class="line">http &#123;</span><br><span class="line">    log_format  mine_format  <span class="string">&#x27;$remote_addr - $remote_user [$time_local] &quot;$request&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;$status $body_bytes_sent &quot;$http_referer&quot; &#x27;</span></span><br><span class="line">                      <span class="string">&#x27;&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;&#x27;</span></span><br><span class="line">                       <span class="string">&#x27;$upstream_addr $upstream_response_time $request_time &#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 在server标签中应用定义新的access_log配置</span></span><br><span class="line">server &#123;</span><br><span class="line">        listen 9600;</span><br><span class="line">        location / &#123;</span><br><span class="line">                root html;</span><br><span class="line">                access_log logs/mine_access.log mine_format;</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用<code>nginx -s reload</code>重新加载配置文件， 访问 9000后，访问 logs&#x2F;mine_access.log</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.61.1 - - [30/Oct/2024:00:44:47 +0800] <span class="string">&quot;GET /favicon.ico HTTP/1.1&quot;</span> 404 555 <span class="string">&quot;http://fulsun.top:9600/&quot;</span> <span class="string">&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0&quot;</span> <span class="string">&quot;-&quot;</span>- - 0.000 </span><br></pre></td></tr></table></figure>
+</li>
+<li><p>刷新时间的配置: nginx默认情况下对访问日志是实时记录的，其实一定程度上来说是会占用cpu资源的，当然了大部分站点其实访问量并不大，所以实时记录日志所带来的性能消耗是可以忽略的。如果说对于访问量大且对性能要求较高的站点，可能会希望通过优化日志的输出频率来达到减少IO的效果。</p>
+</li>
+<li><p>配置完<code>flush和buffer</code>后，其实我们就相当于是有两个记录日志的节点了，一个是缓冲区满了，另外一个是到刷新日志的时间点了。缓冲区的存在使得nginx不需要针对每一个请求都做一次IO，可以节省一点系统资源。当然了，我们还可以开启gzip压缩（可选等级为1-9，级别越高压缩级别越高）来进一步减轻磁盘压力。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">access_log logs/mine_access.gz mine_format gzip buffer=<span class="number">32</span>k flush=<span class="number">5</span>s;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="error-log-指令"><a href="#error-log-指令" class="headerlink" title="error_log 指令"></a>error_log 指令</h3><p>官方说明：</p>
+<ul>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/debugging_log.html">http://nginx.org/en/docs/debugging_log.html</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/ngx_core_module.html#error_log">http://nginx.org/en/docs/ngx_core_module.html#error_log</a></p>
+</li>
+<li><p>配置错误日志。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 语法:</span></span><br><span class="line">error_log file [level];</span><br><span class="line"><span class="comment"># 可选的日志级别配置从低到高分别为debug, info, notice, warn, error, crit, alert, emerg</span></span><br><span class="line">error_log file | stderr | syslog:server=address[,parameter=value] [debug | info | notice |</span><br><span class="line">warn | error | crit | alert | emerg];</span><br><span class="line"></span><br><span class="line">默认值:</span><br><span class="line">error_log logs/error.log error;</span><br><span class="line"></span><br><span class="line">配置段:</span><br><span class="line">main, http, server, location</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="open-log-file-cache指令"><a href="#open-log-file-cache指令" class="headerlink" title="open_log_file_cache指令"></a>open_log_file_cache指令</h3><p>参考资料：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_log_module.html">http://nginx.org/en/docs/http/ngx_http_log_module.html</a></p>
+<p>对于每一条日志记录，都将是先打开文件，再写入日志，然后关闭。可以使用 open_log_file_cache 来设置日志文件缓存(默认是 off)。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">语法格式:   open_log_file_cache max=N [inactive=time] [min_uses=N] [valid=time];</span><br><span class="line">                     open_log_file_cache off;</span><br><span class="line">默认值:     open_log_file_cache off;</span><br><span class="line">作用域:     http, server, location</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置缓存最多缓存1000个日志文件描述符，20s内如果缓存中的日志文件描述符至少被被访问2次，才不会被缓存关闭。每隔1分钟检查缓存中的文件描述符的文件名是否还存在。</span></span><br><span class="line">eg：open_log_file_cache max=1000 inactive=20s valid=1m min_uses=2;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>max:设置缓存中的最大文件描述符数量，如果缓存被占满，采用LRU算法将描述符关闭。</li>
+<li>inactive:设置存活时间，默认是10s</li>
+<li>min_uses:设置在inactive时间段内，日志文件最少使用多少次后，该日志文件描述符记入缓存中，默认是1次</li>
+<li>valid:设置检查频率，默认60s</li>
+<li>off：禁用缓存</li>
+</ul>
+<h3 id="log-not-found-指令"><a href="#log-not-found-指令" class="headerlink" title="log_not_found 指令"></a>log_not_found 指令</h3><p>是否在 error_log 中记录不存在的错误。默认是。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">log_not_found on | off;</span><br><span class="line"></span><br><span class="line">默认值:</span><br><span class="line">log_not_found on;</span><br><span class="line"></span><br><span class="line">配置段:</span><br><span class="line">http, server, location</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="log-subrequest-指令"><a href="#log-subrequest-指令" class="headerlink" title="log_subrequest 指令"></a>log_subrequest 指令</h3><p>是否在 access_log 中记录子请求的访问日志。默认不记录。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">log_subrequest on | off;</span><br><span class="line"></span><br><span class="line">默认值:</span><br><span class="line">log_subrequest off;</span><br><span class="line"></span><br><span class="line">配置段:</span><br><span class="line">http, server, location</span><br></pre></td></tr></table></figure>
+
+<h3 id="rewrite-log-指令"><a href="#rewrite-log-指令" class="headerlink" title="rewrite_log 指令"></a>rewrite_log 指令</h3><p>由 ngx_http_rewrite_module 模块提供的。用来记录重写日志的。对于调试重写规则建议开启。启用时将在 error log 中记录 notice 级别的重写日志。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">语法:</span><br><span class="line">rewrite_log on | off;</span><br><span class="line"></span><br><span class="line">默认值:</span><br><span class="line">rewrite_log off;</span><br><span class="line"></span><br><span class="line">配置段:</span><br><span class="line">http, server, location, <span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Nginx日志运维优化"><a href="#Nginx日志运维优化" class="headerlink" title="Nginx日志运维优化"></a>Nginx日志运维优化</h2><h3 id="按指定时间分割"><a href="#按指定时间分割" class="headerlink" title="按指定时间分割"></a>按指定时间分割</h3><p>nginx默认是不会进行日志文件的分割操作的，也就是所有访问日志会一直往<code>access.log</code>文件里面追加，时间一长的话这个文件就会变得很大，而且运维人员在查看当天文件的也很不方便。所以一般来说，我们都会选择按日对日志文件进行切割。<br>常见的处理方案有2种：（1）直接在nginx配置文件中配置（2）通过linux的<code>crontab</code>配置定时任务，自己手动写一下定时处理的脚本。</p>
+<ul>
+<li><p>在nginx配置文件中配置：</p>
+<ul>
+<li><strong>这里需要注意的是，<code>error_log</code>日志文件可能会由于nginx版本的原因，无法使用变量来动态切割每天的日志，所以感觉这种方法并不完全适用。</strong></li>
+<li>在Nginx配置文件中，可以使用<code>$time_local</code>或<code>$time_iso8601</code>变量来获取当前时间，然后将其作为日志文件名的一部分。所以我们可以这样配置我们的日志文件名。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 在http标签块中按照我们需要的日期格式yyyy-MM-dd定义变量$logdate</span></span><br><span class="line"></span><br><span class="line">http &#123;</span><br><span class="line">    ...</span><br><span class="line">     map <span class="variable">$time_iso8601</span> <span class="variable">$logdate</span> &#123;</span><br><span class="line">             <span class="string">&#x27;~^(?&lt;ymd&gt;\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;)&#x27;</span> <span class="variable">$ymd</span>;</span><br><span class="line">             default    <span class="string">&#x27;date-not-found&#x27;</span>;</span><br><span class="line">     &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 在对应的站点中使用变量来动态生成日志文件</span></span><br><span class="line"></span><br><span class="line">location / &#123;</span><br><span class="line">    root html;</span><br><span class="line">    access_log /opt/nginx/logs/mine_access.<span class="variable">$logdate</span>.<span class="built_in">log</span> mine_format;</span><br><span class="line">    error_log /opt/nginx/logs/mine_error.log warn;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>结合crontab定时任务来完成日志的切割效果（更推荐）</strong></p>
+<ul>
+<li><p>根据<code>年/月</code>生成对应的目录，然后把日志文件重命名后放入到对应月份的目录中，最后再通过<code>nginx -s reopen</code>命令重新启动日志</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># nginx_log_split.sh</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line">nginx_home=/opt/nginx/</span><br><span class="line">nginx_log_path=<span class="variable">$&#123;nginx_home&#125;</span>logs/</span><br><span class="line">current_date1=$(<span class="built_in">date</span> +%Y-%m-%d)</span><br><span class="line">access_log_file_name=access.log</span><br><span class="line">error_log_file_name=error.log</span><br><span class="line"></span><br><span class="line">history_file_path=<span class="variable">$&#123;nginx_home&#125;</span>logs/history_log/$(<span class="built_in">date</span> +%Y)/$(<span class="built_in">date</span> +%m)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># check if the nginx server alive</span></span><br><span class="line"><span class="keyword">if</span> [ -e <span class="variable">$&#123;nginx_log_path&#125;</span>nginx.pid ];<span class="keyword">then</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># create log folder for nginx log file</span></span><br><span class="line">    <span class="keyword">if</span> [ ! -e <span class="variable">$&#123;history_file_path&#125;</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">mkdir</span> -p <span class="variable">$&#123;history_file_path&#125;</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> create folder success&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment"># rename the log file with current date</span></span><br><span class="line">    <span class="keyword">if</span> [ -e $nginx_log_path<span class="variable">$access_log_file_name</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">mv</span> <span class="variable">$&#123;nginx_log_path&#125;</span><span class="variable">$&#123;access_log_file_name&#125;</span> <span class="variable">$&#123;history_file_path&#125;</span>/access-<span class="variable">$&#123;current_date1&#125;</span>.<span class="built_in">log</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> rename access.log successfully&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> access.log file no exist,skip&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> [ -e $nginx_log_path<span class="variable">$error_log_file_name</span> ];<span class="keyword">then</span></span><br><span class="line">        <span class="built_in">mv</span> <span class="variable">$&#123;nginx_log_path&#125;</span><span class="variable">$&#123;error_log_file_name&#125;</span> <span class="variable">$&#123;history_file_path&#125;</span>/error-<span class="variable">$&#123;current_date1&#125;</span>.<span class="built_in">log</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> rename error.log successfully&quot;</span></span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">        <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> error.log file no exist,skip&quot;</span></span><br><span class="line">    <span class="keyword">fi</span></span><br><span class="line"></span><br><span class="line">    <span class="comment"># reopen the nginx server log</span></span><br><span class="line">    <span class="variable">$&#123;nginx_home&#125;</span>/sbin/nginx -s reopen</span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> reload log file success&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">&quot;<span class="subst">$(date)</span> nginx server is close,skip&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><h6 id="配置crontab定时器"><a href="#配置crontab定时器" class="headerlink" title="配置crontab定时器"></a>配置crontab定时器</h6><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 给脚本授权</span></span><br><span class="line"><span class="built_in">chmod</span> 774 nginx_log_split.sh</span><br><span class="line"><span class="comment"># 让系统每天晚上23:59分的时候跑一次我们的脚本，生成分割当天的日志文件</span></span><br><span class="line">59 23 * * * /opt/nginx/logs/nginx_split_log.sh &gt; /opt/nginx/logs/history_log/execute.log 2&gt;&amp;1</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="按模块区分访问日志"><a href="#按模块区分访问日志" class="headerlink" title="按模块区分访问日志"></a>按模块区分访问日志</h3><p>对于站点较多，且都部署在同一台nginx服务器（或者同一个nginx集群）的企业，一般我们会习惯性的将不同站点的日志分开管理，避免所有的站点日志都输出在同一个<code>access.log</code>文件中，导致后续统计或者排查问题的时候容易混淆。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">server <span class="punctuation">&#123;</span></span><br><span class="line">        listen <span class="number">9600</span>;</span><br><span class="line">        location / <span class="punctuation">&#123;</span></span><br><span class="line">                root html;</span><br><span class="line">                access_log /opt/nginx/logs/mine_access1.log mine_format;</span><br><span class="line">                error_log /opt/nginx/logs/mine_error.log warn;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br><span class="line">server <span class="punctuation">&#123;</span></span><br><span class="line">        listen <span class="number">9601</span>;</span><br><span class="line">        location / <span class="punctuation">&#123;</span></span><br><span class="line">                root html;</span><br><span class="line">                access_log /opt/nginx/logs/mine_access2.log mine_format;</span><br><span class="line">        <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="日志轮转、压缩与删除"><a href="#日志轮转、压缩与删除" class="headerlink" title="日志轮转、压缩与删除"></a>日志轮转、压缩与删除</h2><ul>
+<li><p>检查并安装logrotate</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 nginx]# whereis logrotate</span><br><span class="line">logrotate: /usr/sbin/logrotate /usr/share/man/man8/logrotate.8.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 安装</span></span><br><span class="line">[root@RockyLinux9 nginx]# dnf install -y logrotate</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写nginx的logrotate配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 nginx]# <span class="built_in">cat</span> /etc/logrotate.d/nginx</span><br><span class="line">/usr/local/nginx/logs/*.<span class="built_in">log</span> &#123;</span><br><span class="line">    daily               <span class="comment"># 每天轮转</span></span><br><span class="line">    missingok           <span class="comment"># 如果日志文件丢失，不报错</span></span><br><span class="line">    rotate 7</span><br><span class="line">    <span class="comment"># 保留7个备份</span></span><br><span class="line">    compress            <span class="comment"># 使用 gzip 压缩旧日志文件</span></span><br><span class="line">    delaycompress       <span class="comment"># 延迟压缩，直到下一次轮转周期</span></span><br><span class="line">    notifempty          <span class="comment"># 如果日志文件为空，不轮转</span></span><br><span class="line">    create 640 nginx nginx</span><br><span class="line">    <span class="comment"># 创建新日志文件，并设置权限和所有权</span></span><br><span class="line">    sharedscripts       <span class="comment"># 如果有多个日志文件，只运行一次 postrotate 脚本</span></span><br><span class="line">    postrotate</span><br><span class="line">        /usr/sbin/nginx -s reload &gt; /dev/null  <span class="comment"># 或者使用 systemctl reload nginx</span></span><br><span class="line">    endscript</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试logrotate配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用-d选项来测试配置文件是否正确，执行后显示操作，但不会实际进行任何修改。</span></span><br><span class="line">[root@RockyLinux9 ~]# logrotate -d /etc/logrotate.d/nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>手动运行logrotate, 测试配置文件正确后，可以手动运行logrotate</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# logrotate /etc/logrotate.d/nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查cron服务</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# <span class="built_in">which</span> crond</span><br><span class="line">/usr/sbin/crond</span><br><span class="line"><span class="comment"># 若没有，请安装</span></span><br><span class="line">[root@RockyLinux9 ~]# dnf install -y cronie</span><br><span class="line">[root@RockyLinux9 ~]# systemctl <span class="built_in">enable</span> crond --now</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写cron脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# <span class="built_in">cat</span> /etc/cron.daily/logrotate</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用 logrotate 命令</span></span><br><span class="line">/usr/sbin/logrotate /etc/logrotate.conf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查 logrotate 的退出状态</span></span><br><span class="line">EXITVALUE=$?</span><br><span class="line"><span class="keyword">if</span> [ <span class="variable">$EXITVALUE</span> != 0 ]; <span class="keyword">then</span></span><br><span class="line">    /usr/bin/logger -t logrotate <span class="string">&quot;ALERT exited abnormally with [<span class="variable">$EXITVALUE</span>]&quot;</span></span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="built_in">exit</span> 0</span><br><span class="line"></span><br><span class="line">[root@RockyLinux9 ~]# <span class="built_in">chmod</span> +x /etc/cron.daily/logrotate</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置计划任务（可选）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# crontab -e</span><br><span class="line"><span class="comment"># 添加内容，每天0点执行logrotate</span></span><br><span class="line">0 0 * * * /usr/sbin/logrotate /etc/logrotate.d/nginx</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>自定义bash脚本进行日志备份与删除（可选）</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# <span class="built_in">cat</span> /usr/local/nginx/logs/log_backup.sh</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义Nginx日志目录</span></span><br><span class="line">base_path=<span class="string">&#x27;/usr/local/nginx/logs&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 移动日志文件</span></span><br><span class="line"><span class="built_in">mv</span> <span class="variable">$base_path</span>/access.log <span class="variable">$base_path</span>/access-$(<span class="built_in">date</span> -d yesterday +<span class="string">&quot;%Y%m%d&quot;</span>).<span class="built_in">log</span></span><br><span class="line"><span class="built_in">mv</span> <span class="variable">$base_path</span>/error.log <span class="variable">$base_path</span>/error-$(<span class="built_in">date</span> -d yesterday +<span class="string">&quot;%Y%m%d&quot;</span>).<span class="built_in">log</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 发送USR1信号给Nginx</span></span><br><span class="line"><span class="built_in">kill</span> -USR1 `<span class="built_in">cat</span> /usr/local/nginx/logs/nginx.pid`</span><br><span class="line"></span><br><span class="line"><span class="comment"># 找到日志目录下超过7天的log文件并删除</span></span><br><span class="line">find <span class="variable">$base_path</span>/*.<span class="built_in">log</span> -<span class="built_in">type</span> f -mtime +7 -<span class="built_in">exec</span> <span class="built_in">rm</span> -rf &#123;&#125; \;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置bash的crontab定时任务（可选）</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@RockyLinux9 ~]# crontab -e</span><br><span class="line"><span class="comment"># 添加内容，每天0点执行log_backup.sh</span></span><br><span class="line">0 0 * * * /bin/bash /usr/local/nginx/logs/log_backup.sh</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="日志分析"><a href="#日志分析" class="headerlink" title="日志分析"></a>日志分析</h2><p>Nginx日志分析是管理和维护Nginx服务器的重要部分。Nginx的访问日志（access log）和错误日志（error log）提供了关于服务器性能、用户访问模式以及任何潜在问题的关键信息。分析步骤如下：</p>
+<h3 id="访问日志分析"><a href="#访问日志分析" class="headerlink" title="访问日志分析"></a>访问日志分析</h3><ul>
+<li><p>了解Nginx访问日志的格式。在Nginx的配置文件（<code>/etc/nginx/nginx.conf</code>或<code>/usr/local/nginx/conf/nginx.conf</code>）中的log_format指令中找到。</p>
+</li>
+<li><p>使用基本工具</p>
+<ul>
+<li>grep：用于搜索特定的字符串或模式。</li>
+<li>awk 和 sed：用于文本处理和转换。</li>
+<li>sort 和 uniq：用于排序和去重。</li>
+</ul>
+</li>
+<li><p>分析示例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看最频繁的请求：</span></span><br><span class="line"><span class="built_in">cat</span> access.log | awk <span class="string">&#x27;&#123;print $7&#125;&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr | <span class="built_in">head</span> -n 10</span><br><span class="line"></span><br><span class="line"><span class="comment"># 这将显示按数量排序的最常见的请求路径（URL）。查看特定IP的请求：</span></span><br><span class="line">grep <span class="string">&#x27;192.168.61.1&#x27;</span> access.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分析用户代理：这将显示最常见的用户代理（浏览器和其他客户端）。</span></span><br><span class="line"><span class="built_in">cat</span> access.log | awk <span class="string">&#x27;&#123;print $11&#125;&#x27;</span> | <span class="built_in">sort</span> | <span class="built_in">uniq</span> -c | <span class="built_in">sort</span> -nr | <span class="built_in">head</span> -n 10</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="错误日志分析"><a href="#错误日志分析" class="headerlink" title="错误日志分析"></a>错误日志分析</h3><ul>
+<li><p>查看错误日志：错误日志通常包含关于服务器配置错误、权限问题、内部错误等的详细信息。你可以使用cat、tail、grep等工具来查看和分析它。</p>
+</li>
+<li><p>分析示例</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看最近的错误：</span></span><br><span class="line"><span class="built_in">tail</span> -n 10 error.log</span><br><span class="line"></span><br><span class="line"><span class="comment"># 搜索特定错误或警告：</span></span><br><span class="line">grep <span class="string">&#x27;error&#x27;</span> error.log</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用专门的日志分析工具: 除了基本工具外，还有许多专门的日志分析工具可以更深入地分析Nginx日志。这些工具通常提供图形界面、实时分析、报告和警报等功能。例如：</p>
+<ul>
+<li>GoAccess：一个快速、实时的Web日志分析器，可以生成HTML报告。</li>
+<li>ELK Stack（Elasticsearch、Logstash和Kibana）：一个强大的日志分析平台，可以处理和分析各种类型的日志数据。</li>
+</ul>
+</li>
+</ul>
+<h2 id="安全性"><a href="#安全性" class="headerlink" title="安全性"></a>安全性</h2><p>Nginx日志的安全性配置涉及多个方面，以确保日志文件的完整性和保密性。以下是Nginx日志安全性配置：</p>
+<ul>
+<li><p>限制日志文件的访问权限：</p>
+<ul>
+<li>确保Nginx日志文件（如access.log和error.log）的访问权限受到限制，只允许必要的系统用户（如Nginx运行的用户）进行读写操作。</li>
+<li>使用chmod命令设置适当的文件权限，例如chmod 640 &#x2F;usr&#x2F;local&#x2F;nginx&#x2F;logs&#x2F;access.log，确保只有所有者（Nginx运行的用户）和特定的组（如nginx组）可以读写日志文件。</li>
+</ul>
+</li>
+<li><p>加密传输日志文件：</p>
+<ul>
+<li>如果需要将Nginx日志文件传输到远程服务器进行分析或备份，请确保使用加密传输方式（如SFTP、SCP或rsync over SSH）来传输日志文件，以防止数据在传输过程中被窃取或篡改。</li>
+</ul>
+</li>
+<li><p>使用安全的日志格式：</p>
+<ul>
+<li>在Nginx配置中，使用安全的日志格式，避免在日志中记录敏感信息（如密码、密钥等）。</li>
+<li>使用log_format指令自定义日志格式，确保只记录必要的信息，并避免记录过多的敏感数据。</li>
+</ul>
+</li>
+<li><p>监控和审计：</p>
+<ul>
+<li>定期检查和审计Nginx日志文件，以发现任何异常或潜在的安全威胁。</li>
+</ul>
+</li>
+<li><p>物理安全：</p>
+<ul>
+<li>确保存储Nginx日志文件的服务器或设备位于安全的物理位置，以防止未经授权的访问或窃取。</li>
+<li>限制对服务器或设备的物理访问权限，确保只有授权人员能够接触和访问日志文件。</li>
+</ul>
+</li>
+<li><p>备份和恢复策略：</p>
+<ul>
+<li>定期备份Nginx日志文件，以防止数据丢失或损坏。</li>
+<li>制定恢复策略，以便在需要时能够迅速恢复丢失的日志文件或数据。</li>
+<li>请根据具体环境和需求或采取其他安全措施来确保Nginx日志的安全性。</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/2793eb31">https://fulsun.github.io/p/2793eb31</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/010.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/eaf22a9f" title="Nginx静态资源部署与跨域访问"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Nginx静态资源部署与跨域访问</div></div></a></div><div class="next-post pull-right"><a href="/p/8afb7a39" title="Nginx平滑升级与回滚"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Nginx平滑升级与回滚</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/eaf22a9f" title="Nginx静态资源部署与跨域访问"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-10</div><div class="title">Nginx静态资源部署与跨域访问</div></div></a></div><div><a href="/p/deab9856" title="Nginx介绍"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-28</div><div class="title">Nginx介绍</div></div></a></div><div><a href="/p/ab1b37cf" title="Nginx基本配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-29</div><div class="title">Nginx基本配置</div></div></a></div><div><a href="/p/ea231d7a" title="Location的URI解析"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-30</div><div class="title">Location的URI解析</div></div></a></div><div><a href="/p/ee9089be" title="URL地址的重写与跳转"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-01</div><div class="title">URL地址的重写与跳转</div></div></a></div><div><a href="/p/4709a84" title="本地https环境解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/008.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-02</div><div class="title">本地https环境解决方案</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8B%E7%BB%8D"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx%E6%97%A5%E5%BF%97%E9%85%8D%E7%BD%AE"><span class="toc-text">Nginx日志配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#log-format%E6%97%A5%E5%BF%97%E6%A0%BC%E5%BC%8F"><span class="toc-text">log_format日志格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#access-log%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6"><span class="toc-text">access.log日志文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#error-log-%E6%8C%87%E4%BB%A4"><span class="toc-text">error_log 指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#open-log-file-cache%E6%8C%87%E4%BB%A4"><span class="toc-text">open_log_file_cache指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#log-not-found-%E6%8C%87%E4%BB%A4"><span class="toc-text">log_not_found 指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#log-subrequest-%E6%8C%87%E4%BB%A4"><span class="toc-text">log_subrequest 指令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rewrite-log-%E6%8C%87%E4%BB%A4"><span class="toc-text">rewrite_log 指令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nginx%E6%97%A5%E5%BF%97%E8%BF%90%E7%BB%B4%E4%BC%98%E5%8C%96"><span class="toc-text">Nginx日志运维优化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E6%8C%87%E5%AE%9A%E6%97%B6%E9%97%B4%E5%88%86%E5%89%B2"><span class="toc-text">按指定时间分割</span></a><ol class="toc-child"><li class="toc-item toc-level-6"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEcrontab%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-text">配置crontab定时器</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E6%A8%A1%E5%9D%97%E5%8C%BA%E5%88%86%E8%AE%BF%E9%97%AE%E6%97%A5%E5%BF%97"><span class="toc-text">按模块区分访问日志</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E8%BD%AE%E8%BD%AC%E3%80%81%E5%8E%8B%E7%BC%A9%E4%B8%8E%E5%88%A0%E9%99%A4"><span class="toc-text">日志轮转、压缩与删除</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="toc-text">日志分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BF%E9%97%AE%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="toc-text">访问日志分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97%E5%88%86%E6%9E%90"><span class="toc-text">错误日志分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%85%A8%E6%80%A7"><span class="toc-text">安全性</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

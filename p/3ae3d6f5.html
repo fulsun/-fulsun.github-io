@@ -1,0 +1,340 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据字典展示 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="存储数据库中所有表结构信息的表称为数据字典。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据字典展示">
+<meta property="og:url" content="https://fulsun.github.io/p/3ae3d6f5">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="存储数据库中所有表结构信息的表称为数据字典。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/001.webp">
+<meta property="article:published_time" content="2021-09-22T21:12:33.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.102Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringBoot">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/001.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/3ae3d6f5"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据字典展示',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/001.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">数据字典展示</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-09-22T21:12:33.000Z" title="发表于 2021-09-22 21:12:33">2021-09-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.102Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringBoot/">SpringBoot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>6分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="数据字典展示"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="数据字典"><a href="#数据字典" class="headerlink" title="数据字典"></a>数据字典</h2><ul>
+<li>开发中，往往需要将数据库中的表结构数据展示到页面管理，这个存储数据库中所有表结构信息的表称为数据字典。</li>
+</ul>
+<h3 id="数据字典设计"><a href="#数据字典设计" class="headerlink" title="数据字典设计"></a>数据字典设计</h3><ul>
+<li><p>第一种：较为复杂，作为所有数据库表的元数据，程序中的业务表并不实际存在，所有的业务表结构皆存在于数据字典中，需要使用到业务表时，从数据字典中获取表结构。这种设计对于开发人员要求较高，整体业务逻辑更为抽象。</p>
+</li>
+<li><p>第二种：较为简单，仅作为展示用，并不具备实际业务功能，便于管理数据库表格信息。程序中的业务表皆是实际存在的，数据字典仅存储这些业务表格的结构，作为展示。</p>
+</li>
+<li><p>此处简单测试系统，甚至不做存储，每次访问都可以直接扫描数据库所有业务表的结构进行展示。</p>
+</li>
+</ul>
+<h2 id="数据字典开发"><a href="#数据字典开发" class="headerlink" title="数据字典开发"></a>数据字典开发</h2><ul>
+<li>information_schema 数据库跟 performance_schema 一样，都是 MySQL 自带的信息数据库。</li>
+<li>其中 performance_schema 用于性能分析，而 information_schema 用于存储数据库元数据(关于数据的数据)，例如数据库名、表名、列的数据类型、访问权限等。</li>
+<li>information_schema 中的表实际上是视图，而不是基本表，因此，文件系统上没有与之相关的文件。</li>
+</ul>
+<h3 id="information-schema"><a href="#information-schema" class="headerlink" title="information_schema"></a>information_schema</h3><ul>
+<li><p>查询数据库的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; use information_schema;</span><br><span class="line">Database changed</span><br><span class="line"></span><br><span class="line">mysql&gt; show tables;</span><br><span class="line">+---------------------------------------+</span><br><span class="line">| Tables_in_information_schema          |</span><br><span class="line">+---------------------------------------+</span><br><span class="line">| CHARACTER_SETS                        |</span><br><span class="line">| COLLATIONS                            |</span><br><span class="line">| COLLATION_CHARACTER_SET_APPLICABILITY |</span><br><span class="line">| COLUMNS                               |</span><br><span class="line">| COLUMN_PRIVILEGES                     |</span><br><span class="line">| ENGINES                               |</span><br><span class="line">| EVENTS                                |</span><br><span class="line">| FILES                                 |</span><br><span class="line">| GLOBAL_STATUS                         |</span><br><span class="line">| GLOBAL_VARIABLES                      |</span><br><span class="line">| KEY_COLUMN_USAGE                      |</span><br><span class="line">| OPTIMIZER_TRACE                       |</span><br><span class="line">| PARAMETERS                            |</span><br><span class="line">| PARTITIONS                            |</span><br><span class="line">| PLUGINS                               |</span><br><span class="line">| PROCESSLIST                           |</span><br><span class="line">| PROFILING                             |</span><br><span class="line">| REFERENTIAL_CONSTRAINTS               |</span><br><span class="line">| ROUTINES                              |</span><br><span class="line">| SCHEMATA                              |</span><br><span class="line">| SCHEMA_PRIVILEGES                     |</span><br><span class="line">| SESSION_STATUS                        |</span><br><span class="line">| SESSION_VARIABLES                     |</span><br><span class="line">| STATISTICS                            |</span><br><span class="line">| TABLES                                |</span><br><span class="line">| TABLESPACES                           |</span><br><span class="line">| TABLE_CONSTRAINTS                     |</span><br><span class="line">| TABLE_PRIVILEGES                      |</span><br><span class="line">| TRIGGERS                              |</span><br><span class="line">| USER_PRIVILEGES                       |</span><br><span class="line">| VIEWS                                 |</span><br><span class="line">| INNODB_LOCKS                          |</span><br><span class="line">| INNODB_TRX                            |</span><br><span class="line">| INNODB_SYS_DATAFILES                  |</span><br><span class="line">| INNODB_FT_CONFIG                      |</span><br><span class="line">| INNODB_SYS_VIRTUAL                    |</span><br><span class="line">| INNODB_CMP                            |</span><br><span class="line">| INNODB_FT_BEING_DELETED               |</span><br><span class="line">| INNODB_CMP_RESET                      |</span><br><span class="line">| INNODB_CMP_PER_INDEX                  |</span><br><span class="line">| INNODB_CMPMEM_RESET                   |</span><br><span class="line">| INNODB_FT_DELETED                     |</span><br><span class="line">| INNODB_BUFFER_PAGE_LRU                |</span><br><span class="line">| INNODB_LOCK_WAITS                     |</span><br><span class="line">| INNODB_TEMP_TABLE_INFO                |</span><br><span class="line">| INNODB_SYS_INDEXES                    |</span><br><span class="line">| INNODB_SYS_TABLES                     |</span><br><span class="line">| INNODB_SYS_FIELDS                     |</span><br><span class="line">| INNODB_CMP_PER_INDEX_RESET            |</span><br><span class="line">| INNODB_BUFFER_PAGE                    |</span><br><span class="line">| INNODB_FT_DEFAULT_STOPWORD            |</span><br><span class="line">| INNODB_FT_INDEX_TABLE                 |</span><br><span class="line">| INNODB_FT_INDEX_CACHE                 |</span><br><span class="line">| INNODB_SYS_TABLESPACES                |</span><br><span class="line">| INNODB_METRICS                        |</span><br><span class="line">| INNODB_SYS_FOREIGN_COLS               |</span><br><span class="line">| INNODB_CMPMEM                         |</span><br><span class="line">| INNODB_BUFFER_POOL_STATS              |</span><br><span class="line">| INNODB_SYS_COLUMNS                    |</span><br><span class="line">| INNODB_SYS_FOREIGN                    |</span><br><span class="line">| INNODB_SYS_TABLESTATS                 |</span><br><span class="line">+---------------------------------------+</span><br><span class="line">61 rows in set (0.00 sec)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="常用的表"><a href="#常用的表" class="headerlink" title="常用的表"></a>常用的表</h4><ul>
+<li><p>CHARACTER_SETS 表</p>
+<ul>
+<li>提供了 mysql 可用字符集的信息。<code>SHOW CHARACTER SET;</code> 命令从这个表获取结果。</li>
+</ul>
+</li>
+<li><p>SCHEMATA 表</p>
+<ul>
+<li>当前 mysql 实例中所有数据库的信息。<code>SHOW DATABASES;</code> 命令从这个表获取数据。</li>
+</ul>
+</li>
+<li><p>TABLES 表</p>
+<ul>
+<li>存储数据库中的表信息（包括视图），包括表属于哪个数据库，表的类型、存储引擎、创建时间等信息。<code>SHOW TABLES FROM XX;</code> 命令从这个表获取结果。</li>
+</ul>
+</li>
+<li><p>COLUMNS 表</p>
+<ul>
+<li>存储表中的列信息，包括表有多少列、每个列的类型等。<code>SHOW COLUMNS FROM schemaname.tablename</code> 命令从这个表获取结果。</li>
+</ul>
+</li>
+<li><p>STATISTICS 表</p>
+<ul>
+<li>表索引的信息。<code>SHOW INDEX FROM schemaname.tablename;</code> 命令从这个表获取结果。</li>
+</ul>
+</li>
+<li><p>USER_PRIVILEGES 表</p>
+<ul>
+<li>用户权限表。内容源自 mysql.user 授权表。是非标准表。</li>
+</ul>
+</li>
+<li><p>SCHEMA_PRIVILEGES 表</p>
+<ul>
+<li>方案权限表。给出了关于方案（数据库）权限的信息。内容来自 mysql.db 授权表。是非标准表。</li>
+</ul>
+</li>
+<li><p>TABLE_PRIVILEGES 表</p>
+<ul>
+<li>表权限表。给出了关于表权限的信息。内容源自 mysql.tables_priv 授权表。是非标准表。</li>
+</ul>
+</li>
+<li><p>COLUMN_PRIVILEGES 表</p>
+<ul>
+<li>列权限表。给出了关于列权限的信息。内容源自 mysql.columns_priv 授权表。是非标准表。</li>
+</ul>
+</li>
+<li><p>COLLATIONS 表</p>
+<ul>
+<li>提供了关于各字符集的对照信息。<code>SHOW COLLATION;</code> 命令从这个表获取结果。</li>
+</ul>
+</li>
+<li><p>COLLATION_CHARACTER_SET_APPLICABILITY 表</p>
+<ul>
+<li>指明了可用于校对的字符集。相当于 <code>SHOW COLLATION</code> 命令结果的前两个字段。</li>
+</ul>
+</li>
+<li><p>TABLE_CONSTRAINTS 表</p>
+<ul>
+<li>描述了存在约束的表。以及表的约束类型。</li>
+</ul>
+</li>
+<li><p>KEY_COLUMN_USAGE 表</p>
+<ul>
+<li>描述了具有约束的键列。</li>
+</ul>
+</li>
+<li><p>ROUTINES 表</p>
+<ul>
+<li>提供了关于存储子程序（存储程序和函数）的信息。此时，ROUTINES 表不包含自定义函数（UDF）。名为“mysql.proc name”的列指明了对应于 INFORMATION_SCHEMA.ROUTINES 表的 mysql.proc 列。</li>
+</ul>
+</li>
+<li><p>VIEWS 表</p>
+<ul>
+<li>给出了关于数据库中的视图的信息。需要有 show views 权限，否则无法查看视图信息。</li>
+</ul>
+</li>
+<li><p>TRIGGERS 表</p>
+<ul>
+<li>提供了关于触发程序的信息。必须有 super 权限才能查看该表。</li>
+</ul>
+</li>
+</ul>
+<h3 id="数据字典对象"><a href="#数据字典对象" class="headerlink" title="数据字典对象"></a>数据字典对象</h3><ul>
+<li><p>创建数据字典实体类（不建表）（同步创建相关的mapper及service）</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据字典对象</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@since</span> 2019-08-06</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@EqualsAndHashCode(callSuper = false)</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@ApiModel(value=&quot;SysDataDictionary对象&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SysDataDictionary</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;表名&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String tableName;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;字段&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String columnName;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;字段类型&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String dataType;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;字段描述&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String columnComment;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;可否为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String isNullable;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;字段长度&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Double length;</span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;字段默认值&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String columnDefault;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Mapper</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SysDataDictionaryMapper</span> <span class="keyword">extends</span> <span class="title class_">BaseMapper</span>&lt;SysDataDictionary&gt; &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 扫描所有数据库表结构</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTable</span><span class="params">(String database)</span>;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 扫描指定数据库表结构</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTableOf</span><span class="params">(String database,String table)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">SysDataDictionaryService</span> <span class="keyword">extends</span> <span class="title class_">IService</span>&lt;SysDataDictionary&gt; &#123;</span><br><span class="line">    <span class="keyword">public</span> List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTable</span><span class="params">(String database)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTable</span><span class="params">(String database, String table)</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SysDataDictionaryServiceImpl</span> <span class="keyword">extends</span> <span class="title class_">ServiceImpl</span>&lt;SysDataDictionaryMapper, SysDataDictionary&gt; <span class="keyword">implements</span> <span class="title class_">SysDataDictionaryService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTable</span><span class="params">(String database)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.baseMapper.scanDataTable(database);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;SysDataDictionary&gt; <span class="title function_">scanDataTable</span><span class="params">(String database, String table)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.baseMapper.scanDataTableOf(database, table);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="mapper文件"><a href="#mapper文件" class="headerlink" title="mapper文件"></a>mapper文件</h3><ul>
+<li><p>SysDataDictionaryMapper.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="meta">&lt;!DOCTYPE <span class="keyword">mapper</span> <span class="keyword">PUBLIC</span> <span class="string">&quot;-//mybatis.org//DTD Mapper 3.0//EN&quot;</span> <span class="string">&quot;http://mybatis.org/dtd/mybatis-3-mapper.dtd&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mapper</span> <span class="attr">namespace</span>=<span class="string">&quot;pers.fulsun.demo.springcloud.mapper.SysDataDictionaryMapper&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">&lt;!-- 通用查询映射结果 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">resultMap</span> <span class="attr">id</span>=<span class="string">&quot;BaseResultMap&quot;</span> <span class="attr">type</span>=<span class="string">&quot;pers.fulsun.demo.springcloud.entity.SysDataDictionary&quot;</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;table_name&quot;</span> <span class="attr">property</span>=<span class="string">&quot;tableName&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;key&quot;</span> <span class="attr">property</span>=<span class="string">&quot;key&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;type&quot;</span> <span class="attr">property</span>=<span class="string">&quot;type&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;description&quot;</span> <span class="attr">property</span>=<span class="string">&quot;description&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;not_null&quot;</span> <span class="attr">property</span>=<span class="string">&quot;notNull&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">result</span> <span class="attr">column</span>=<span class="string">&quot;length&quot;</span> <span class="attr">property</span>=<span class="string">&quot;length&quot;</span> &gt;</span><span class="tag">&lt;/<span class="name">result</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">resultMap</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;scanDataTable&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;pers.fulsun.demo.springcloud.entity.SysDataDictionary&quot;</span>&gt;</span></span><br><span class="line">        SELECT</span><br><span class="line">        TABLE_NAME,</span><br><span class="line">        COLUMN_NAME,</span><br><span class="line">        DATA_TYPE,</span><br><span class="line">        CHARACTER_MAXIMUM_LENGTH length,</span><br><span class="line">        IS_NULLABLE,</span><br><span class="line">        COLUMN_DEFAULT,</span><br><span class="line">        COLUMN_COMMENT</span><br><span class="line">        FROM</span><br><span class="line">        INFORMATION_SCHEMA.COLUMNS</span><br><span class="line">        where</span><br><span class="line">        table_schema= #&#123;database&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">select</span> <span class="attr">id</span>=<span class="string">&quot;scanDataTableOf&quot;</span> <span class="attr">resultType</span>=<span class="string">&quot;pers.fulsun.demo.springcloud.entity.SysDataDictionary&quot;</span>&gt;</span></span><br><span class="line">        SELECT</span><br><span class="line">        TABLE_NAME,</span><br><span class="line">        COLUMN_NAME,</span><br><span class="line">        DATA_TYPE,</span><br><span class="line">        CHARACTER_MAXIMUM_LENGTH length,</span><br><span class="line">        IS_NULLABLE,</span><br><span class="line">        COLUMN_DEFAULT,</span><br><span class="line">        COLUMN_COMMENT</span><br><span class="line">        FROM</span><br><span class="line">        INFORMATION_SCHEMA.COLUMNS</span><br><span class="line">        where</span><br><span class="line">        table_schema= #&#123;database&#125;</span><br><span class="line">        and</span><br><span class="line">        table_name=#&#123;table&#125;</span><br><span class="line">    <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">mapper</span>&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>测试</p>
+<ul>
+<li><p>启动调用 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://localhost:7900/sys-data-dictionary/scan">http://localhost:7900/sys-data-dictionary/scan</a></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/3ae3d6f5/e5aac965d6f5319d2cea80bc99888e07.png"></p>
+</li>
+</ul>
+<p>​</p>
+<ul>
+<li><p>查看user表的字段信息 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://localhost:7900/sys-data-dictionary/scanTable?table=user">http://localhost:7900/sys-data-dictionary/scanTable?table=user</a></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/3ae3d6f5/dc5f2c7d17e2faad4c908f467a275cee.png"></p>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/3ae3d6f5">https://fulsun.github.io/p/3ae3d6f5</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringBoot/">SpringBoot</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/001.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/db4cc70" title="Hystrix熔断器"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Hystrix熔断器</div></div></a></div><div class="next-post pull-right"><a href="/p/effd05e4" title="Springboot定时任务开发"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Springboot定时任务开发</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/a8182ef2" title="微服务（Microservices）——Martin Flower"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-21</div><div class="title">微服务（Microservices）——Martin Flower</div></div></a></div><div><a href="/p/19af5078" title="认识SpringBoot2.X"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-22</div><div class="title">认识SpringBoot2.X</div></div></a></div><div><a href="/p/47ae80c7" title="SpringBoot运行原理"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-23</div><div class="title">SpringBoot运行原理</div></div></a></div><div><a href="/p/c690db69" title="Springboot热部署"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-12</div><div class="title">Springboot热部署</div></div></a></div><div><a href="/p/627ee5dd" title="Springboot的自动配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/012.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2020-03-27</div><div class="title">Springboot的自动配置</div></div></a></div><div><a href="/p/f4f1dd7c" title="Springboot文件上传和下载"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-01-18</div><div class="title">Springboot文件上传和下载</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8"><span class="toc-text">数据字典</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8%E8%AE%BE%E8%AE%A1"><span class="toc-text">数据字典设计</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8%E5%BC%80%E5%8F%91"><span class="toc-text">数据字典开发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#information-schema"><span class="toc-text">information_schema</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E7%9A%84%E8%A1%A8"><span class="toc-text">常用的表</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%AD%97%E5%85%B8%E5%AF%B9%E8%B1%A1"><span class="toc-text">数据字典对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mapper%E6%96%87%E4%BB%B6"><span class="toc-text">mapper文件</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

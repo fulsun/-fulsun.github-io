@@ -1,0 +1,477 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>VMware安装Centos7 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="没有云服务器用，但是可以用虚拟机搭建一个Linux环境。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="VMware安装Centos7">
+<meta property="og:url" content="https://fulsun.github.io/p/f9a8da1b">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="没有云服务器用，但是可以用虚拟机搭建一个Linux环境。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/006.webp">
+<meta property="article:published_time" content="2018-09-23T12:55:44.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.350Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="VMware">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/006.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/f9a8da1b"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'VMware安装Centos7',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/006.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">VMware安装Centos7</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-09-23T12:55:44.000Z" title="发表于 2018-09-23 12:55:44">2018-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.350Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="VMware安装Centos7"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="软件准备"><a href="#软件准备" class="headerlink" title="软件准备"></a>软件准备</h2><h3 id="检查硬件"><a href="#检查硬件" class="headerlink" title="检查硬件"></a>检查硬件</h3><ul>
+<li><p>因为是在宿主机上运行虚拟化软件安装centos，所以对宿主机的配置有一定的要求。最起码CPU双核、硬盘200G、内存4G以上。</p>
+</li>
+<li><p>下面是我的笔记本配置：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/6f4f689aae32173276ec0c343628fb11.jpg"></p>
+</li>
+<li><p>那就开始安装虚拟机软件vmware吧(虚拟化技术：虚拟出计算机系统）。</p>
+</li>
+</ul>
+<h3 id="VMware"><a href="#VMware" class="headerlink" title="VMware"></a>VMware</h3><ul>
+<li><p>首先确保自己的电脑主机开启了支持虚拟化技术。具体实现根据自己笔记本的型号配置。按住F2进入bios设置界面，</p>
+<ol>
+<li><p>首先看到的是main（概要）选项卡，选择进入Advanced高级——CPU Configuration处理器设置；</p>
+</li>
+<li><p>找到<code>Intel Virtualization Technology</code>英特尔虚拟化技术 选项，设置为Enabled开启，再F10保存退出即可。</p>
+</li>
+</ol>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.vmware.com/">Vmware</a>公司出品的一套虚拟化软件，可以在物理机上用软件的方式模拟出虚拟的计算机系统，而虚拟出的计算机系统可以像一台真实的机器一样，安装操作系统，运行软件等。类似的产品还有Oracle出品的免费版虚拟机软件VirtualBox</p>
+</li>
+<li><p>Vmware优点</p>
+<ul>
+<li>不需要分区或重新开机就能在同一台PC机上使用两种以上的操作系统。</li>
+<li>本机系统可以与虚拟机系统网络通信</li>
+<li>可以随时修改虚拟机操作系统环境</li>
+</ul>
+</li>
+<li><p>VMwar下载前需要进行登录，如果没VMware账号就去注册一个。</p>
+<ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-12.5.9-7535481.exe">VMware-workstation-full-12.5.9-7535481</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://download3.vmware.com/software/wkst/file/VMware-workstation-full-14.1.3-9474260.exe">VMware Workstation Pro 14.1.3 Build 9474260</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.vmware.com/cn.html">VMware官网下载</a></li>
+</ul>
+</li>
+<li><p>填写VMware Workstation 激活密钥即可使用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CG54H-D8D0H-H8DHY-C6X7X-N2KG6</span><br><span class="line">ZC3WK-AFXEK-488JP-A7MQX-XL8YF</span><br><span class="line">AC5XK-0ZD4H-088HP-9NQZV-ZG2R4</span><br><span class="line">ZC5XK-A6E0M-080XQ-04ZZG-YF08D</span><br><span class="line">ZY5H0-D3Y8K-M89EZ-AYPEG-MYUA8</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Centos"><a href="#Centos" class="headerlink" title="Centos"></a>Centos</h3><ul>
+<li><p>如果没有镜像的话，可以去官网下载：</p>
+<ul>
+<li><p>官网： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.centos.org/download/">https://www.centos.org/download/</a></p>
+</li>
+<li><p>国内源：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://mirrors.ustc.edu.cn/centos/">http://centos.ustc.edu.cn/centos/</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="虚拟机和宿主机通讯"><a href="#虚拟机和宿主机通讯" class="headerlink" title="虚拟机和宿主机通讯"></a>虚拟机和宿主机通讯</h2><h3 id="bridged-桥接模式-访问外网"><a href="#bridged-桥接模式-访问外网" class="headerlink" title="bridged(桥接模式:访问外网)"></a>bridged(桥接模式:访问外网)</h3><ul>
+<li>主机的网卡和虚拟交换机(<strong>vmnet0</strong>)之间通过虚拟网桥连接</li>
+<li><strong>主机和虚拟机的ip是在同一个网段</strong></li>
+<li>缺点:不利于搭建大型集群</li>
+</ul>
+<h3 id="NAT模式-可以vmnet8局域网和外网"><a href="#NAT模式-可以vmnet8局域网和外网" class="headerlink" title="NAT模式(可以vmnet8局域网和外网):"></a>NAT模式(可以<strong>vmnet8</strong>局域网和外网):</h3><ul>
+<li><p>虚拟系统借助NAT(网络地址转换)功能,通过宿主机的</p>
+</li>
+<li><p>宿主机创建vet8的虚拟网卡,虚拟机交换机用(<strong>vmnet8</strong>)建立连接局域网</p>
+</li>
+<li><p>NAT地址转化,连接虚拟交换机和网卡,访问外网</p>
+</li>
+<li><p>DHCP协议:动态地址分配</p>
+</li>
+</ul>
+<h3 id="仅主机模式"><a href="#仅主机模式" class="headerlink" title="仅主机模式"></a>仅主机模式</h3><ul>
+<li><p>没有NAT设备(仅访问局域网)(<strong>vmnet1</strong>)</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/39cb32bc573709d215b6ff3689a403a1.jpg"></p>
+</li>
+</ul>
+<h2 id="Vmware新建虚拟机"><a href="#Vmware新建虚拟机" class="headerlink" title="Vmware新建虚拟机"></a>Vmware新建虚拟机</h2><ul>
+<li><p>打开安装好的VM，选择创建新的虚拟机。</p>
+</li>
+<li><p>典型安装与自定义安装，这里我选择自定义安装。</p>
+<ul>
+<li><p>典型安装：VMwear会将主流的配置应用在虚拟机的操作系统上，对于新手来很友好。</p>
+</li>
+<li><p>自定义安装：自定义安装可以针对性的把一些资源加强，把不需要的资源移除。避免资源的浪费。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/2e61833c00fec8ce803ac0baa71b69b9.jpg"></p>
+</li>
+</ul>
+</li>
+<li><p>虚拟机兼容性选择: 这里要注意兼容性，如果是VMwear15创建的虚拟机复制到更低的版本可能会出现一不兼容的现象。如果是用低版本创建的虚拟机在VMwear15中打开则不会出现兼容性问题。</p>
+</li>
+<li><p>选择稍后安装操作系统, 选择之后安装的操作系统，正确的选择会让vm tools更好的兼容。这里选择linux下的CentOS</p>
+</li>
+<li><p>虚拟机名称就是一个名字，在虚拟机多的时候方便自己找到。VMwear的默认位置是在C盘下，可根据需要修改。</p>
+</li>
+<li><p>处理器与内存的分配</p>
+<ul>
+<li><p>处理器分配要根据自己的实际需求来分配。在使用过程中CPU不够的话是可以再增加的。</p>
+<ul>
+<li><p>处理器数量指的就是物理处理器的数量，也就是你的cpu个数，大家的消费级电脑通常都是一个cpu，但服务器通常有多个cpu，因此VMware需要模拟那些有多个cpu的虚拟机，所以如果没有特殊需求建议这里大家在**处理器数量这一栏通常填‘1’即可，而每个处理器的内核数量那一栏直接填写内核数量，这里通常建议不超过本机的50%**，比如笔者的笔记本是4核4线程的，那么填写内核数量‘2’即可，最后内核总数就是‘2’。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 查看cpu内核数</span></span><br><span class="line">wmic cpu get numberOfCores</span><br><span class="line">NumberOfCores</span><br><span class="line">4</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>内存也是要根据实际的需求分配。我的宿主机内存是8G所以我给虚拟机分配2G内存。</p>
+</li>
+</ul>
+</li>
+<li><p>网络连接类型的选择, 网络连接类型一共有桥接、NAT、仅主机和不联网四种。<code>这里选择桥接模式</code></p>
+<ul>
+<li>桥接：选择桥接模式的话虚拟机和宿主机在网络上就是平级的关系，相当于连接在同一交换机上。</li>
+<li>NAT：NAT模式就是虚拟机要联网得先通过宿主机才能和外面进行通信。</li>
+<li>仅主机：虚拟机与宿主机直接连起来</li>
+</ul>
+</li>
+<li><p>其余选项按虚拟机默认选项即可(I&#x2F;O控制器类型，磁盘类型SCSI)</p>
+</li>
+<li><p>创建新虚拟磁盘，磁盘容量暂时分配30G即可后期可以随时增加，不要勾选立即分配所有磁盘，否则虚拟机会将100G直接分配给CentOS，会导致宿主机所剩硬盘容量减少。</p>
+</li>
+<li><p>勾选将虚拟磁盘拆分成多个文件，这样可以使虚拟机方便用储存设备拷贝复制。</p>
+</li>
+<li><p>点击自定义硬件，取消不需要的硬件，如声卡、打印机等</p>
+</li>
+<li><p>点击完成，已经创建好虚拟机。</p>
+</li>
+</ul>
+<h2 id="安装Centos7"><a href="#安装Centos7" class="headerlink" title="安装Centos7"></a>安装Centos7</h2><ul>
+<li><p>右击刚创建的虚拟机，选择设置，</p>
+</li>
+<li><p>先选择CD&#x2F;DVD，再选择使用ISO映像文件，最后选择浏览找到下载好的镜像文件。启动时连接一定要勾选上后确定</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/3acbea442914329317d13397c8219eb5.jpg"></p>
+</li>
+<li><p>开启虚拟机后会出现以下界面</p>
+<ol>
+<li>Install CentOS 7 : 安装CentOS 7</li>
+<li>Test this media &amp; install : CentOS 7 测试安装文件并安装CentOS 7</li>
+<li>Troubleshooting : 修复故障</li>
+<li><code>选择第一项</code>，安装直接CentOS 7，回车</li>
+</ol>
+</li>
+<li><p>选择安装过程中使用的语言，这里选择简体中文、键盘选择美式键盘。点击继续</p>
+</li>
+<li><p>设置时区,这里我的默认了亚洲&#x2F;上海时区，就不需要设置了。</p>
+</li>
+<li><p>选择需要安装的软件,可以选择带GUI的服务器，这里我使用最小安装。</p>
+</li>
+<li><p>选择安装位置，在这里可以进行磁盘划分。点击自动配置分区，也可以看情况配置分区大小，点击完成，进入下面界面。</p>
+</li>
+<li><p>设置主机名与网卡信息, 打开网卡，然后设置你的主机名，然后点击完成</p>
+</li>
+<li><p>最后选择开始安装</p>
+</li>
+<li><p>设置root密码</p>
+</li>
+<li><p>点击创建用户，创建管理员用户</p>
+</li>
+<li><p>等待系统安装完毕重启系统即可</p>
+</li>
+</ul>
+<h2 id="手动分区"><a href="#手动分区" class="headerlink" title="手动分区"></a>手动分区</h2><ul>
+<li><p><strong>新手建议自动配置分区，这样既方便有不容易出问题。【选择自动分区选择-点击左上角的完成】</strong></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/3f2d7c3bf380d6c88feb8204f9baf059.png"></p>
+</li>
+<li><p>选择<code>我要配置分区</code> 然后单击左上角”完成”就会弹出手动分区的配置界面</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/b75677498437fef6d87ee8106c1111e9.png"></p>
+</li>
+<li><p>分区方案描述: 如果你是新手记住：<code>除了SWAP分区外，其他分区的文件系统一律选择ext4类型,设备类型默认选LVM</code></p>
+<ul>
+<li><p><code>boot</code>分区 ：</p>
+<ul>
+<li>作用：引导分区，包含了系统启动的必要内核文件， 一般这些文件所占空间在200M以下</li>
+<li>分区建议：分区的时候可选100M-500M之间,如果空间足够用，建议分300-500M。避免由于长期使用的冗余文件塞满这个分区。</li>
+<li>分区格式：建议ext4，按需求更改</li>
+</ul>
+</li>
+<li><p><code>/分区</code>（根分区）：</p>
+<ul>
+<li>作用：所有的文件都从这里开始，你可以比喻为Windows的C盘，但其实有区别。如果你有大量的数据在根目录下（比如FTP等）可以划分大一点的空间</li>
+<li>分区建议：建议15G以上。看需求，根分区和home分区的大小就类似C盘和D盘的空间分布一样，主要占空间在哪儿就在那里分大容量</li>
+<li>分区格式：建议ext4，按需求更改</li>
+</ul>
+</li>
+<li><p><code>swap分区</code></p>
+<ul>
+<li>作用：类似于Windows的虚拟内存，在内存不够用时占用硬盘的虚拟内存来进行临时数据的存放，而对于linux就是swap分区</li>
+<li>分区建议：建议是物理内存大小的2倍，比如你电脑是4G的物理内存，swap分区可以是8G</li>
+<li>分区格式：<code>swap</code>格式</li>
+</ul>
+</li>
+<li><p><code>home分区(可选的分区)</code></p>
+<ul>
+<li>作用：存放用户数据，HOME的结构一般是 HOME&#x2F;userName&#x2F;userFile，如果不分则默认在&#x2F;目录下</li>
+<li>分区建议：如果用户数据多可以将此分区适当增大，请参考“根分区”分区建议；一般硬盘的主要容量几乎都在Home分区和根分区下</li>
+<li>分区格式：建议ext4，按需求更改</li>
+</ul>
+</li>
+<li><p><code>var分区(可选的分区)</code></p>
+<ul>
+<li>作用：用于log日志的文件的存放，如果不分则默认在&#x2F;目录下</li>
+<li>分区建议：如果你安装的linux是用于服务器或者经常做日志分析，请划分var分区，避免日志文件不断膨胀塞满导致根分区而引发问题。</li>
+<li>分区格式：建议ext4，按需求更改</li>
+</ul>
+</li>
+<li><p>常见划分</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/c5857579516b1a224c1c2b0082d0c08c.png"></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">standad parition       标准分区</span><br><span class="line">LVM                            特殊分区 进行分区动态扩容、缩容</span><br><span class="line"></span><br><span class="line">通用方案</span><br><span class="line">/boot　　启动分区　　保存和系统相关的文件</span><br><span class="line">swap　　交换分区　　临时将硬盘多余容量变为内存使用 内存大于8G swap分区大小==1.5倍内存容量</span><br><span class="line">/　　　　跟分区　　将剩余的容量都给根分区等价于windows系统中的C盘</span><br><span class="line"></span><br><span class="line">数据比较重要的场景</span><br><span class="line">/boot　　   200M</span><br><span class="line">swap 　　 1G 2G 1.5倍</span><br><span class="line">/ 　　　　  20G-200G</span><br><span class="line">/data 　　   剩余空间</span><br><span class="line"></span><br><span class="line">灵活的分区方案</span><br><span class="line">/boot　　   200M</span><br><span class="line">swap 　　 1G 2G 1.5倍</span><br><span class="line">/ 　　　　  20G-200G</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="网关配置"><a href="#网关配置" class="headerlink" title="网关配置"></a>网关配置</h2><h3 id="vmware的配置"><a href="#vmware的配置" class="headerlink" title="vmware的配置"></a>vmware的配置</h3><ul>
+<li>打开界面，选择”编辑“-“虚拟网络编辑”</li>
+<li>修改NAT模式，<code>修改子网ip的地址段为192.168.61.0</code>，确定。</li>
+<li>点击NAT设置,查看网关地址为<code>192.168.61.2</code></li>
+</ul>
+<h3 id="Vmware-Fusion-配置"><a href="#Vmware-Fusion-配置" class="headerlink" title="Vmware Fusion 配置"></a>Vmware Fusion 配置</h3><ul>
+<li><p>配置自定义网络连接</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/b2e807c1cfcccc1ec5390decab78d866.jpg"></p>
+</li>
+<li><p>修改安装虚拟机的网络适配器</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/bb965331b078611f9adc7b2cb1731f3d.jpg"></p>
+</li>
+<li><p>注意 :这里的网关地址用子网 IP ,最后一位为 2,bigsur版本为1，具体网关查看方式<code>cat /Library/Preferences/VMware\ Fusion/vmnet2/nat.conf</code></p>
+</li>
+</ul>
+<h3 id="Hyper-V虚拟网络设置"><a href="#Hyper-V虚拟网络设置" class="headerlink" title="Hyper-V虚拟网络设置"></a>Hyper-V虚拟网络设置</h3><ul>
+<li><p>打开Hyper-V上的虚拟机交换机管理器：</p>
+</li>
+<li><p>新建虚拟机网络交换机：虚拟机交换机管理-&gt; 新建虚拟机网络交换机， 勾选外部网络，如下</p>
+<ul>
+<li><p>选择外部网络会出现网桥</p>
+</li>
+<li><p>使用内部网络需要共享网络</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/49ff3a3075916963d78714deddeb7921.jpg"></p>
+</li>
+</ul>
+</li>
+<li><p>配置虚拟机的网络适配器，使用上一步创建的外部网络</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/f80f5fc2295fe6770a1b9cd973ece775.jpg"></p>
+</li>
+<li><p>配置网络</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/d3182f3af6846d201d845ebef5c805ea.jpg"></p>
+</li>
+<li><p>共享网络</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/f9a8da1b/610ffc2b95964a2b1b9e949dead724c0.jpg"></p>
+</li>
+<li><p>以上设置好后就重启虚拟机，就可以在本地物理机访问虚拟机了</p>
+</li>
+</ul>
+<h2 id="克隆后网卡修改"><a href="#克隆后网卡修改" class="headerlink" title="克隆后网卡修改"></a>克隆后网卡修改</h2><p>在使用vmware虚拟机时，有时候需要通过一个虚拟机克隆出批量的虚拟机，在克隆后，会发现网卡信息发生了变化，以这里为例，源主机网卡名称为eth0、eth1，在克隆后变成了eth2、eth3，这时候，如果想要保持与源主机相同的名称，需要进行修改，一共需要修改2个地方。</p>
+<ul>
+<li>修改<code>/etc/udev/rules.d/70-persistent-net.rules</code>文件网卡的name</li>
+<li>修改网卡的MAC地址，将网卡mac地址改为与上面相同,也可以只删除UUID</li>
+<li>重启主机，再次查看网络信息</li>
+</ul>
+<h2 id="SecureCRT-8-1-4的使用"><a href="#SecureCRT-8-1-4的使用" class="headerlink" title="SecureCRT-8.1.4的使用"></a>SecureCRT-8.1.4的使用</h2><ul>
+<li><p>设置</p>
+<ol>
+<li>option – global options –default Session  – edit default session</li>
+<li>Terminal–Enulation–Terminal —&gt; “Linux”,勾选ANSI color,勾选Use color Scheme</li>
+<li>Appearance—&gt;Current color scheme  设置主题和字体</li>
+<li>character encoding <strong>utf-8</strong></li>
+<li>ok 应用到所有</li>
+</ol>
+</li>
+<li><p>操作:</p>
+<ul>
+<li>复制: 按住鼠标左键,选择文本</li>
+<li>粘贴:右键即可</li>
+</ul>
+</li>
+</ul>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.csdn.net/babyxue/article/details/80970526">VMware安装Centos7超详细过程（图文）_小七的玩偶的博客-CSDN博客_centos</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/f9a8da1b">https://fulsun.github.io/p/f9a8da1b</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/VMware/">VMware</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/006.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/a11a1bfa" title="配置Centos7"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">配置Centos7</div></div></a></div><div class="next-post pull-right"><a href="/p/ddbe5190" title="Linux介绍"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/008.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Linux介绍</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BD%AF%E4%BB%B6%E5%87%86%E5%A4%87"><span class="toc-text">软件准备</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A3%80%E6%9F%A5%E7%A1%AC%E4%BB%B6"><span class="toc-text">检查硬件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#VMware"><span class="toc-text">VMware</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Centos"><span class="toc-text">Centos</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%99%9A%E6%8B%9F%E6%9C%BA%E5%92%8C%E5%AE%BF%E4%B8%BB%E6%9C%BA%E9%80%9A%E8%AE%AF"><span class="toc-text">虚拟机和宿主机通讯</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#bridged-%E6%A1%A5%E6%8E%A5%E6%A8%A1%E5%BC%8F-%E8%AE%BF%E9%97%AE%E5%A4%96%E7%BD%91"><span class="toc-text">bridged(桥接模式:访问外网)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NAT%E6%A8%A1%E5%BC%8F-%E5%8F%AF%E4%BB%A5vmnet8%E5%B1%80%E5%9F%9F%E7%BD%91%E5%92%8C%E5%A4%96%E7%BD%91"><span class="toc-text">NAT模式(可以vmnet8局域网和外网):</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%85%E4%B8%BB%E6%9C%BA%E6%A8%A1%E5%BC%8F"><span class="toc-text">仅主机模式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vmware%E6%96%B0%E5%BB%BA%E8%99%9A%E6%8B%9F%E6%9C%BA"><span class="toc-text">Vmware新建虚拟机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85Centos7"><span class="toc-text">安装Centos7</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%88%86%E5%8C%BA"><span class="toc-text">手动分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E5%85%B3%E9%85%8D%E7%BD%AE"><span class="toc-text">网关配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#vmware%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">vmware的配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vmware-Fusion-%E9%85%8D%E7%BD%AE"><span class="toc-text">Vmware Fusion 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hyper-V%E8%99%9A%E6%8B%9F%E7%BD%91%E7%BB%9C%E8%AE%BE%E7%BD%AE"><span class="toc-text">Hyper-V虚拟网络设置</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%8B%E9%9A%86%E5%90%8E%E7%BD%91%E5%8D%A1%E4%BF%AE%E6%94%B9"><span class="toc-text">克隆后网卡修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SecureCRT-8-1-4%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="toc-text">SecureCRT-8.1.4的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

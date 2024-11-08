@@ -1,0 +1,432 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>URL地址的重写与跳转 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="rewrite、if、set 实现URL地址的重写与跳转">
+<meta property="og:type" content="article">
+<meta property="og:title" content="URL地址的重写与跳转">
+<meta property="og:url" content="https://fulsun.github.io/p/ee9089be">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="rewrite、if、set 实现URL地址的重写与跳转">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/002.webp">
+<meta property="article:published_time" content="2019-07-01T19:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.342Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/002.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/ee9089be"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'URL地址的重写与跳转',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/002.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">URL地址的重写与跳转</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-07-01T19:00:00.000Z" title="发表于 2019-07-01 19:00:00">2019-07-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.342Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Nginx/">Nginx</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>15分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="URL地址的重写与跳转"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="重写和转发的区别"><a href="#重写和转发的区别" class="headerlink" title="重写和转发的区别"></a>重写和转发的区别</h2><ul>
+<li><p>Rewrite是Nginx服务器提供的一个重要基本功能，是Web服务器产品中几乎必备的功能。主要的作用是用来实现URL的重写。</p>
+</li>
+<li><p>注意:Nginx服务器的Rewrite功能的实现依赖于PCRE的支持，因此在编译安装Nginx服务器之前，需要安装PCRE库。Nginx使用的是<code>ngx_http_rewrite_module</code>模块来解析和处理Rewrite功能的相关配置。</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>重写Rewrite</th>
+<th>转发 foward</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>浏览器地址</td>
+<td>变化</td>
+<td>不变</td>
+</tr>
+<tr>
+<td>请求数</td>
+<td>两次</td>
+<td>一次</td>
+</tr>
+<tr>
+<td>路径要求</td>
+<td>完整的路径</td>
+<td>不要求</td>
+</tr>
+<tr>
+<td>速度</td>
+<td></td>
+<td>快于地址重写</td>
+</tr>
+<tr>
+<td>request范围内属性</td>
+<td>不能传递</td>
+<td>可以传递</td>
+</tr>
+</tbody></table>
+<h2 id="set指令"><a href="#set指令" class="headerlink" title="set指令"></a>set指令</h2><ul>
+<li><p>官方说明：</p>
+<ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#set">http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#set</a></li>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/stream/ngx_stream_set_module.html#set">http://nginx.org/en/docs/stream/ngx_stream_set_module.html#set</a></li>
+</ul>
+</li>
+<li><p>用途： 用于设置一个新的变量。</p>
+<ul>
+<li><p>variable:变量的名称，该变量名称要用”<code>$</code>“作为变量的第一个字符，且不能与Nginx服务器预设的全局变量同名。</p>
+<p>value:变量的值，可以是字符串、其他变量或者变量的组合等。</p>
+</li>
+</ul>
+<p>	</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法	<span class="built_in">set</span> <span class="variable">$variable</span> value;</span><br><span class="line">默认值	—</span><br><span class="line">位置	server、location、<span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>示例：如果请求的 User-Agent 头包含 MSIE，则 $user_agent 变量将被设置为 “msie”，否则它将保持为空字符串。然后，这个变量的值将被包含在返回的响应体中。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /test &#123;  </span><br><span class="line">    <span class="built_in">set</span> <span class="variable">$user_agent</span> <span class="string">&quot;&quot;</span>;  </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$http_user_agent</span> ~ MSIE) &#123;  </span><br><span class="line">        <span class="built_in">set</span> <span class="variable">$user_agent</span> <span class="string">&quot;msie&quot;</span>;  </span><br><span class="line">    &#125;  </span><br><span class="line">    <span class="built_in">return</span> 200 <span class="string">&quot;User Agent: <span class="variable">$user_agent</span>&quot;</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="if指令"><a href="#if指令" class="headerlink" title="if指令"></a>if指令</h2><ul>
+<li><p>该指令用来支持条件判断，并根据条件判断结果选择不同的Nginx配置。</p>
+</li>
+<li><p>官方说明：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#if">http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#if</a></p>
+</li>
+<li><p>语法</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法	<span class="keyword">if</span> (condition)</span><br><span class="line">默认值	—</span><br><span class="line">位置	server、location</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>condition为判定条件，可以支持以下写法：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 变量名。如果变量名对应的值为空或者是0，if都判断为false,其他条件为true。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$param</span>)&#123;</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#  使用&quot;=&quot;和&quot;!=&quot;比较变量和字符串是否相等，满足条件为true，不满足为false</span></span><br><span class="line"><span class="comment"># 此处和Java不太一样的地方是字符串不需要添加引号。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$request_method</span> = POST)&#123;</span><br><span class="line">	<span class="built_in">return</span> 405;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用正则表达式对变量进行匹配，匹配成功返回true，否则返回false。</span></span><br><span class="line"><span class="comment"># 变量与正则表达式之间使用 ~ , ~* ,! ,!* 来连接。</span></span><br><span class="line"><span class="comment"># &quot;~&quot;代表匹配正则表达式过程中区分大小写，</span></span><br><span class="line"><span class="comment"># &quot;~*&quot;代表匹配正则表达式过程中不区分大小写</span></span><br><span class="line"><span class="comment"># &quot;!&quot; 和&quot;!*&quot;刚好和上面取相反值，如果匹配上返回false,匹配不上返回true</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$http_user_agent</span> ~ MSIE)&#123;</span><br><span class="line">	<span class="comment">#$http_user_agent的值中是否包含MSIE字符串，如果包含返回true</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正则表达式中包含 &#125; 或 ; 等字符，整个表达式应该用单引号或双引号括起来。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断请求的文件是否存在使用&quot;-f&quot;和&quot;!-f&quot;,</span></span><br><span class="line"><span class="comment"># 当使用&quot;-f&quot;时，如果请求的文件存在返回true，不存在返回false。</span></span><br><span class="line"><span class="comment"># 当使用&quot;!f&quot;时，如果请求文件不存在，但该文件所在目录存在返回true,文件和目录都不存在返回false,如果文件存在返回false</span></span><br><span class="line"><span class="keyword">if</span> (-f <span class="variable">$request_filename</span>)&#123;</span><br><span class="line">	<span class="comment">#判断请求的文件是否存在</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (!-f <span class="variable">$request_filename</span>)&#123;</span><br><span class="line">	<span class="comment">#判断请求的文件是否不存在</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断请求的目录是否存在使用&quot;-d&quot;和&quot;!-d&quot;,</span></span><br><span class="line"><span class="comment"># 当使用&quot;-d&quot;时，如果请求的目录存在，if返回true，如果目录不存在则返回false</span></span><br><span class="line"><span class="comment"># 当使用&quot;!-d&quot;时，如果请求的目录不存在但该目录的上级目录存在则返回true，该目录和它上级目录都不存在则返回false,如果请求目录存在也返回false.</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断请求的目录或者文件是否存在使用&quot;-e&quot;和&quot;!-e&quot;</span></span><br><span class="line"><span class="comment"># 当使用&quot;-e&quot;,如果请求的目录或者文件存在时，if返回true,否则返回false.</span></span><br><span class="line"><span class="comment"># 当使用&quot;!-e&quot;,如果请求的文件和文件所在路径上的目录都不存在返回true,否则返回false</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 判断请求的文件是否可执行使用&quot;-x&quot;和&quot;!-x&quot;</span></span><br><span class="line"><span class="comment">#当使用&quot;-x&quot;,如果请求的文件可执行，if返回true,否则返回false</span></span><br><span class="line"><span class="comment"># 当使用&quot;!-x&quot;,如果请求文件不可执行，返回true,否则返回false</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>变量比较，如：<code>$variable = value</code>。</li>
+<li>变量与正则表达式的匹配， 如：<code>$variable ~ pattern</code>。</li>
+<li>逻辑操作：<code>!</code>（非）、 <code>-f</code>（文件存在）、 <code>-d</code>（目录存在）、 <code>-e</code>（文件、目录、符号链接存在）、 <code>-x</code>（可执行文件存在）等。</li>
+<li>正则表达式中包含 “<code>&#125;</code>” 或 “<code>;</code>” 字符，整个表达式应该用单引号或双引号括起来。</li>
+</ul>
+</li>
+<li><p>上下文配置 :</p>
+<ul>
+<li>if 指令在<code>server</code> 和<code> location</code> 上下文使用。</li>
+</ul>
+</li>
+<li><p>示例1：针对MSIE浏览器的重定向</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 当请求的User-Agent头包含MSIE（Internet Explorer的旧版本）时</span></span><br><span class="line"><span class="comment"># Nginx 会将请求重写为 /msie/ 加上原始请求的路径，并停止处理后续的重写规则（break标志）。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$http_user_agent</span> ~ MSIE) &#123;  </span><br><span class="line">    rewrite ^(.*)$ /msie/<span class="variable">$1</span> <span class="built_in">break</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>示例2：从Cookie中提取ID</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用正则表达式从Cookie头中提取id的值。</span></span><br><span class="line"><span class="comment"># 如果Cookie中包含形如id=some_value;或id=some_value的片段，那么变量$id将被设置为some_value。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$http_cookie</span> ~* <span class="string">&quot;id=([^;]+)(?:;|$)&quot;</span>) &#123;  </span><br><span class="line">    <span class="built_in">set</span> <span class="variable">$id</span> <span class="variable">$1</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>示例3：禁止POST方法</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果请求的方法是 POST，Nginx 将返回405状态码（方法不允许）。</span></span><br><span class="line"><span class="comment"># 这通常用于确保某个位置或服务器仅支持 GET 或其他 HTTP 方法，而不支持 POST。</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$request_method</span> = POST) &#123;  </span><br><span class="line">    <span class="built_in">return</span> 405;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>示例4：基于<code>$slow</code>变量的带宽限制</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果变量 $slow 为真（需要在其他地方定义或根据其他条件设置），Nginx 将限制发送到客户端的响应速度为每秒10KB。用于防止在慢速连接上发送大量数据，或在某些条件下有意地限制带宽。</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$slow</span>) &#123;  </span><br><span class="line">    limit_rate 10k;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>示例5：基于$invalid_referer的访问控制</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果变量 $invalid_referer 为真（表示请求的 Referer 头无效或不存在，或者不符合某些预期的模式），Nginx 将返回 403 状态码（禁止访问）。常用于防止热链接、保护资源或实施其他基于 Referer 的访问控制策略。</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$invalid_referer</span>) &#123;  </span><br><span class="line">    <span class="built_in">return</span> 403;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="break指令"><a href="#break指令" class="headerlink" title="break指令"></a>break指令</h2><p>该指令用于中断当前相同作用域中的其他Nginx配置。与该指令处于同一作用域的Nginx配置中，位于它前面的指令配置生效，位于后面的指令配置无效。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法	<span class="built_in">break</span>;</span><br><span class="line">默认值	—</span><br><span class="line">位置	server、location、<span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">location /&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="variable">$param</span>)&#123;</span><br><span class="line">		<span class="built_in">set</span> <span class="variable">$id</span> <span class="variable">$1</span>;</span><br><span class="line">		<span class="built_in">break</span>;</span><br><span class="line">		limit_rate 10k;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="return指令"><a href="#return指令" class="headerlink" title="return指令"></a>return指令</h2><p>该指令用于完成对请求的处理，直接向客户端返回响应状态代码。在return后的所有Nginx配置都是无效的。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">语法</span><br><span class="line">    <span class="built_in">return</span> code [text];</span><br><span class="line">    <span class="built_in">return</span> code URL;</span><br><span class="line">    <span class="built_in">return</span> URL;</span><br><span class="line">默认值	—</span><br><span class="line">位置	server、location、<span class="keyword">if</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># code:为返回给客户端的HTTP状态代理。可以返回的状态代码为0~999的任意HTTP状态代理</span></span><br><span class="line"><span class="comment"># text:为返回给客户端的响应体内容，支持变量的使用</span></span><br><span class="line"><span class="comment"># URL:为返回给客户端的URL地址</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="rewrite指令"><a href="#rewrite指令" class="headerlink" title="rewrite指令"></a>rewrite指令</h2><ul>
+<li><p>官方说明：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite%E3%80%82">http://nginx.org/en/docs/http/ngx_http_rewrite_module.html#rewrite。</a></p>
+</li>
+<li><p>该指令通过正则表达式的使用来改变URI(统一资源标识符)。可以同时存在一个或者多个指令，按照顺序依次对URL进行匹配和处理。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">语法	rewrite regex replacement [flag];</span><br><span class="line">默认值	—</span><br><span class="line">位置	server、location、<span class="keyword">if</span></span><br><span class="line"><span class="comment"># regex：用于匹配URI的正则表达式。</span></span><br><span class="line"><span class="comment"># replacement:匹配成功后，用于替换URI中被截取内容的字符串。</span></span><br><span class="line"><span class="comment"># 如果该字符串是以&quot;http://&quot;或者&quot;https://&quot;开头的，则不会继续向下对URI进行其他处理，而是直接返回重写后的URI给客户端。。</span></span><br><span class="line"><span class="comment"># flag：指定如何处理替换后的URI的标志。</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>标志（Flags）</p>
+<ul>
+<li>last：停止处理当前 rewrite 指令集，重新搜索匹配URI的 location 块。</li>
+<li>break：停止处理当前的 rewrite 指令集。</li>
+<li>redirect：返回302临时重定向。</li>
+<li>permanent：返回301永久重定向。</li>
+</ul>
+</li>
+<li><p>上下文配置</p>
+<ul>
+<li>rewrite指令可以在 server、location 和 if 上下文中使用。</li>
+</ul>
+</li>
+<li><p>示例1：URL重写</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将 /old-url/ 重写为 /new-url/ </span></span><br><span class="line">location /old-url/ &#123;  </span><br><span class="line">    rewrite ^/old-url/(.*)$ /new-url/<span class="variable">$1</span> last;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>示例2：删除URL中的 .php 扩展名</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  当请求 /some-page.php 时，重定向到 /some-page ：</span></span><br><span class="line"></span><br><span class="line">location / &#123;  </span><br><span class="line">    <span class="keyword">if</span> (<span class="variable">$request_filename</span> !-f) &#123;  </span><br><span class="line">        rewrite ^(.+)\.php(.*)$ $1<span class="variable">$2</span> permanent;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意：虽然上面的示例使用了 if 指令，但通常尽可能避免在 nginx 配置中使用 if，因为它可能会导致性能问题。更好的方法可能是使用 try_files 指令或其他方法。</p>
+</li>
+<li><p><strong>示例3：防止目录列表</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 如果你不希望用户能够列出目录的内容</span></span><br><span class="line"><span class="comment"># 你可以使用 rewrite 指令来重定向到一个错误页面或另一个 URI：</span></span><br><span class="line"></span><br><span class="line">location /some-directory/ &#123;  </span><br><span class="line">    autoindex off;  <span class="comment"># 首先关闭目录列表  </span></span><br><span class="line">    <span class="keyword">if</span> (!-e <span class="variable">$request_filename</span>) &#123;  </span><br><span class="line">        rewrite ^/some-directory/(.*)$ /error-page.html last;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="rewrite-log指令"><a href="#rewrite-log指令" class="headerlink" title="rewrite_log指令"></a>rewrite_log指令</h2><p>该指令配置是否开启URL重写日志的输出功能。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">语法	rewrite_log on|off;</span><br><span class="line">默认值	rewrite_log off;</span><br><span class="line">位置	http、server、location、<span class="keyword">if</span></span><br></pre></td></tr></table></figure>
+
+<p>开启后，URL重写的相关日志将以notice级别输出到error_log指令配置的日志文件汇总。</p>
+<h2 id="Rewrite的案例"><a href="#Rewrite的案例" class="headerlink" title="Rewrite的案例"></a>Rewrite的案例</h2><h3 id="域名跳转"><a href="#域名跳转" class="headerlink" title="域名跳转"></a>域名跳转</h3><p>如果我们想访问京东网站，大家都知道我们可以输入<code>www.jd.com</code>,但是同样的我们也可以输入<code>www.360buy.com</code>同样也都能访问到京东网站。这个其实是因为京东刚开始的时候域名就是<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.360buy.com,后面由于各种原因把自己的域名换成了www.jd.com/">www.360buy.com，后面由于各种原因把自己的域名换成了www.jd.com</a>, 虽然说域名变量，但是对于以前只记住了<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.360buy.com的用户来说,我们如何把这部分用户也迁移到我们新域名的访问上来,针对于这个问题,我们就可以使用nginx中rewrite的域名跳转来解决./">www.360buy.com的用户来说，我们如何把这部分用户也迁移到我们新域名的访问上来，针对于这个问题，我们就可以使用Nginx中Rewrite的域名跳转来解决。</a></p>
+<ul>
+<li><p>准备两个域名 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.360buy.com/">www.360buy.com</a> | <a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.jd.com/">www.jd.com</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/hosts</span><br><span class="line">192.168.200.133 www.360buy.com</span><br><span class="line">192.168.200.133 www.jd.com</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>/usr/local/nginx/html/hm</code>目录下创建一个访问页面</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">  &lt;html&gt;</span><br><span class="line">  	&lt;title&gt;&lt;/title&gt;</span><br><span class="line">  	&lt;body&gt;</span><br><span class="line">  		&lt;h1&gt;欢迎来到我们的网站&lt;/h1&gt;</span><br><span class="line">  	&lt;/body&gt;</span><br><span class="line">  &lt;/html&gt;</span><br><span class="line"></span><br><span class="line">- 通过Rewrite完成将www.360buy.com的请求跳转到www.jd.com</span><br><span class="line"></span><br><span class="line">  ```sh</span><br><span class="line">  server &#123;</span><br><span class="line">  	listen 80;</span><br><span class="line">  	server_name www.360buy.com;</span><br><span class="line">  	rewrite ^/ http://www.jd.com permanent;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  server &#123;</span><br><span class="line">  	listen 80;</span><br><span class="line">  	server_name www.jd.com;</span><br><span class="line">  	location /&#123;</span><br><span class="line">  		root /usr/local/nginx/html/hm;</span><br><span class="line">  		index index.html;</span><br><span class="line">  	&#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="域名跳转2"><a href="#域名跳转2" class="headerlink" title="域名跳转2"></a>域名跳转2</h3><blockquote>
+<p>问题描述:如何在域名跳转的过程中携带请求的URI？</p>
+</blockquote>
+<ul>
+<li><p>修改配置信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.itheima.com;</span><br><span class="line">	rewrite ^(.*) http://www.hm.com<span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<blockquote>
+<p>问题描述:我们除了上述说的<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.jd.com/">www.jd.com</a> 、<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.360buy.com其实还有我们也可以通过www.jingdong.com来访问,那么如何通过rewrite来实现多个域名的跳转/">www.360buy.com其实还有我们也可以通过www.jingdong.com来访问，那么如何通过Rewrite来实现多个域名的跳转</a>?</p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 添加域名</span></span><br><span class="line">vim /etc/hosts</span><br><span class="line">192.168.200.133 www.jingdong.com</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>修改配置信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.360buy.com www.jingdong.com;</span><br><span class="line">	rewrite ^(.*) http://www.jd.com<span class="variable">$1</span> permanent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="域名镜像"><a href="#域名镜像" class="headerlink" title="域名镜像"></a>域名镜像</h3><p>上述案例中，将<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.360buy.com/">www.360buy.com</a> 和 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.jingdong.com都能跳转到www.jd.com,那么www.jd.com我们就可以把它起名叫主域名,其他两个就是我们所说的镜像域名,当然如果我们不想把整个网站做镜像,只想为其中某一个子目录下的资源做镜像,我们可以在location块中配置rewrite功能,比如/">www.jingdong.com都能跳转到www.jd.com，那么www.jd.com我们就可以把它起名叫主域名，其他两个就是我们所说的镜像域名，当然如果我们不想把整个网站做镜像，只想为其中某一个子目录下的资源做镜像，我们可以在location块中配置rewrite功能，比如</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name rewrite.myweb.com;</span><br><span class="line">	location ^~ /source1&#123;</span><br><span class="line">		rewrite ^/resource1(.*) http://rewrite.myweb.com/web<span class="variable">$1</span> last;</span><br><span class="line">	&#125;</span><br><span class="line">	location ^~ /source2&#123;</span><br><span class="line">		rewrite ^/resource2(.*) http://rewrite.myweb.com/web<span class="variable">$1</span> last;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="独立域名"><a href="#独立域名" class="headerlink" title="独立域名"></a>独立域名</h3><p>一个完整的项目包含多个模块，比如购物网站有商品商品搜索模块、商品详情模块已经购物车模块等，那么我们如何为每一个模块设置独立的域名。</p>
+<ul>
+<li><p>需求：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">http://search.hm.com  访问商品搜索模块</span><br><span class="line">http://item.hm.com	  访问商品详情模块</span><br><span class="line">http://cart.hm.com	  访问商品购物车模块</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name search.hm.com;</span><br><span class="line">	rewrite ^(.*) http://www.hm.com/bbs<span class="variable">$1</span> last;</span><br><span class="line">&#125;</span><br><span class="line">server&#123;</span><br><span class="line">	listen 81;</span><br><span class="line">	server_name item.hm.com;</span><br><span class="line">	rewrite ^(.*) http://www.hm.com/item<span class="variable">$1</span> last;</span><br><span class="line">&#125;</span><br><span class="line">server&#123;</span><br><span class="line">	listen 82;</span><br><span class="line">	server_name cart.hm.com;</span><br><span class="line">	rewrite ^(.*) http://www.hm.com/cart<span class="variable">$1</span> last;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="目录自动添加”-“"><a href="#目录自动添加”-“" class="headerlink" title="目录自动添加”&#x2F;“"></a>目录自动添加”&#x2F;“</h3><ul>
+<li><p>问题描述</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen	80;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location / &#123;</span><br><span class="line">		root html;</span><br><span class="line">		index index.html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>要想访问上述资源，很简单，只需要通过<a target="_blank" rel="noopener external nofollow noreferrer" href="http://192.168.200.133直接就能访问,地址后面不需要加/,%E4%BD%86%E6%98%AF%E5%A6%82%E6%9E%9C%E5%B0%86%E4%B8%8A%E8%BF%B0%E7%9A%84%E9%85%8D%E7%BD%AE%E4%BF%AE%E6%94%B9%E4%B8%BA%E5%A6%82%E4%B8%8B%E5%86%85%E5%AE%B9">http://192.168.200.133直接就能访问，地址后面不需要加/,但是如果将上述的配置修改为如下内容</a>:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen	80;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	location /hm &#123;</span><br><span class="line">		root html;</span><br><span class="line">		index index.html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>这个时候，要想访问上述资源，按照上述的访问方式，我们可以通过<a target="_blank" rel="noopener external nofollow noreferrer" href="http://192.168.200.133/hm/%E6%9D%A5%E8%AE%BF%E9%97%AE,%E4%BD%86%E6%98%AF%E5%A6%82%E6%9E%9C%E5%9C%B0%E5%9D%80%E5%90%8E%E9%9D%A2%E4%B8%8D%E5%8A%A0%E6%96%9C%E6%9D%A0%EF%BC%8C%E9%A1%B5%E9%9D%A2%E5%B0%B1%E4%BC%9A%E5%87%BA%E9%97%AE%E9%A2%98%E3%80%82%E5%A6%82%E6%9E%9C%E4%B8%8D%E5%8A%A0%E6%96%9C%E6%9D%A0%EF%BC%8CNginx%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%86%85%E9%83%A8%E4%BC%9A%E8%87%AA%E5%8A%A8%E5%81%9A%E4%B8%80%E4%B8%AA301%E7%9A%84%E9%87%8D%E5%AE%9A%E5%90%91%EF%BC%8C%E9%87%8D%E5%AE%9A%E5%90%91%E7%9A%84%E5%9C%B0%E5%9D%80%E4%BC%9A%E6%9C%89%E4%B8%80%E4%B8%AA%E6%8C%87%E4%BB%A4%E5%8F%ABserver_name_in_redirect">http://192.168.200.133/hm/来访问,但是如果地址后面不加斜杠，页面就会出问题。如果不加斜杠，Nginx服务器内部会自动做一个301的重定向，重定向的地址会有一个指令叫server_name_in_redirect</a> on|off;来决定重定向的地址：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">如果该指令为on</span><br><span class="line">	重定向的地址为:  http://server_name/目录名/;</span><br><span class="line">如果该指令为off</span><br><span class="line">	重定向的地址为:  http://原URL中的域名/目录名/;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">http://192.168.200.133/hm如果不加斜杠，那么按照上述规则，</span><br><span class="line">如果指令server_name_in_redirect为on，则301重定向地址变为 </span><br><span class="line">	http://localhost/hm/ <span class="comment"># 地址就有问题。</span></span><br><span class="line">如果为off，则301重定向地址变为</span><br><span class="line">	http://192.168.200.133/ht/。# 是正常的</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>注意server_name_in_redirect指令在Nginx的0.8.48版本之前默认都是on，之后改成了off,所以现在我们这个版本不需要考虑这个问题，但是如果是0.8.48以前的版本并且server_name_in_redirect设置为on，我们如何通过rewrite来解决这个问题？</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 可以使用rewrite功能为末尾没有斜杠的URL自动添加一个斜杠</span></span><br><span class="line">server &#123;</span><br><span class="line">	listen	80;</span><br><span class="line">	server_name localhost;</span><br><span class="line">	server_name_in_redirect on;</span><br><span class="line">	location /hm &#123;</span><br><span class="line">		<span class="keyword">if</span> (-d <span class="variable">$request_filename</span>)&#123;</span><br><span class="line">			rewrite ^/(.*)([^/])$ http://<span class="variable">$host</span>/$1<span class="variable">$2</span>/ permanent;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="合并目录"><a href="#合并目录" class="headerlink" title="合并目录"></a>合并目录</h3><p>搜索引擎优化(SEO)是一种利用搜索引擎的搜索规则来提供目的网站的有关搜索引擎内排名的方式。我们在创建自己的站点时，可以通过很多中方式来有效的提供搜索引擎优化的程度。其中有一项就包含URL的目录层级一般不要超过三层，否则的话不利于搜索引擎的搜索也给客户端的输入带来了负担，但是将所有的文件放在一个目录下又会导致文件资源管理混乱并且访问文件的速度也会随着文件增多而慢下来，这两个问题是相互矛盾的，那么使用rewrite如何解决上述问题?</p>
+<ul>
+<li><p>举例，网站中有一个资源文件的访问路径时 &#x2F;server&#x2F;11&#x2F;22&#x2F;33&#x2F;44&#x2F;20.html,也就是说20.html存在于第5级目录下</p>
+</li>
+<li><p>如果想要访问该资源文件，客户端的URL地址就要写成 <code>http://www.web.name/server/11/22/33/44/20.html</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.web.name;</span><br><span class="line">	location /server&#123;</span><br><span class="line">		root html;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>但是这个是非常不利于SEO搜索引擎优化的，同时客户端也不好记.使用rewrite我们可以进行如下配置:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.web.name;</span><br><span class="line">	location /server&#123;</span><br><span class="line">		rewrite ^/server-([0-9]+)-([0-9]+)-([0-9]+)-([0-9]+)\.html$ /server/<span class="variable">$1</span>/<span class="variable">$2</span>/<span class="variable">$3</span>/<span class="variable">$4</span>/<span class="variable">$5</span>.html last;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>客户端只需要输入<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.web.name/server-11-22-33-44-20.html%E5%B0%B1%E5%8F%AF%E4%BB%A5%E8%AE%BF%E9%97%AE%E5%88%B020.html%E9%A1%B5%E9%9D%A2%E4%BA%86%E3%80%82%E8%BF%99%E9%87%8C%E4%B9%9F%E5%85%85%E5%88%86%E5%88%A9%E7%94%A8%E4%BA%86rewrite%E6%8C%87%E4%BB%A4%E6%94%AF%E6%8C%81%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E7%89%B9%E6%80%A7%E3%80%82">http://www.web.name/server-11-22-33-44-20.html就可以访问到20.html页面了。这里也充分利用了rewrite指令支持正则表达式的特性。</a></p>
+</li>
+</ul>
+<h3 id="防盗链"><a href="#防盗链" class="headerlink" title="防盗链"></a>防盗链</h3><p>防盗链之前我们已经介绍过了相关的知识，在rewrite中的防盗链和之前将的原理其实都是一样的，只不过通过rewrite可以将防盗链的功能进行完善下，当出现防盗链的情况，我们可以使用rewrite将请求转发到自定义的一张图片和页面，给用户比较好的提示信息。下面我们就通过根据文件类型实现防盗链的一个配置实例:</p>
+<figure class="highlight perl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">	<span class="keyword">listen</span> <span class="number">80</span>;</span><br><span class="line">	server_name www.web.com;</span><br><span class="line">	locatin ~* ^.+\.(gif|jpg|png|swf|flv|rar|zip)$&#123;</span><br><span class="line">		valid_referers none blocked server_names *.web.com;</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$invalid_referer</span>)&#123;</span><br><span class="line">			rewrite ^<span class="regexp">/ http:/</span><span class="regexp">/www.web.com/imag</span>es/forbidden.png;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据目录实现防盗链配置：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">server&#123;</span><br><span class="line">	listen 80;</span><br><span class="line">	server_name www.web.com;</span><br><span class="line">	location /file/&#123;</span><br><span class="line">		root /server/file/;</span><br><span class="line">		valid_referers none blocked server_names *.web.com;</span><br><span class="line">		<span class="keyword">if</span> (<span class="variable">$invalid_referer</span>)&#123;</span><br><span class="line">			rewrite ^/ http://www.web.com/images/forbidden.png;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>当使用 rewrite 指令时，确保了解正则表达式的语法和 nginx 的配置方式。</li>
+<li>过度使用 rewrite 可能会导致性能下降，特别是在处理大量请求时。因此，尽量保持配置简单和高效。</li>
+<li>在生产环境中更改配置之前，最好在测试环境中验证更改。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/ee9089be">https://fulsun.github.io/p/ee9089be</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/002.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/4709a84" title="本地https环境解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/008.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">本地https环境解决方案</div></div></a></div><div class="next-post pull-right"><a href="/p/ea231d7a" title="Location的URI解析"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Location的URI解析</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/eaf22a9f" title="Nginx静态资源部署与跨域访问"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-10</div><div class="title">Nginx静态资源部署与跨域访问</div></div></a></div><div><a href="/p/deab9856" title="Nginx介绍"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-28</div><div class="title">Nginx介绍</div></div></a></div><div><a href="/p/ab1b37cf" title="Nginx基本配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-29</div><div class="title">Nginx基本配置</div></div></a></div><div><a href="/p/2793eb31" title="Nginx日志管理"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-09</div><div class="title">Nginx日志管理</div></div></a></div><div><a href="/p/ea231d7a" title="Location的URI解析"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-30</div><div class="title">Location的URI解析</div></div></a></div><div><a href="/p/4709a84" title="本地https环境解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/008.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-02</div><div class="title">本地https环境解决方案</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%87%8D%E5%86%99%E5%92%8C%E8%BD%AC%E5%8F%91%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">重写和转发的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#set%E6%8C%87%E4%BB%A4"><span class="toc-text">set指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#if%E6%8C%87%E4%BB%A4"><span class="toc-text">if指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#break%E6%8C%87%E4%BB%A4"><span class="toc-text">break指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#return%E6%8C%87%E4%BB%A4"><span class="toc-text">return指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rewrite%E6%8C%87%E4%BB%A4"><span class="toc-text">rewrite指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#rewrite-log%E6%8C%87%E4%BB%A4"><span class="toc-text">rewrite_log指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rewrite%E7%9A%84%E6%A1%88%E4%BE%8B"><span class="toc-text">Rewrite的案例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E8%B7%B3%E8%BD%AC"><span class="toc-text">域名跳转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E8%B7%B3%E8%BD%AC2"><span class="toc-text">域名跳转2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%9F%E5%90%8D%E9%95%9C%E5%83%8F"><span class="toc-text">域名镜像</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8B%AC%E7%AB%8B%E5%9F%9F%E5%90%8D"><span class="toc-text">独立域名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%9B%AE%E5%BD%95%E8%87%AA%E5%8A%A8%E6%B7%BB%E5%8A%A0%E2%80%9D-%E2%80%9C"><span class="toc-text">目录自动添加”&#x2F;“</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%88%E5%B9%B6%E7%9B%AE%E5%BD%95"><span class="toc-text">合并目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%98%B2%E7%9B%97%E9%93%BE"><span class="toc-text">防盗链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

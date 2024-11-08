@@ -1,0 +1,607 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>PostgreSQL 入门 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="PostgreSQL 入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PostgreSQL 入门">
+<meta property="og:url" content="https://fulsun.github.io/p/c9429499">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="PostgreSQL 入门">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/012.webp">
+<meta property="article:published_time" content="2024-02-01T10:14:29.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:06.946Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="PostgreSQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/012.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/c9429499"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'PostgreSQL 入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:06'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/012.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">PostgreSQL 入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-02-01T10:14:29.000Z" title="发表于 2024-02-01 10:14:29">2024-02-01</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:06.946Z" title="更新于 2024-11-08 13:02:06">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><i class="fas fa-angle-right post-meta-separator"></i><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/PostgreSQL/">PostgreSQL</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="PostgreSQL 入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="PG-简介"><a href="#PG-简介" class="headerlink" title="PG 简介"></a>PG 简介</h2><p><code>PostgreSQL</code> 是一个免费的对象-关系数据库服务器(ORDBMS)，在灵活的 <code>BSD</code> 许可证下发行</p>
+<ul>
+<li>PostgreSQL 官网 <code>https://www.postgresql.org/</code></li>
+<li>PostgreSQL 中文社区 <code>http://www.postgres.cn/v2/home</code></li>
+<li>全球数据库排行 <code>https://db-engines.com/en/</code></li>
+<li>国产数据库排行 <code>https://www.modb.pro/dbRank</code></li>
+</ul>
+<h3 id="PG-的历史"><a href="#PG-的历史" class="headerlink" title="PG 的历史"></a>PG 的历史</h3><ul>
+<li><code>PostgreSQL</code> 最初设想于 1986 年，当时被叫做 <code>Berkley Postgres Project</code></li>
+<li>该项目一直到 1994 年都处于演进和修改中，直到开发人员 <code>Andrew Yu</code> 和 <code>Jolly Chen</code> 在 <code>Postgres</code> 中添加了一个 SQL（<code>Structured Query Language</code>，结构化查询语言）翻译程序，该版本叫做 <code>Postgres95</code>，在开放源代码社区发放, 以社区的形式运作。</li>
+<li>1996 年，再次对 <code>Postgres95</code> 做了较大的改动，并将其作为 <code>PostgresSQL6.0</code> 版发布。该版本的 <code>Postgres</code> 提高了后端的速度，包括增强型 SQL92 标准以及重要的后端特性（包括子选择、默认值、约束和触发器）</li>
+<li>2005 年，发布 8.0 版本，开始支持 <code>windows系统</code> 环境</li>
+<li><code>PostgreSQL 9.0</code> ：<code>支持64位windows系统</code>，<code>异步流数据复制</code>、<code>Hot Standby</code>；</li>
+<li><code>PostgreSQL 9.1</code> ：支持数据同步复制，<code>unlogged tabels</code>、<code>serializable snapshot isolation</code>、<code>FDW</code> 外部表。</li>
+<li>此版本后，<code>PostgreSQL</code> 开始得到中国多个行业用户的关注，开始有应用于电信、保险、制造业等边缘系统。</li>
+<li>目前生产环境主流的版本是 <code>PostgreSQL 12</code></li>
+<li>2021-09-30，PostgreSQL 全球开发组宣布，功能最为强大的开源数据库，<code>PostgreSQL 14</code> 版本正式发布！</li>
+</ul>
+<h3 id="PG-的社区"><a href="#PG-的社区" class="headerlink" title="PG 的社区"></a>PG 的社区</h3><ul>
+<li>纯社区<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/a548635e5e98341fe720d0f1d699a2c1.png"><ul>
+<li>最终用户：希望社区长久，期望可以享受免费的、可持续发展的、开源的、不被任何商业公司、不被任何国家控制的企业级数据库。去 O，去 DB2 ，去 Sybase；</li>
+<li>云厂商：自研是最佳选择，但是自研有一些问题：譬如需要培养生态，需要市场背书，需要大量研发资源，可能需要重复造轮子；</li>
+<li>数据库厂商： 需要一款可以无法律风险，二次分发的开源数据库，唯有 PG</li>
+<li>数据库服务|DaaS 服务提供商</li>
+</ul>
+</li>
+<li>完善的组织结构<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/e92be79ab2ab4c4415ac0a8636bbd4d7.png"></li>
+<li><strong>开源许可独特性</strong><ul>
+<li>BSD 许可协议（英语：Berkeley Software Distribution license）是自由软件中使用最广泛的许可协议之一。BSD 就是遵照这个许可证来发布。BSD 许可协议，二开版本可开源也可闭源商用。</li>
+<li>跟其他条款相比，从 GNU 通用公共许可证（GPL）到限制重重的著作权（Copyright），BSD 许可证比较宽松，甚至跟公有领域更为接近。”Take it down to the copy center and make as many copies as you want”。可以说，GPL 强迫后续版本必须一样是自由软件，BSD 的后续版本可以选择要继续是 BSD 或其他自由软件条款或封闭软件等等。</li>
+</ul>
+</li>
+</ul>
+<h3 id="PostgreSQL-与-MySQL-的比较"><a href="#PostgreSQL-与-MySQL-的比较" class="headerlink" title="PostgreSQL 与 MySQL 的比较"></a>PostgreSQL 与 MySQL 的比较</h3><ul>
+<li><p>PostgreSQL 相对于 MySQL 的优势</p>
+<ul>
+<li>在 SQL 的标准实现上要比 MySQL 完善，而且功能实现比较严谨。</li>
+<li>对表连接支持较完整，优化器的功能较完整，支持的索引类型很多，复杂查询能力较强。</li>
+<li>PG 主表采用堆表存放，MySQL 采用索引组织表，能够支持比 MySQL 更大的数据量。</li>
+<li>PG 的主备复制属于物理复制，相对于 MySQL 基于 binlog 的逻辑复制，数据的一致性更加可靠，复制性能更高，对主机性能的影响也更小。</li>
+<li>PostgreSQL 支持 JSON 和其他 NoSQL 功能，如本机 XML 支持和使用 HSTORE 的键值对。它还支持索引 JSON 数据以加快访问速度，特别是 10 版本 JSONB 更是强大。</li>
+<li>PostgreSQL 完全免费，而且是 BSD 协议，MySQL 现在主要是被 Oracle 公司控制（GPL 协议）。</li>
+</ul>
+</li>
+<li><p>MySQL 相对于 PG 的优势</p>
+<ul>
+<li><code>innodb</code> 的基于回滚段实现的 <code>MVCC机制</code>，相对 PG 新老数据一起存放的 <code>基于XID的MVCC机制</code>，是占优的。新老数据一起存放，需要定时触 发 <code>VACUUM</code>，会带来多余的 IO 和数据库对象加锁开销，引起数据库整体的并发能力下降。而且 <code>VACUUM</code> 清理不及时，还可能会引发数据膨胀。</li>
+</ul>
+<blockquote>
+<p>MVCC (Multiversion Concurrency Control) 中文全程叫多版本并发控制，是现代数据库（包括 MySQL、Oracle、PostgreSQL 等）引擎实现中常用的处理读写冲突的手段，目的在于提高数据库高并发场景下的吞吐性能。</p>
+</blockquote>
+<ul>
+<li><code>MySQL</code> 采用索引组织表，这种存储方式非常适合基于主键匹配的查询、删改操作，但是对表结构设计存在约束。</li>
+<li><code>MySQL</code> 的优化器较简单，系统表、运算符、数据类型的实现都很精简，非常适合简单的查询操作。</li>
+<li><code>MySQL</code> 相对于 PG 在国内的流行度更高，PG 在国内显得就有些落寞了。</li>
+<li><code>MySQL</code> 的存储引擎插件化机制，使得它的应用场景更加广泛，比如除了 <code>innodb</code> 适合事务处理场景外，<code>myisam</code> 适合静态数据的查询场景。</li>
+</ul>
+</li>
+</ul>
+<h2 id="PostgreSQL-的下载安装"><a href="#PostgreSQL-的下载安装" class="headerlink" title="PostgreSQL 的下载安装"></a>PostgreSQL 的下载安装</h2><h3 id="Windows-上安装-PostgreSQL"><a href="#Windows-上安装-PostgreSQL" class="headerlink" title="Windows 上安装 PostgreSQL"></a>Windows 上安装 PostgreSQL</h3><ul>
+<li><p>访问官网下载地址 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">https://www.enterprisedb.com/downloads/postgres-postgresql-downloads</a><br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/adfe081f547926f655304a1e5eacc2ad.png"></p>
+</li>
+<li><p>下载最新发布的 <code>PostgreSQL 16</code> 双击下载安装包，开始安装</p>
+</li>
+<li><p>选择安装组件<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/61b5fc812acd3f800d3c653f19e1c9c4.png"></p>
+</li>
+<li><p>设置数据库路径</p>
+</li>
+<li><p>设置超级用户的密码</p>
+</li>
+<li><p>设置端口号，可以直接用默认 5433 就行</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/4888cc63b86149e11479831817a0902c.png"></p>
+</li>
+<li><p>去掉勾选，直接点 Finish</p>
+</li>
+<li><p>打开 pgAdmin 4<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/434e9482d2f99cc3066ac0c94d0648fa.png"></p>
+</li>
+<li><p>点击左侧的 Servers &gt; Postgre SQL 10<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/8a099c783ea799c43478f3634c15fec0.png"></p>
+</li>
+<li><p>输入密码，点击 OK 即可，控制面板如下<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/0c813ed5364d623c5d674144bcaea98e.png"></p>
+</li>
+<li><p>打开 SQL Shell(psql)<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/e5ae2d77402103006d5a7b52002892a9.png"></p>
+</li>
+<li><p>远程访问</p>
+<ul>
+<li>打开 postgresql 安装目录的 data 子目录</li>
+<li>修改 pg_hba.conf 文件：在 IPV4 部分添加新的一行: host all all 0.0.0.0&#x2F;0 md5<br><img src= "/medias/detail/load.gif" data-lazy-src="/p/c9429499/b4453de1c8e5f3e9684f154ddcebe7ab.png"></li>
+<li>控制面板–&gt; 系统与安全–&gt; Windows 防火墙, 关闭防火墙。</li>
+<li>重启 postGresql 服务</li>
+</ul>
+</li>
+</ul>
+<h3 id="Linux-上安装-PostgreSQL"><a href="#Linux-上安装-PostgreSQL" class="headerlink" title="Linux 上安装 PostgreSQL"></a>Linux 上安装 PostgreSQL</h3><ul>
+<li><p>下载安装</p>
+<ul>
+<li><p>访问官网下载地址 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.postgresql.org/download/">https://www.postgresql.org/download/</a></p>
+</li>
+<li><p>选择相应的版本和平台</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Install the repository RPM:</span></span><br><span class="line">sudo yum install -y https://download.postgresql.org/pub/repos/yum/reporpms/EL-7-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Install PostgreSQL:</span></span><br><span class="line">sudo yum install -y postgresql14-server</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Optionally initialize the database and <span class="built_in">enable</span> automatic start:</span></span><br><span class="line">sudo /usr/pgsql-14/bin/postgresql-14-setup initdb</span><br><span class="line">sudo systemctl enable postgresql-14</span><br><span class="line">sudo systemctl start postgresql-14</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>导入 yum 源</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install -y <span class="symbol">https:</span>/<span class="regexp">/download.postgresql.org/pub</span><span class="regexp">/repos/yum</span><span class="regexp">/reporpms/</span><span class="variable constant_">EL</span>-<span class="number">7</span>-x86_64/pgdg-redhat-repo-latest.noarch.rpm</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 <code>PostgreSQL</code> 服务</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo yum <span class="keyword">install </span>-y postgresql14-server</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>初始化数据库</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> /usr/pgsql-14/bin/postgresql-14-setup initdb</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 PostgreSQL 服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#设置 PostgreSQL 服务为开机启动</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> postgresql-14</span><br><span class="line"><span class="comment">#启动 PostgreSQL 服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl start postgresql-14</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>修改 postgres 账号密码</p>
+<ul>
+<li><p><code>PostgreSQL</code> 安装成功之后，会默认创建一个名为 <code>postgres</code> 的 Linux 用户，初始化数据库后，会有名为 <code>postgres</code> 的数据库，来存储数据库的基础信息，例如用户信息等等，相当于 MySQL 中默认的名为 mysql 数据库。</p>
+</li>
+<li><p><code>postgres</code> 数据库中会初始化一名超级用户 <code>postgres</code></p>
+</li>
+<li><p>为了方便我们使用 <code>postgres</code> 账号进行管理，我们可以修改该账号的密码</p>
+</li>
+<li><p>进入 <code>PostgreSQL</code> 命令行</p>
+</li>
+<li><p>通过 su 命令切换 <code>linux</code> 用户为 <code>postgres</code> 会自动进入命令行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">su postgres</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动 SQL Shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psql</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改密码</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">USER</span> postgres <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;NewPassword&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>配置远程访问</p>
+<ul>
+<li><p>开放端口</p>
+<figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo firewall-<span class="keyword">cmd</span><span class="language-bash"> --add-port=5432/tcp --permanent</span></span><br><span class="line">sudo firewall-<span class="keyword">cmd</span><span class="language-bash"> --reload</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改 IP 绑定</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#修改配置文件</span></span><br><span class="line">vi /var/lib/pgsql/14/data/postgresql.conf</span><br><span class="line"><span class="comment">#将监听地址修改为*</span></span><br><span class="line"><span class="comment">#默认 listen_addresses 配置是注释掉的，所以可以直接在配置文件开头加入该行</span></span><br><span class="line">listen_addresses=<span class="string">&#x27;*&#x27;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>允许所有 IP 访问</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#修改配置文件</span></span><br><span class="line">vi /var/lib/pgsql/14/data/pg_hba.conf</span><br><span class="line"></span><br><span class="line"><span class="comment">#在文件尾部加入</span></span><br><span class="line">host  all  all 0.0.0.0/0 md5</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重启 PostgreSQL 服务</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#重启 PostgreSQL 服务</span></span><br><span class="line"><span class="built_in">sudo</span> systemctl restart postgresql-14</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="PostgreSQL-的基本使用"><a href="#PostgreSQL-的基本使用" class="headerlink" title="PostgreSQL 的基本使用"></a>PostgreSQL 的基本使用</h2><h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><ul>
+<li><p>登录</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">psql -h 服务器 -U 用户名  -d 数据库 -p 端口地址  // -U 是大写</span></span><br><span class="line">psql -U dbuser -d exampledb -h 127.0.0.1 -p 5432</span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">psql (连接数据库，默认用户和数据库都是postgres)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">相当于系统用户 postgres 以同名数据库用户的身份，登录数据库，这是不用输入密码的。如果一切正常，系统提示符会变为 <span class="string">&quot;postgres =#&quot;</span>，表示这时已经进入了数据库控制台。</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="数据库操作"><a href="#数据库操作" class="headerlink" title="数据库操作"></a>数据库操作</h3><ul>
+<li><p>数据库操作</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#创建数据库</span></span><br><span class="line">CREATE DATABASE mydb;</span><br><span class="line"><span class="comment">#查看所有数据库</span></span><br><span class="line"><span class="punctuation">\</span>l</span><br><span class="line"><span class="comment">#切换当前数据库</span></span><br><span class="line"><span class="punctuation">\</span><span class="built_in">c</span> mydb</span><br><span class="line"><span class="comment">#删除数据库</span></span><br><span class="line">drop database <span class="operator">&lt;</span>dbname<span class="operator">&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="数据库值类型"><a href="#数据库值类型" class="headerlink" title="数据库值类型"></a>数据库值类型</h3><ul>
+<li><p>创建表格时每列都必须使用数据类型。PotgreSQL 中主要有三类数据类型：</p>
+<ul>
+<li>数值数据类型</li>
+<li>字符串数据类型</li>
+<li>日期&#x2F;时间数据类型</li>
+</ul>
+</li>
+<li><p>数值数据类型</p>
+<table>
+<thead>
+<tr>
+<th>名字</th>
+<th>存储长度</th>
+<th>描述</th>
+<th>范围</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>smallint</td>
+<td>2 字节</td>
+<td>小范围整数</td>
+<td>-32768 到+32767</td>
+</tr>
+<tr>
+<td>integer</td>
+<td>4 字节</td>
+<td>常用的整数</td>
+<td>-32768 到+32767</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>8 字节</td>
+<td>大范围整数</td>
+<td>-9223372036854775808 到 +9223372036854775807</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td>可变长</td>
+<td>用户指定的精度，精确</td>
+<td>小数点前 131072 位；小数点后 16383 位</td>
+</tr>
+<tr>
+<td>numeric</td>
+<td>可变长</td>
+<td>用户指定精度，精确</td>
+<td>小数点前 131072 位；小数点后 16383 位</td>
+</tr>
+<tr>
+<td>real</td>
+<td>4 字节</td>
+<td>可变精度，不精确</td>
+<td>6 位十进制数字精度</td>
+</tr>
+<tr>
+<td>double</td>
+<td>8 字节</td>
+<td>可变精度，不精确</td>
+<td>15 位十进制数字精度</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>字符串字符串类型包括</p>
+<ul>
+<li>char(size)，character(size)：固定长度字符串，size 规定了需存储的字符数，由右边的空格补齐；</li>
+<li>varchar(size)，character varying(size)：可变长度字符串，size 规定了需存储的字符数；</li>
+<li>text：可变长度字符串。</li>
+</ul>
+</li>
+<li><p>日期&#x2F;时间 表示日期或时间的数据类型有：</p>
+<ul>
+<li>timestamp：日期和时间；</li>
+<li>date：日期，无时间；</li>
+<li>time：时间；</li>
+</ul>
+</li>
+<li><p>其他数据类型类型还有 <code>布尔值 boolean</code> （true 或 false），<code>货币数额 money</code> 和 <code>几何数据</code> 等</p>
+</li>
+</ul>
+<h3 id="数据库表操作"><a href="#数据库表操作" class="headerlink" title="数据库表操作"></a>数据库表操作</h3><ul>
+<li><p>CRUD 表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">#创建表</span></span><br><span class="line">CREATE TABLE <span class="built_in">test</span>(<span class="built_in">id</span> int,body varchar(100));</span><br><span class="line"><span class="comment">#在表中插入数据</span></span><br><span class="line">insert into <span class="built_in">test</span>(<span class="built_in">id</span>,body) values(1,<span class="string">&#x27;hello,postgresql&#x27;</span>);</span><br><span class="line"><span class="comment">#查看当前数据库下所有表</span></span><br><span class="line">\d</span><br><span class="line"><span class="comment">#查看表结构，相当于 desc</span></span><br><span class="line">\d <span class="built_in">test</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PostgreSQL 使用序列来标识字段的自增长</p>
+<ul>
+<li><p>数据类型有 <code>smallserial</code>、<code>serial</code> 和 <code>bigserial</code> 。这些属性类似于 MySQL 数据库支持的 <code>AUTO_INCREMENT</code> 属性</p>
+<ul>
+<li><p><code>SMALLSERIAL</code>、<code>SERIAL</code> 和 <code>BIGSERIAL</code> 范围：</p>
+<table>
+<thead>
+<tr>
+<th>伪类型</th>
+<th>存储大小</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SALLSERIAL</td>
+<td>2 字节</td>
+</tr>
+<tr>
+<td>SERIAL</td>
+<td>4 字节</td>
+</tr>
+<tr>
+<td>BIGSERIAL</td>
+<td>8 字节</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+<li><p>示例</p>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#创建表</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> COMPANY(</span><br><span class="line">   ID  SERIAL <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">   NAME           TEXT      <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">   AGE            <span class="type">INT</span>       <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">   ADDRESS        <span class="type">CHAR</span>(<span class="number">50</span>),</span><br><span class="line">   SALARY         <span class="type">REAL</span></span><br><span class="line">);</span><br><span class="line">#插入数据</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> COMPANY (NAME,AGE,ADDRESS,SALARY)</span><br><span class="line"><span class="keyword">VALUES</span> ( <span class="string">&#x27;Paul&#x27;</span>, <span class="number">32</span>, <span class="string">&#x27;California&#x27;</span>, <span class="number">20000.00</span> );</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> COMPANY (NAME,AGE,ADDRESS,SALARY)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;Allen&#x27;</span>, <span class="number">25</span>, <span class="string">&#x27;Texas&#x27;</span>, <span class="number">15000.00</span> );</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Schema"><a href="#Schema" class="headerlink" title="Schema"></a>Schema</h3><ul>
+<li><p>PostgreSQL 模式（SCHEMA）可以看着是一个表的集合。</p>
+</li>
+<li><p>一个模式可以包含视图、索引、数据类型、函数和操作符等。</p>
+</li>
+<li><p>相同的对象名称可以被用于不同的模式中而不会出现冲突，例如 schema1 和 myschema 都可以包含名为 mytable 的表。</p>
+</li>
+<li><p>使用模式的优势：</p>
+<ul>
+<li>允许多个用户使用一个数据库并且不会互相干扰</li>
+<li>将数据库对象组织成逻辑组以便更容易管理。</li>
+<li>第三方应用的对象可以放在独立的模式中，这样它们就不会与其他对象的名称发生冲突</li>
+</ul>
+</li>
+<li><p>模式类似于操作系统层的目录，但是模式不能嵌套</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">#创建schema：</span><br><span class="line"><span class="keyword">create</span> schema myschema;</span><br><span class="line"><span class="keyword">create</span> <span class="keyword">table</span> myschema.company(</span><br><span class="line">   ID   <span class="type">INT</span>              <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">   NAME <span class="type">VARCHAR</span> (<span class="number">20</span>)     <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">   AGE  <span class="type">INT</span>              <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">   ADDRESS  <span class="type">CHAR</span> (<span class="number">25</span>),</span><br><span class="line">   SALARY   <span class="type">DECIMAL</span> (<span class="number">18</span>, <span class="number">2</span>),</span><br><span class="line">   <span class="keyword">PRIMARY</span> KEY (ID)</span><br><span class="line">);</span><br><span class="line">#删除schema：</span><br><span class="line"><span class="keyword">drop</span> schema myschema；</span><br><span class="line">#删除一个模式以及其中包含的所有对象：</span><br><span class="line"><span class="keyword">DROP</span> SCHEMA myschema CASCADE;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="备份-PostgreSQL-数据库"><a href="#备份-PostgreSQL-数据库" class="headerlink" title="备份 PostgreSQL 数据库"></a>备份 PostgreSQL 数据库</h3><ul>
+<li><p>如果在生产环境中使用 PostgreSQL，请务必采取预防措施以确保用户的数据不会丢失</p>
+</li>
+<li><p><strong>单数据库</strong></p>
+<ul>
+<li><code>PostgreSQL</code> 提供了 <code>pg_dump</code> 实用程序来简化备份单个数据库的过程。 必须以对要备份的数据库具有读取权限的用户身份运行此命令。</li>
+</ul>
+<ol>
+<li><p>以 <code>postgres</code> 用户身份登录：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo su - postgres</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>通过运行以下命令将数据库的内容转储到文件中。替换 dbname 为要备份的数据库的名称</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dump dbname &gt; dbname.<span class="keyword">bak</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成的备份文件 dbname.bak 可以使用 scp 传输到另一台主机，也可以存储在本地以供以后使用。要演示恢复丢失的数据，请删除示例数据库并在其位置创建一个空数据库：</p>
+<ul>
+<li>使用 psql 恢复数据库</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">psql <span class="built_in">test</span> &lt; dbname.bak</span><br><span class="line"><span class="comment">#备份格式有几种选择：</span></span><br><span class="line"><span class="comment"># 1. *.bak：压缩二进制格式</span></span><br><span class="line"><span class="comment"># 2. *.sql：明文转储</span></span><br><span class="line"><span class="comment"># 3. *.tar：tarball</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：默认情况下，<code>PostgreSQL</code> 将忽略备份过程中发生的任何错误。这可能导致备份不完整。要防止这种情况，您可以使用 <code>-1</code> 选项运行 <code>pg_dump</code> 命令。 这会将整个备份过程视为 <code>单个事务</code>，这将在发生错误时阻止部分备份。</p>
+</blockquote>
+</li>
+<li><p>所有数据库</p>
+</li>
+</ol>
+<ul>
+<li><p>由于 <code>pg_dump</code> 一次只创建一个数据库的备份，因此它不会存储有关数据库角色或其他群集范围配置的信息。 要存储此信息并同时备份所有数据库，可以使用 <code>pg_dumpall</code>。</p>
+</li>
+<li><p>创建备份文件：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pg_dumpall &gt; pg_backup.<span class="keyword">bak</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从备份还原所有数据库：</p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">psql -f pg_backup.<span class="keyword">bak </span>postgres</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>示例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">#</span><span class="language-bash">备份数据库</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">pg_dump -U postgres -f /tmp/postgres.sql postgres (导出postgres数据库保存为postgres.sql)</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">pg_dump -U postgres -f /tmp/postgres.sql -t <span class="built_in">test</span> postgres (导出postgres数据库中表<span class="built_in">test</span>的数据)</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">pg_dump -U postgres -F t -f /tmp/postgres.tar postgres (导出postgres数据库以tar形式压缩保存为postgres.tar)</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">恢复数据库</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">psql -U postgres -f /tmp/postgres.sql bk01 (恢复postgres.sql数据到bk01数据库)</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">pg_restore --  从 pg_dump 创建的备份文件中恢复 PostgreSQL 数据库, 用于恢复由 pg_dump 转储的任何非纯文本格式中的 PostgreSQL 数据库。</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">pg_restore -U postgres -d bk01 /tmp/postgres.tar  (恢复postgres.tar数据到bk01数据库)</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="用户操作"><a href="#用户操作" class="headerlink" title="用户操作"></a>用户操作</h3><ul>
+<li><p>用户操作</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">#创建用户并设置密码</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span> <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">USER</span> test <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;test&#x27;</span>;</span><br><span class="line">#修改用户密码</span><br><span class="line">$ <span class="keyword">ALTER</span> <span class="keyword">USER</span> <span class="string">&#x27;username&#x27;</span> <span class="keyword">WITH</span> PASSWORD <span class="string">&#x27;password&#x27;</span>;</span><br><span class="line">#数据库授权,赋予指定账户指定数据库所有权限</span><br><span class="line">$ <span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE <span class="string">&#x27;dbname&#x27;</span> <span class="keyword">TO</span> <span class="string">&#x27;username&#x27;</span>;</span><br><span class="line">#将数据库 mydb 权限授权于 test</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE mydb <span class="keyword">TO</span> test;</span><br><span class="line">#但此时用户还是没有读写权限，需要继续授权表</span><br><span class="line"><span class="keyword">GRANT</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> <span class="keyword">ALL</span> TABLES <span class="keyword">IN</span> SCHEMA public <span class="keyword">TO</span> xxx;</span><br><span class="line">#注意，该<span class="keyword">sql</span>语句必须在所要操作的数据库里执行</span><br><span class="line"></span><br><span class="line">#移除指定账户指定数据库所有权限</span><br><span class="line"><span class="keyword">REVOKE</span> <span class="keyword">ALL</span> PRIVILEGES <span class="keyword">ON</span> DATABASE mydb <span class="keyword">from</span> test</span><br><span class="line">#删除用户</span><br><span class="line"><span class="keyword">drop</span> <span class="keyword">user</span> test</span><br><span class="line"># 查看用户</span><br><span class="line">\du</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>pg_hba.conf</code> 配置中的第一项设置的意思是：本地用户通过 <code>unix socket</code> 登陆时，使用 <code>peer</code> 方式认证<br>```</p>
+</blockquote>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &quot;local&quot; is for Unix domain socket connections only</span></span><br><span class="line">local   <span class="built_in">all</span>     <span class="built_in">all</span>          peer</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; `peer`是用`PostgreSQL`所在的操作系统上的`用户登陆`。`peer`方式中，`client`必须和`PostgreSQL`在**同一台机器**上。只要当前`系统用户`和要登陆到`PostgreSQL`的用户名相同，就可以登陆。在刚部署`PostgreSQL`之后，切换到系统的`postgres`用户后，直接执行`psql`就能进入`PostgreSQL`就是这个原因（当前系统用户为名`postgre`，`PostgreSQL`中的用户名也是`postgre`)。</span><br><span class="line"></span><br><span class="line">*   在`PostgreSQL`中创建一个没有密码的用户：</span><br><span class="line"></span><br><span class="line">``` sql</span><br><span class="line">create user local_user1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>切换到local_user1用户后，就可以直接通过unix_socket登陆PostgreSQL:</li>
+</ul>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># su - local_user1</span></span><br><span class="line">[local_user1<span class="variable">@10</span> ~]<span class="variable">$ </span>psql postgres</span><br><span class="line">psql (<span class="number">9.2</span>.<span class="number">24</span>)</span><br><span class="line"><span class="title class_">Type</span> <span class="string">&quot;help&quot;</span> <span class="keyword">for</span> help.</span><br><span class="line"></span><br><span class="line">postgres =&gt;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：要<strong>指定数据库名</strong>，如果不指定<strong>默认使用与用户同名的数据库</strong>。<code>peer</code>不是常用的方式！最常用的方式是通过<code>密码远程登陆</code></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="PostgreSQL-角色管理"><a href="#PostgreSQL-角色管理" class="headerlink" title="PostgreSQL 角色管理"></a>PostgreSQL 角色管理</h3><ul>
+<li><p>角色管理</p>
+<ul>
+<li><p>在<code>PostgreSQL</code>里没有区分用户和角色的概念，<code>&quot;CREATE USER&quot;</code>为 <code>&quot;CREATE ROLE&quot;</code> 的别名，这两个命令几乎是完全相同的，唯一的区别是 <code>&quot;CREATE USER&quot;</code> 命令创建的用户默认带有<code>LOGIN</code>属性，而<code>&quot;CREATE ROLE&quot;</code> 命令创建的用户默认不带<code>LOGIN</code>属性</p>
+</li>
+<li><p>创建david 角色和sandy 用户</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">postgres =<span class="comment"># CREATE ROLE david;　　//默认不带 LOGIN 属性</span></span><br><span class="line">CREATE ROLE</span><br><span class="line">postgres =<span class="comment"># CREATE USER sandy;　　//默认具有 LOGIN 属性</span></span><br><span class="line">CREATE ROLE</span><br><span class="line">postgres =<span class="comment"># \du</span></span><br><span class="line">							 List of roles</span><br><span class="line"> Role name |                   Attributes                   | Member of</span><br><span class="line">-----------+------------------------------------------------+-----------</span><br><span class="line"> david     | Cannot login                                   | &#123;&#125;</span><br><span class="line"> postgres  | Superuser, Create role, Create DB, Replication | &#123;&#125;</span><br><span class="line"> sandy     |                                                | &#123;&#125;</span><br><span class="line">  </span><br><span class="line">postgres =<span class="comment">#</span></span><br><span class="line">postgres =<span class="comment"># SELECT rolname from pg_roles ;</span></span><br><span class="line"> rolname</span><br><span class="line">----------</span><br><span class="line"> postgres</span><br><span class="line"> david</span><br><span class="line"> sandy</span><br><span class="line">(3 rows)</span><br><span class="line">  </span><br><span class="line">postgres =<span class="comment"># SELECT usename from pg_user;         //角色 david 创建时没有分配 login 权限，所以没有创建用户</span></span><br><span class="line"> usename</span><br><span class="line">----------</span><br><span class="line"> postgres</span><br><span class="line"> sandy</span><br><span class="line">(2 rows)</span><br><span class="line">  </span><br><span class="line">postgres =<span class="comment">#</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>创建用户时赋予角色属性</p>
+<ul>
+<li>如果要在创建角色时就赋予角色一些属性，可以使用下面的方法。</li>
+</ul>
+<ol>
+<li><p>首先切换到postgres 用户。</p>
+</li>
+<li><p>创建角色bella 并赋予其CREATEDB 的权限。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">postgres =<span class="comment"># CREATE ROLE bella CREATEDB ;</span></span><br><span class="line">CREATE ROLE</span><br><span class="line">postgres =<span class="comment"># \du</span></span><br><span class="line">							 List of roles</span><br><span class="line"> Role name |                   Attributes                   | Member of</span><br><span class="line">-----------+------------------------------------------------+-----------</span><br><span class="line"> bella     | Create DB, Cannot login                        | &#123;&#125;</span><br><span class="line"> david     |                                                | &#123;&#125;</span><br><span class="line"> postgres  | Superuser, Create role, Create DB, Replication | &#123;&#125;</span><br><span class="line"> sandy     |                                                | &#123;&#125;</span><br><span class="line">    </span><br><span class="line">postgres =<span class="comment">#</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<ul>
+<li><p>创建角色renee 并赋予其创建数据库及带有密码登录的属性。</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">postgres =<span class="comment"># CREATE ROLE renee CREATEDB PASSWORD &#x27;abc123&#x27; LOGIN;</span></span><br><span class="line">CREATE ROLE</span><br><span class="line">postgres =<span class="comment"># \du</span></span><br><span class="line">							 List of roles</span><br><span class="line"> Role name |                   Attributes                   | Member of</span><br><span class="line">-----------+------------------------------------------------+-----------</span><br><span class="line"> bella     | Create DB, Cannot login                        | &#123;&#125;</span><br><span class="line"> david     |                                                | &#123;&#125;</span><br><span class="line"> postgres  | Superuser, Create role, Create DB, Replication | &#123;&#125;</span><br><span class="line"> renee     | Create DB                                      | &#123;&#125;</span><br><span class="line"> sandy     |                                                | &#123;&#125;</span><br><span class="line"></span><br><span class="line">postgres =<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试renee 角色</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">postgres<span class="meta">@CS</span>-DEV:~&gt; psql -U renee -d postgres</span><br><span class="line">psql (<span class="number">9.1</span><span class="number">.0</span>)</span><br><span class="line"><span class="built_in">Type</span> <span class="string">&quot;help&quot;</span> <span class="keyword">for</span> help.</span><br><span class="line">  </span><br><span class="line">postgres =&gt;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>给已存在用户赋予各种权限</p>
+<ul>
+<li><p>赋予登录权限</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">postgres =<span class="comment"># ALTER ROLE bella WITH LOGIN;</span></span><br><span class="line">ALTER ROLE</span><br><span class="line">postgres =<span class="comment"># \du</span></span><br><span class="line">							 List of roles</span><br><span class="line"> Role name |                   Attributes                   | Member of</span><br><span class="line">-----------+------------------------------------------------+-----------</span><br><span class="line"> bella     | Create DB                                      | &#123;&#125;</span><br><span class="line"> david     |                                                | &#123;&#125;</span><br><span class="line"> postgres  | Superuser, Create role, Create DB, Replication | &#123;&#125;</span><br><span class="line"> renee     | Create DB                                      | &#123;&#125;</span><br><span class="line"> sandy     |                                                | &#123;&#125;</span><br><span class="line"></span><br><span class="line">postgres =<span class="comment">#</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>赋予renee 创建角色的权限</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">postgres =<span class="comment"># ALTER ROLE renee WITH CREATEROLE;</span></span><br><span class="line">ALTER ROLE</span><br><span class="line">postgres =<span class="comment"># \du</span></span><br><span class="line">							 List of roles</span><br><span class="line"> Role name |                   Attributes                   | Member of</span><br><span class="line">-----------+------------------------------------------------+-----------</span><br><span class="line"> bella     | Create DB                                      | &#123;&#125;</span><br><span class="line"> david     |                                                | &#123;&#125;</span><br><span class="line"> postgres  | Superuser, Create role, Create DB, Replication | &#123;&#125;</span><br><span class="line"> renee     | Create role, Create DB                         | &#123;&#125;</span><br><span class="line"> sandy     |                                                | &#123;&#125;</span><br><span class="line"></span><br><span class="line">postgres =<span class="comment">#</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h2 id="控制台常用命令总结"><a href="#控制台常用命令总结" class="headerlink" title="控制台常用命令总结"></a>控制台常用命令总结</h2><ul>
+<li><p>控制台常用命令总结</p>
+<figure class="highlight less"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">\<span class="selector-tag">password</span> 命令（设置密码）</span><br><span class="line">\<span class="selector-tag">q</span> 命令（退出）</span><br><span class="line">\<span class="selector-tag">h</span>：查看 <span class="selector-tag">SQL</span> 命令的解释，比如\<span class="selector-tag">h</span> <span class="selector-tag">select</span>。</span><br><span class="line">\?：查看 <span class="selector-tag">psql</span> 命令列表。</span><br><span class="line">\<span class="selector-tag">l</span>：列出所有数据库。</span><br><span class="line">\<span class="selector-tag">c</span> <span class="selector-attr">[database_name]</span>：连接其他数据库。</span><br><span class="line">\<span class="selector-tag">c</span> <span class="selector-tag">-</span> <span class="selector-attr">[username]</span>: 切换用户</span><br><span class="line">\<span class="selector-tag">d</span>：列出当前数据库的所有表格。</span><br><span class="line">\<span class="selector-tag">d</span> <span class="selector-attr">[table_name]</span>：列出某一张表格的结构。</span><br><span class="line">\<span class="selector-tag">du</span>：列出所有用户。</span><br></pre></td></tr></table></figure></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/c9429499">https://fulsun.github.io/p/c9429499</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/PostgreSQL/">PostgreSQL</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/012.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/710fb91d" title="Mybatis-Plus使用"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/008.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Mybatis-Plus使用</div></div></a></div><div class="next-post pull-right"><a href="/p/91e798bc" title="Java内存模型"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Java内存模型</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#PG-%E7%AE%80%E4%BB%8B"><span class="toc-text">PG 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#PG-%E7%9A%84%E5%8E%86%E5%8F%B2"><span class="toc-text">PG 的历史</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PG-%E7%9A%84%E7%A4%BE%E5%8C%BA"><span class="toc-text">PG 的社区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PostgreSQL-%E4%B8%8E-MySQL-%E7%9A%84%E6%AF%94%E8%BE%83"><span class="toc-text">PostgreSQL 与 MySQL 的比较</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PostgreSQL-%E7%9A%84%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85"><span class="toc-text">PostgreSQL 的下载安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Windows-%E4%B8%8A%E5%AE%89%E8%A3%85-PostgreSQL"><span class="toc-text">Windows 上安装 PostgreSQL</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux-%E4%B8%8A%E5%AE%89%E8%A3%85-PostgreSQL"><span class="toc-text">Linux 上安装 PostgreSQL</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PostgreSQL-%E7%9A%84%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">PostgreSQL 的基本使用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BB%E5%BD%95"><span class="toc-text">登录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%93%8D%E4%BD%9C"><span class="toc-text">数据库操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%80%BC%E7%B1%BB%E5%9E%8B"><span class="toc-text">数据库值类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8%E6%93%8D%E4%BD%9C"><span class="toc-text">数据库表操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Schema"><span class="toc-text">Schema</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%87%E4%BB%BD-PostgreSQL-%E6%95%B0%E6%8D%AE%E5%BA%93"><span class="toc-text">备份 PostgreSQL 数据库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E6%93%8D%E4%BD%9C"><span class="toc-text">用户操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PostgreSQL-%E8%A7%92%E8%89%B2%E7%AE%A1%E7%90%86"><span class="toc-text">PostgreSQL 角色管理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%8E%A7%E5%88%B6%E5%8F%B0%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E6%80%BB%E7%BB%93"><span class="toc-text">控制台常用命令总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

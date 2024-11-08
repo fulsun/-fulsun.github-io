@@ -1,0 +1,486 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Maven使用教程 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="设置IDEA、Maven等环境">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Maven使用教程">
+<meta property="og:url" content="https://fulsun.github.io/p/41f15683">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="设置IDEA、Maven等环境">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/013.webp">
+<meta property="article:published_time" content="2021-05-07T18:33:35.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.274Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="maven">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/013.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/41f15683"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Maven使用教程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/013.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Maven使用教程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-07T18:33:35.000Z" title="发表于 2021-05-07 18:33:35">2021-05-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.274Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Maven/">Maven</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">4.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>18分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Maven使用教程"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="项目管理问题"><a href="#项目管理问题" class="headerlink" title="项目管理问题"></a>项目管理问题</h2><p>常规的jar包管理主要存在以下的问题：</p>
+<ol>
+<li><strong>繁琐</strong>:要为每个项目手动导入所需的jar，需要搜集全部jar</li>
+<li><strong>复杂</strong>:项目中的jar如果需要版本升级，就需要再重新搜集jar</li>
+<li><strong>冗余</strong>: 相同的jar在不同的项目中保存了多份</li>
+</ol>
+<blockquote>
+<p>那么怎么样才能方便快捷的管理我们项目中的jar包呢？</p>
+</blockquote>
+<h2 id="Maven概述"><a href="#Maven概述" class="headerlink" title="Maven概述"></a>Maven概述</h2><blockquote>
+<p>目前开发中常用的项目管理工具主要就是：<code>Maven</code>和<code>Gradle</code></p>
+</blockquote>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://maven.apache.org/">Maven</a>（&#x2F;ˈmeɪvn&#x2F;）：Maven这个单词来自于意第绪语（犹太语），意为知识的积累.</p>
+<p>Maven是一个基于项目对象模型（POM）的概念的纯java开发的开源的项目管理工具。主要用来管理java项目，进行依赖管理(jar包依赖管理)和项目构建(项目编译、打包、测试、部署)。此外还能分模块开发，提高开发效率。</p>
+<p>Gradle（[ɡredl]）：是一个基于JVM的构建工具，是一款通用灵活的构建工具，支持传递性依赖管理，而不需要远程仓库或者是pom.xml和ivy.xml配置文件，基于Groovy，build脚本使用Groovy编写。</p>
+<h2 id="Maven安装"><a href="#Maven安装" class="headerlink" title="Maven安装"></a>Maven安装</h2><ol>
+<li><p>下载链接：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://maven.apache.org/download.cgi">http://maven.apache.org/download.cgi</a> ,历史版本： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://archive.apache.org/dist/maven/maven-3/">https://archive.apache.org/dist/maven/maven-3/</a></p>
+</li>
+<li><p>将下载的文件，选择合适的目录进行解压即可。 <strong>注意： 解压文件尽量不要放在含有中文或者特殊字符的目录下</strong>。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">bin:含有mvn运行的脚本</span><br><span class="line">boot:含有plexus-classworlds类加载器框架,Maven 使用该框架加载自己的类库。</span><br><span class="line">conf:含有settings.xml配置文件</span><br><span class="line">lib:含有Maven运行时所需要的java类库</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>环境变量设置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># maven依赖java环境，所以要确保java环境已配置好 （maven-3.3+ 需要jdk7+）</span></span><br><span class="line">MAVEN_HOME = maven的安装目录</span><br><span class="line">PATH = maven的安装目录下的bin目录</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看maven版本信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">C:\Users\sfuli&gt;mvn -v</span><br><span class="line">Apache Maven 3.6.1 (d66c9c0b3152b2e69ee9bac180bb8fcc8e6af555; 2019-04-05T03:00:29+08:00)</span><br><span class="line">Maven home: D:\scoop\apps\maven\current\bin\..</span><br><span class="line">Java version: 1.8.0_201, vendor: Oracle Corporation, runtime: D:\scoop\apps\oraclejdk8\current\jre</span><br><span class="line">Default locale: zh_CN, platform encoding: GBK</span><br><span class="line">OS name: <span class="string">&quot;windows 10&quot;</span>, version: <span class="string">&quot;10.0&quot;</span>, <span class="built_in">arch</span>: <span class="string">&quot;amd64&quot;</span>, family: <span class="string">&quot;windows&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Maven配置"><a href="#Maven配置" class="headerlink" title="Maven配置"></a>Maven配置</h2><blockquote>
+<p>maven的conf目录中有 settings.xml ，是maven的配置文件，做如下配置：</p>
+</blockquote>
+<h3 id="本地仓库"><a href="#本地仓库" class="headerlink" title="本地仓库"></a>本地仓库</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">settings</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">          <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://maven.apache.org/SETTINGS/1.0.0 			  	http://maven.apache.org/xsd/settings-1.0.0.xsd&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- localRepository</span></span><br><span class="line"><span class="comment">   | The path to the local repository maven will use to store artifacts.</span></span><br><span class="line"><span class="comment">   |</span></span><br><span class="line"><span class="comment">   | Default: $&#123;user.home&#125;/.m2/repository</span></span><br><span class="line"><span class="comment">  &lt;localRepository&gt;/path/to/local/repo&lt;/localRepository&gt;</span></span><br><span class="line"><span class="comment">  --&gt;</span></span><br><span class="line">  <span class="comment">&lt;!-- 选择一个磁盘目录，作为本地仓库 --&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">localRepository</span>&gt;</span>D:\scoop\persist\maven\repository<span class="tag">&lt;/<span class="name">localRepository</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="JDK配置"><a href="#JDK配置" class="headerlink" title="JDK配置"></a>JDK配置</h3><blockquote>
+<p>在profiles标签中增加 一个profile标签，限定maven项目默认的jdk版本.</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 在已有的profiles标签中添加profile标签 --&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>myjdk<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">activation</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">activeByDefault</span>&gt;</span>true<span class="tag">&lt;/<span class="name">activeByDefault</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">jdk</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">jdk</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">activation</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">properties</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maven.compiler.source</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.source</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maven.compiler.target</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.target</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">maven.compiler.compilerVersion</span>&gt;</span>1.8<span class="tag">&lt;/<span class="name">maven.compiler.compilerVersion</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">properties</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 让增加的 profile生效 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activeProfiles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activeProfile</span>&gt;</span>myjdk<span class="tag">&lt;/<span class="name">activeProfile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activeProfiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="仓库"><a href="#仓库" class="headerlink" title="仓库"></a>仓库</h3><ul>
+<li><p>存储依赖的地方，体现形式就是本地的一个目录。</p>
+</li>
+<li><p>仓库中不仅存放依赖，而且管理着每个依赖的唯一标识(坐标)，Java项目凭坐标获取依赖。</p>
+</li>
+<li><p>当需要依赖时，会从仓库中取查找，优先顺序为：<code>本地仓库  &gt;  私服(如果配置了的话) &gt;  公共仓库(如果配置了的话) &gt; 中央仓库</code></p>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://repo.maven.apache.org/maven2/">Maven 中央仓库</a>是由 Maven 社区提供的仓库，不用任何配置。 提供<a target="_blank" rel="noopener external nofollow noreferrer" href="https://mvnrepository.com/">仓库搜索服务</a></p>
+</li>
+<li><p>中央仓库在国外，下载依赖速度过慢，所以都会配置一个<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developer.aliyun.com/mvn/guide">国内的公共仓库</a>替代中央仓库。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--setting.xml中添加如下配置--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">mirrors</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>aliyun<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- 中心仓库的 mirror(镜像) --&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>central<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus aliyun<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="comment">&lt;!-- aliyun仓库地址 以后所有要指向中心仓库的请求，都会指向aliyun仓库--&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">url</span>&gt;</span>https://maven.aliyun.com/repository/central<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  	<span class="tag">&lt;<span class="name">mirror</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">id</span>&gt;</span>aliyunmaven<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">mirrorOf</span>&gt;</span>*<span class="tag">&lt;/<span class="name">mirrorOf</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">name</span>&gt;</span>阿里云公共仓库<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">url</span>&gt;</span>https://maven.aliyun.com/repository/public<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">mirror</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">mirrors</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="私服"><a href="#私服" class="headerlink" title="私服"></a>私服</h3><blockquote>
+<p>公司范围内共享的仓库，不对外开放。 可以通过 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.sonatype.org/nexus/go">Nexus</a>来创建、管理一个私服。</p>
+</blockquote>
+<h2 id="Idea-Maven"><a href="#Idea-Maven" class="headerlink" title="Idea-Maven"></a>Idea-Maven</h2><blockquote>
+<p>在idea中关联本地安装的maven，后续就可以通过idea使用maven，管理项目啦。</p>
+</blockquote>
+<h3 id="Idea中关联Maven"><a href="#Idea中关联Maven" class="headerlink" title="Idea中关联Maven"></a>Idea中关联Maven</h3><p><img src= "/medias/detail/load.gif" data-lazy-src="/p/41f15683/9bc591e7b25005d3dd3b195f277dfbef.png"></p>
+<h3 id="创建Maven项目"><a href="#创建Maven项目" class="headerlink" title="创建Maven项目"></a>创建Maven项目</h3><p><img src= "/medias/detail/load.gif" data-lazy-src="/p/41f15683/bcf3557cd42db285347f7a0d0538a80a.png"></p>
+<h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><p><img src= "/medias/detail/load.gif" data-lazy-src="/p/41f15683/666d55918e83049750dd71e5a92d7c87.png"></p>
+<ul>
+<li><code>src/main/java</code> 存放源代码，建包，放项目中代码(service,dao,User,….)</li>
+<li><code>src/main/resources</code> 书写配置文件，项目中的配置文件(jdbc.properties)</li>
+<li><code>src/test/java</code> 书写测试代码，项目中测试案例代码</li>
+<li><code> src/test/resources</code> 书写测试案例相关配置文件</li>
+<li><code>项目根/pom.xml</code> (project object model) maven项目核心文件，其中定义项目构建方式，声明依赖等</li>
+</ul>
+<h3 id="创建web项目"><a href="#创建web项目" class="headerlink" title="创建web项目"></a>创建web项目</h3><ol>
+<li><p>pom.xml中设置 war</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">project</span> <span class="attr">...</span>&gt;</span></span><br><span class="line">    ...</span><br><span class="line">    <span class="tag">&lt;<span class="name">packaging</span>&gt;</span>war<span class="tag">&lt;/<span class="name">packaging</span>&gt;</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">&lt;!-- 导入JSP 和 Servlet 和 JSTL 依赖 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- jstl 支持 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jstl<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- servlet编译环境 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="comment">&lt;!-- jsp编译环境 --&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jsp-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">project</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>按照maven规范，新建web项目特有目录<code>webapp</code>. 新建<code>src\main\webapp\WEB-INF\web.xml</code></p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?xml version=<span class="string">&quot;1.0&quot;</span> encoding=<span class="string">&quot;UTF-8&quot;</span>?&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">web-app</span> <span class="attr">xmlns</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xmlns:xsi</span>=<span class="string">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">xsi:schemaLocation</span>=<span class="string">&quot;http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">version</span>=<span class="string">&quot;4.0&quot;</span>&gt;</span></span><br><span class="line">	<span class="comment">&lt;!-- 这是一个空白的web.xml文件模板 --&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">web-app</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="依赖生命周期"><a href="#依赖生命周期" class="headerlink" title="依赖生命周期"></a>依赖生命周期</h2><blockquote>
+<p>Jar包生效的时间段，即Jar的生命周期</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>标识</th>
+<th>周期</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>compile</td>
+<td>缺省值，适用于所有阶段（测试运行，编译，运行，打包）</td>
+</tr>
+<tr>
+<td>provided</td>
+<td>类似compile，期望JDK、容器或使用者会提供这个依赖。如servlet-api.jar；适用于（测试运行，编译）阶段</td>
+</tr>
+<tr>
+<td>runtime</td>
+<td>只在运行时使用，如 mysql的驱动jar，适用于（运行，测试）阶段</td>
+</tr>
+<tr>
+<td>test</td>
+<td>只在测试时使用，适用于（编译，测试运行）阶段，如 junit.jar</td>
+</tr>
+<tr>
+<td>system</td>
+<td>Maven不会在仓库中查找对应依赖，在本地磁盘目录中查找；适用于（编译，测试运行，运行）阶段</td>
+</tr>
+</tbody></table>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>commons-io<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>2.6<span class="tag">&lt;/<span class="name">version</span>&gt;</span>    <span class="comment">&lt;!-- 生命周期 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>compile<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span>    <span class="comment">&lt;!-- servlet编译环境 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>javax.servlet<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>javax.servlet-api<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.1.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span>    <span class="comment">&lt;!-- 生命周期 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>provided<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>junit<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>4.12<span class="tag">&lt;/<span class="name">version</span>&gt;</span>    <span class="comment">&lt;!-- 生命周期 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="Maven指令"><a href="#Maven指令" class="headerlink" title="Maven指令"></a>Maven指令</h2><ol>
+<li><code>compile</code> 编译</li>
+<li><code>clean</code> 删除target&#x2F;</li>
+<li><code>test</code> 运行测试test case junit&#x2F;testNG</li>
+<li><code>package</code> 打包</li>
+<li><code>install</code> 把项目install到local repo</li>
+<li><code>deploy</code> 发本地jar发布到remote</li>
+</ol>
+<h2 id="私服-1"><a href="#私服-1" class="headerlink" title="私服"></a>私服</h2><h3 id="搭建私服"><a href="#搭建私服" class="headerlink" title="搭建私服"></a>搭建私服</h3><ul>
+<li>所谓私服就是一个服务器,但是不是本地层面的,是公司层面的,公司中所有的开发人员都在使用同一个私服，有了私服之后，当 Maven 需要下载依赖时，直接请求私服，私服上存在则下载到本地仓库；否则，私服请求外部的远程仓库，将构件下载到私服，再提供给本地仓库下载。</li>
+<li>私服可以解决在企业做开发时每次需要的jar包都要在中心仓库下载,且每次下载完只能被自己使用,不能被其他开发人员使用的问题</li>
+<li>我们可以使用专门的 Maven 仓库管理软件来搭建私服，比如：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://archiva.apache.org/index.cgi">Apache Archiva</a>，<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.jfrog.com/home/v_artifactory_opensource_overview/">Artifactory</a>，<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.sonatype.org/nexus/">Sonatype Nexus</a>。这里我们使用 Sonatype Nexus</li>
+</ul>
+<ol>
+<li><p><strong>下载</strong>: 请根据自己需要，选择如下对应版本（目前 Nexus 分为 Nexus 2.x 和 Nexus 3.x 两个大版本，目前使用最多，运行最稳定的是 Nexus 2.x）</p>
+<ul>
+<li>Nexus 3.x：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://help.sonatype.com/repomanager3/product-information/download">https://help.sonatype.com/repomanager3/product-information/download</a></li>
+<li>Nexus 2.x: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://help.sonatype.com/repomanager2/download">https://help.sonatype.com/repomanager2/download</a></li>
+</ul>
+</li>
+<li><p>从nexus官网下载地址：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.sonatype.com/download-oss-sonatype">https://www.sonatype.com/download-oss-sonatype</a></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/41f15683/21889c3b507e409c581f47fc521dea9f.png"></p>
+</li>
+<li><p>可以使用wget下载方式，命令如下：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一般远程调用下载软件 路径类型是http；如果下载的路径类型是https，则需要一个认证指令，即wget 后面加上--no-check-certificate</span></span><br><span class="line">wget --no-check-certificate https://download.sonatype.com/nexus/3/latest-unix.tar.gz</span><br><span class="line"><span class="comment"># 解压到当前文件夹下：</span></span><br><span class="line">tar -xzvf nexus-3.19.1-01-unix.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解压后在bin目录中执行：</span></span><br><span class="line">nexus install  在系统中安装nexus服务</span><br><span class="line">nexus uninstall 卸载nexus服务</span><br><span class="line">nexus start    启动服务</span><br><span class="line">nexus stop    停止服务</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/maven/nexus3/nexus-3.19.1-01/etc</span><br><span class="line">vi nexus-default.properties</span><br><span class="line"></span><br><span class="line"><span class="comment"># 修改host为对应服务器的ip</span></span><br><span class="line">application-host=192.168.61.10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动nexus</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> /home/maven/nexus3/nexus-3.19.1-01/bin</span><br><span class="line"><span class="comment"># 启动nexus</span></span><br><span class="line">./nexus start</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看启动日志</span></span><br><span class="line"><span class="built_in">cd</span> /home/maven/nexus3/sonatype-work/nexus3/log</span><br><span class="line"><span class="built_in">tail</span> -f nexus.log</span><br><span class="line"><span class="comment"># 查看链接日志</span></span><br><span class="line"><span class="built_in">tail</span> -f nexus-request.log</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>登录nexus manager：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://192.168.61.10:9998/nexus/">http://192.168.61.10:9998/nexus/</a> 用户名默认<code>admin</code>,密码存在&#x2F;home&#x2F;maven&#x2F;nexus3&#x2F;sonatype-work&#x2F;nexus3&#x2F; 下的admin.password文件中。</p>
+</li>
+</ol>
+<h3 id="Maven配置私服"><a href="#Maven配置私服" class="headerlink" title="Maven配置私服"></a>Maven配置私服</h3><blockquote>
+<p>配置settings.xml，设置私服地址、认证等信息</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servers</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">server</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-public<span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!-- nexus的认证id --&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">username</span>&gt;</span>admin<span class="tag">&lt;/<span class="name">username</span>&gt;</span> <span class="comment">&lt;!--nexus中的用户名密码--&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">password</span>&gt;</span>admin123<span class="tag">&lt;/<span class="name">password</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;/<span class="name">server</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servers</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">profiles</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">profile</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus<span class="tag">&lt;/<span class="name">id</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">repositories</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">repository</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-public<span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!--nexus认证id 【此处的repository的id要和 &lt;server&gt;的id保持一致】--&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--name随便--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">name</span>&gt;</span>Nexus Release Snapshot Repository<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--地址是nexus中仓库组对应的地址--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8081/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">releases</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">releases</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">repository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">repositories</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">pluginRepositories</span>&gt;</span> <span class="comment">&lt;!--插件仓库地址，各节点的含义和上面是一样的--&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">id</span>&gt;</span>nexus-public<span class="tag">&lt;/<span class="name">id</span>&gt;</span> <span class="comment">&lt;!--nexus认证id 【此处的repository的id要和 &lt;server&gt;的id保持一致】--&gt;</span></span><br><span class="line">                <span class="comment">&lt;!--地址是nexus中仓库组对应的地址--&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">url</span>&gt;</span>http://localhost:8081/nexus/content/groups/public/<span class="tag">&lt;/<span class="name">url</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">releases</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">releases</span>&gt;</span></span><br><span class="line">                <span class="tag">&lt;<span class="name">snapshots</span>&gt;</span><span class="tag">&lt;<span class="name">enabled</span>&gt;</span>true<span class="tag">&lt;/<span class="name">enabled</span>&gt;</span><span class="tag">&lt;/<span class="name">snapshots</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;/<span class="name">pluginRepository</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;/<span class="name">pluginRepositories</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">profile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">profiles</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">activeProfiles</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activeProfile</span>&gt;</span>yourjdk<span class="tag">&lt;/<span class="name">activeProfile</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 使私服配置生效 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">activeProfile</span>&gt;</span>nexus<span class="tag">&lt;/<span class="name">activeProfile</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">activeProfiles</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="Maven-项目中依赖的搜索顺序"><a href="#Maven-项目中依赖的搜索顺序" class="headerlink" title="Maven 项目中依赖的搜索顺序"></a>Maven 项目中依赖的搜索顺序</h2><blockquote>
+<p>网上有很多关于maven项目中mirror、profile、repository的搜索顺序的文章，说法不一。官方文档并没有找到相关的说明，鉴于此，我抽时间做了一个验证。</p>
+</blockquote>
+<h3 id="依赖仓库的配置方式"><a href="#依赖仓库的配置方式" class="headerlink" title="依赖仓库的配置方式"></a>依赖仓库的配置方式</h3><p>maven项目使用的仓库一共有如下几种方式：</p>
+<ol>
+<li>中央仓库，这是默认的仓库</li>
+<li>镜像仓库，通过 sttings.xml 中的 settings.mirrors.mirror 配置</li>
+<li>全局profile仓库，通过 settings.xml 中的 settings.repositories.repository 配置</li>
+<li>项目仓库，通过 pom.xml 中的 project.repositories.repository 配置</li>
+<li>项目profile仓库，通过 pom.xml 中的 project.profiles.profile.repositories.repository 配置</li>
+<li>本地仓库<br>如果所有配置都存在，依赖的搜索顺序就会变得异常复杂。</li>
+</ol>
+<h3 id="分析依赖搜索顺序"><a href="#分析依赖搜索顺序" class="headerlink" title="分析依赖搜索顺序"></a>分析依赖搜索顺序</h3><p>先从最简单开始，慢慢增加配置，查看有什么变化。</p>
+<h4 id="准备测试环境"><a href="#准备测试环境" class="headerlink" title="准备测试环境"></a>准备测试环境</h4><p>安装jdk、maven。</p>
+<p>使用如下命令创建测试项目：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yes | mvn archetype:generate -DarchetypeGroupId=org.apache.maven.archetypes -DarchetypeArtifactId=maven-archetype-webapp  -DinteractiveMode=true -DgroupId=com.pollyduan -DartifactId=myweb -Dversion=1.0 -Dpackage=com.pollyduan</span><br></pre></td></tr></table></figure>
+
+<p>创建完成后，为了避免后续测试干扰，先执行一次compile。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">cd myweb</span><br><span class="line">mvn compile</span><br></pre></td></tr></table></figure>
+
+<p>最后，修改 pom.xml 文件，将 junit版本号改为 4.12 。我们要使用这个jar来测试依赖的搜索顺序。</p>
+<h4 id="默认情况"><a href="#默认情况" class="headerlink" title="默认情况"></a>默认情况</h4><p>首先确保junit4.12不存在：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下没有配置任何仓库，也就是说，既没改 $M2_HOME&#x2F;conf&#x2F;settings.xml 也没有添加 ~&#x2F;.m2&#x2F;settings.xml</p>
+<p>执行编译，查看日志中拉取junit的仓库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">mvn compile</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line">Downloaded from central: https://repo.maven.apache.org/maven2/junit/junit/4.12/junit-4.12.pom (24 kB at 11 kB/s)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可以看出，默认是从 central 中央仓库拉取的jar.</li>
+</ul>
+<h4 id="配置镜像仓库-settings-mirror"><a href="#配置镜像仓库-settings-mirror" class="headerlink" title="配置镜像仓库 settings_mirror"></a>配置镜像仓库 settings_mirror</h4><p>创建 ~&#x2F;.m2&#x2F;setttings.xml ，内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;settings&gt;</span><br><span class="line">  &lt;mirrors&gt;</span><br><span class="line">    &lt;mirror&gt;</span><br><span class="line">      &lt;id&gt;settings_mirror&lt;/id&gt;</span><br><span class="line">      &lt;url&gt;https://maven.aliyun.com/repository/public&lt;/url&gt;</span><br><span class="line">      &lt;mirrorOf&gt;central&lt;/mirrorOf&gt;</span><br><span class="line">    &lt;/mirror&gt;</span><br><span class="line">  &lt;/mirrors&gt;</span><br><span class="line">&lt;/settings&gt;</span><br></pre></td></tr></table></figure>
+
+<p>重新测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br><span class="line">mvn compile</span><br></pre></td></tr></table></figure>
+
+<p>在日志中查看下载依赖的仓库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloaded from settings_mirror: https://maven.aliyun.com/repository/public/junit/junit/4.12/junit-4.12.pom (24 kB at 35 kB/s)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>可以看出，是从 settings_mirror 中下载的jar</li>
+<li>结论：settings_mirror 的优先级高于 central</li>
+</ul>
+<h4 id="配置pom中的仓库-pom-repositories"><a href="#配置pom中的仓库-pom-repositories" class="headerlink" title="配置pom中的仓库 pom_repositories"></a>配置pom中的仓库 pom_repositories</h4><p>在 project 中增加如下配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;repositories&gt;</span><br><span class="line">  &lt;repository&gt;</span><br><span class="line">    &lt;id&gt;pom_repositories&lt;/id&gt;</span><br><span class="line">    &lt;name&gt;local&lt;/name&gt;</span><br><span class="line">    &lt;url&gt;http://10.18.29.128/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">    &lt;releases&gt;</span><br><span class="line">      &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">    &lt;/releases&gt;</span><br><span class="line">    &lt;snapshots&gt;</span><br><span class="line">      &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">    &lt;/snapshots&gt;</span><br><span class="line">  &lt;/repository&gt;</span><br><span class="line">&lt;/repositories&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>由于我们改变了id的名字，所以仓库地址无所谓，使用相同的地址也不影响测试。</li>
+</ul>
+<p>执行测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br><span class="line">mvn compile</span><br></pre></td></tr></table></figure>
+
+<p>在日志中查看下载依赖的仓库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloaded from pom_repositories: http://10.18.29.128/nexus/content/groups/public/junit/junit/4.12/junit-4.12.pom (24 kB at 95 kB/s)</span><br></pre></td></tr></table></figure>
+
+<p>从显示的仓库id可以看出：</p>
+<ul>
+<li>jar 是从 pom_repositories 中下载的。</li>
+<li>pom_repositories 优先级高于 settings_mirror</li>
+</ul>
+<h4 id="配置全局profile仓库-settings-profile-repo"><a href="#配置全局profile仓库-settings-profile-repo" class="headerlink" title="配置全局profile仓库 settings_profile_repo"></a>配置全局profile仓库 settings_profile_repo</h4><p>在 ~&#x2F;.m2&#x2F;settings.xml 中 settings 的节点内增加：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;profiles&gt;</span><br><span class="line">  &lt;profile&gt;</span><br><span class="line">  &lt;id&gt;s_profile&lt;/id&gt;</span><br><span class="line">  &lt;repositories&gt;</span><br><span class="line">    &lt;repository&gt;</span><br><span class="line">      &lt;id&gt;settings_profile_repo&lt;/id&gt;</span><br><span class="line">      &lt;name&gt;netease&lt;/name&gt;</span><br><span class="line">      &lt;url&gt;http://mirrors.163.com/maven/repository/maven-public/&lt;/url&gt;</span><br><span class="line">      &lt;releases&gt;</span><br><span class="line">        &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">      &lt;/releases&gt;</span><br><span class="line">      &lt;snapshots&gt;</span><br><span class="line">        &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">      &lt;/snapshots&gt;</span><br><span class="line">    &lt;/repository&gt;</span><br><span class="line">  &lt;/repositories&gt;</span><br><span class="line">  &lt;/profile&gt;</span><br><span class="line">&lt;/profiles&gt;</span><br></pre></td></tr></table></figure>
+
+<p>执行测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br><span class="line">mvn compile -Ps_profile</span><br></pre></td></tr></table></figure>
+
+<p>在日志中查看下载依赖的仓库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloaded from settings_profile_repo: http://mirrors.163.com/maven/repository/maven-public/junit/junit/4.12/junit-4.12.pom (24 kB at 63 kB/s)</span><br></pre></td></tr></table></figure>
+
+<p>从显示的仓库id可以看出：</p>
+<ul>
+<li>jar 是从 settings_profile_repo 中下载的。</li>
+<li>settings_profile_repo 优先级高于 settings_mirror。</li>
+<li>settings_profile_repo 优先级高于 pom_repositories 。</li>
+</ul>
+<h4 id="配置项目profile仓库-pom-profile-repo"><a href="#配置项目profile仓库-pom-profile-repo" class="headerlink" title="配置项目profile仓库 pom_profile_repo"></a>配置项目profile仓库 pom_profile_repo</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;profiles&gt;</span><br><span class="line">  &lt;profile&gt;</span><br><span class="line">    &lt;id&gt;p_profile&lt;/id&gt;</span><br><span class="line">    &lt;repositories&gt;</span><br><span class="line">      &lt;repository&gt;</span><br><span class="line">        &lt;id&gt;pom_profile_repo&lt;/id&gt;</span><br><span class="line">        &lt;name&gt;local&lt;/name&gt;</span><br><span class="line">        &lt;url&gt;http://10.18.29.128/nexus/content/groups/public/&lt;/url&gt;</span><br><span class="line">        &lt;releases&gt;</span><br><span class="line">          &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">        &lt;/releases&gt;</span><br><span class="line">        &lt;snapshots&gt;</span><br><span class="line">          &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">        &lt;/snapshots&gt;</span><br><span class="line">      &lt;/repository&gt;</span><br><span class="line">    &lt;/repositories&gt;</span><br><span class="line">  &lt;/profile&gt;</span><br><span class="line">&lt;/profiles&gt;</span><br></pre></td></tr></table></figure>
+
+<p>执行测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br><span class="line">mvn compile -Ps_profile,p_profile</span><br><span class="line">mvn compile -Pp_profile,s_profile</span><br></pre></td></tr></table></figure>
+
+<p>在日志中查看下载依赖的仓库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloaded from settings_profile_repo: http://mirrors.163.com/maven/repository/maven-public/junit/junit/4.12/junit-4.12.pom (24 kB at 68 kB/s)</span><br></pre></td></tr></table></figure>
+
+<p>从显示的仓库id可以看出：</p>
+<ul>
+<li>jar 是从 settings_profile_repo 中下载的</li>
+<li>settings_profile_repo 优先级高于 pom_profile_repo</li>
+</ul>
+<p>进一步测试：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">rm -rf ~/.m2/repository/junit/junit/4.12</span><br><span class="line">mvn compile -Pp_profile</span><br></pre></td></tr></table></figure>
+
+<p>在日志中查看下载依赖的仓库：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Downloaded from pom_profile_repo: http://10.18.29.128/nexus/content/groups/public/junit/junit/4.12/junit-4.12.pom (24 kB at 106 kB/s)</span><br></pre></td></tr></table></figure>
+
+<p>从显示的仓库id可以看出：</p>
+<ul>
+<li>jar 是从 settings_profile_repo 中下载的</li>
+<li>pom_profile_repo 优先级高于 pom_repositories</li>
+</ul>
+<h4 id="最后确认-local-repo-本地仓库-m2-repository"><a href="#最后确认-local-repo-本地仓库-m2-repository" class="headerlink" title="最后确认 local_repo 本地仓库 ~&#x2F;.m2&#x2F;repository"></a>最后确认 local_repo 本地仓库 ~&#x2F;.m2&#x2F;repository</h4><p>这不算测试了，只是一个结论，可以任意测试。</p>
+<ul>
+<li>只要 <code>~/.m2/repository</code> 中包含依赖，无论怎么配置，都会优先使用local本地仓库中的jar.</li>
+</ul>
+<h4 id="最终结论"><a href="#最终结论" class="headerlink" title="最终结论"></a>最终结论</h4><ul>
+<li><p>settings_mirror 的优先级高于 central</p>
+</li>
+<li><p>settings_profile_repo 优先级高于 settings_mirror</p>
+</li>
+<li><p>settings_profile_repo 优先级高于 pom_repositories</p>
+</li>
+<li><p>settings_profile_repo 优先级高于 pom_profile_repo</p>
+</li>
+<li><p>pom_profile_repo 优先级高于 pom_repositories</p>
+</li>
+<li><p>pom_repositories 优先级高于 settings_mirror</p>
+</li>
+<li><p>通过上面的比较得出完整的搜索链：local_repo &gt; settings_profile_repo &gt; pom_profile_repo &gt; pom_repositories &gt; settings_mirror &gt; central</p>
+</li>
+</ul>
+<h2 id="设置Maven内存"><a href="#设置Maven内存" class="headerlink" title="设置Maven内存"></a>设置Maven内存</h2><ul>
+<li><p>windows修改mvn.bat(mvn.cmd)文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 找到@REM MAVEN_OPTS... 在下面添加</span></span><br><span class="line"><span class="built_in">set</span> <span class="string">&quot;MAVEN_OPTS=-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># maven -v 可以看到set命令被打印</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>linux，修改mvn文件，添加</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">export</span> MAVEN_OPTS=<span class="string">&quot;-Xss64m -Xmx2g -XX:ReservedCodeCacheSize=1g&quot;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/41f15683">https://fulsun.github.io/p/41f15683</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/maven/">maven</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/013.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/67817846" title="分页插件-PageHelper"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">分页插件-PageHelper</div></div></a></div><div class="next-post pull-right"><a href="/p/cb2aae1" title="Docker的使用(重写版)"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Docker的使用(重写版)</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%AE%A1%E7%90%86%E9%97%AE%E9%A2%98"><span class="toc-text">项目管理问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E6%A6%82%E8%BF%B0"><span class="toc-text">Maven概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E5%AE%89%E8%A3%85"><span class="toc-text">Maven安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E9%85%8D%E7%BD%AE"><span class="toc-text">Maven配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93"><span class="toc-text">本地仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDK%E9%85%8D%E7%BD%AE"><span class="toc-text">JDK配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%93%E5%BA%93"><span class="toc-text">仓库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A7%81%E6%9C%8D"><span class="toc-text">私服</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Idea-Maven"><span class="toc-text">Idea-Maven</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Idea%E4%B8%AD%E5%85%B3%E8%81%94Maven"><span class="toc-text">Idea中关联Maven</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAMaven%E9%A1%B9%E7%9B%AE"><span class="toc-text">创建Maven项目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BAweb%E9%A1%B9%E7%9B%AE"><span class="toc-text">创建web项目</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F"><span class="toc-text">依赖生命周期</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven%E6%8C%87%E4%BB%A4"><span class="toc-text">Maven指令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A7%81%E6%9C%8D-1"><span class="toc-text">私服</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E7%A7%81%E6%9C%8D"><span class="toc-text">搭建私服</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Maven%E9%85%8D%E7%BD%AE%E7%A7%81%E6%9C%8D"><span class="toc-text">Maven配置私服</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Maven-%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BE%9D%E8%B5%96%E7%9A%84%E6%90%9C%E7%B4%A2%E9%A1%BA%E5%BA%8F"><span class="toc-text">Maven 项目中依赖的搜索顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BE%9D%E8%B5%96%E4%BB%93%E5%BA%93%E7%9A%84%E9%85%8D%E7%BD%AE%E6%96%B9%E5%BC%8F"><span class="toc-text">依赖仓库的配置方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E6%9E%90%E4%BE%9D%E8%B5%96%E6%90%9C%E7%B4%A2%E9%A1%BA%E5%BA%8F"><span class="toc-text">分析依赖搜索顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="toc-text">准备测试环境</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%BB%98%E8%AE%A4%E6%83%85%E5%86%B5"><span class="toc-text">默认情况</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%95%9C%E5%83%8F%E4%BB%93%E5%BA%93-settings-mirror"><span class="toc-text">配置镜像仓库 settings_mirror</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEpom%E4%B8%AD%E7%9A%84%E4%BB%93%E5%BA%93-pom-repositories"><span class="toc-text">配置pom中的仓库 pom_repositories</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E5%85%A8%E5%B1%80profile%E4%BB%93%E5%BA%93-settings-profile-repo"><span class="toc-text">配置全局profile仓库 settings_profile_repo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E9%A1%B9%E7%9B%AEprofile%E4%BB%93%E5%BA%93-pom-profile-repo"><span class="toc-text">配置项目profile仓库 pom_profile_repo</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E7%A1%AE%E8%AE%A4-local-repo-%E6%9C%AC%E5%9C%B0%E4%BB%93%E5%BA%93-m2-repository"><span class="toc-text">最后确认 local_repo 本地仓库 ~&#x2F;.m2&#x2F;repository</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E7%BB%93%E8%AE%BA"><span class="toc-text">最终结论</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEMaven%E5%86%85%E5%AD%98"><span class="toc-text">设置Maven内存</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

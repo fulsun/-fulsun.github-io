@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>本地https环境解决方案 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用 mkcert 与 nginx 快速搭建本地 https 环境，并且没有浏览器警告">
+<meta property="og:type" content="article">
+<meta property="og:title" content="本地https环境解决方案">
+<meta property="og:url" content="https://fulsun.github.io/p/4709a84">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="使用 mkcert 与 nginx 快速搭建本地 https 环境，并且没有浏览器警告">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/008.webp">
+<meta property="article:published_time" content="2019-07-02T19:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.342Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Nginx">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/008.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/4709a84"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '本地https环境解决方案',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/008.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">本地https环境解决方案</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2019-07-02T19:00:00.000Z" title="发表于 2019-07-02 19:00:00">2019-07-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.342Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Nginx/">Nginx</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>8分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="本地https环境解决方案"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>以前本地开发搭建 https 环境时，使用的是自签证书，由于浏览器不信任自签证书，经常需要在警告页面点击继续访问，有些麻烦：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/ebfd14c62279607cb9ebc1141f6a0826.png" alt="图 1"></p>
+<p>有时甚至没有继续访问的按钮，就需要到 <code>chrome://net-internals/#hsts</code> 里删除相关域名，更麻烦了，而且过段时间后还需要重复操作：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/364475124c4888811626d048e87ba2cd.png" alt="图 2"></p>
+<p>为了不这么麻烦，需要我们将自签证书使用的根证书添加到系统的可信 CA 证书中，这样就不会出现警告了。当然了达到这个效果需要执行一堆 <code>openssl</code> 命令，确实繁琐，好在已经有了封装了这些的小工具 —— <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert">mkcert</a> 。</p>
+<h2 id="mkcert-介绍"><a href="#mkcert-介绍" class="headerlink" title="mkcert 介绍"></a>mkcert 介绍</h2><blockquote>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert">mkcert</a> 是一个使用 go 语言编写的生成本地自签证书的小程序，具有跨平台、使用简单、支持多域名、自动信任 CA 等一系列方便的特性可供本地开发时快速创建 https 环境使用。</p>
+</blockquote>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/b70a9ba56304e657d9e1d30f3e8032c5.png" alt="图 3"></p>
+<h2 id="mkcert-安装"><a href="#mkcert-安装" class="headerlink" title="mkcert 安装"></a>mkcert 安装</h2><p>安装方式也非常简单，由于 go 语言的静态编译和跨平台的特性，官方提供各平台预编译的版本，直接下载到本地，给可执行权限(Linux&#x2F;Unix 需要)就可以了。下载地址: <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert/releases/latest">https://github.com/FiloSottile/mkcert/releases/latest</a></p>
+<h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><ul>
+<li><p>使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://chocolatey.org/">Chocolatey</a> 或 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ScoopInstaller/scoop">Scoop</a></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">choco install mkcert</span><br><span class="line"><span class="comment"># 或者</span></span><br><span class="line">scoop bucket add extras</span><br><span class="line">scoop install mkcert</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>或者直接下载编译好的文件</p>
+<p>访问 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert/releases">GitHub Releases</a> 下载（<a target="_blank" rel="noopener external nofollow noreferrer" href="https://download.fastgit.org/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-windows-amd64.exe">备用链接</a>）</p>
+<p>然后可以重命名文件为 <code>mkcert.exe</code> ，所在路径放到环境变量 Path 里，方便直接以 <code>mkcert</code> 命令运行</p>
+<p>如果运行时有问题的话，切换为以管理员运行</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/0eb197d0a1a7928eaa11108b16a01349.png" alt="image-20220923104612775"></p>
+</li>
+</ul>
+<h3 id="macOS-Linux"><a href="#macOS-Linux" class="headerlink" title="macOS &#x2F; Linux"></a>macOS &#x2F; Linux</h3><p>使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://brew.sh/">Homebrew</a> &#x2F; <a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.brew.sh/Homebrew-on-Linux">Homebrew on Linux</a></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">brew </span><span class="keyword">install </span>mkcert</span><br><span class="line"><span class="keyword">brew </span><span class="keyword">install </span>nss <span class="comment"># 如果使用 Firefox</span></span><br><span class="line"></span><br><span class="line">yum <span class="keyword">install </span>mkcert</span><br></pre></td></tr></table></figure>
+
+<h3 id="mkcert命令"><a href="#mkcert命令" class="headerlink" title="mkcert命令"></a>mkcert命令</h3><p>安装成功后，应该可以使用<code>mkcert</code>命令了,从上面自带的帮助输出来看，<code>mkcert</code>已经给出了一个基本的工作流，规避了繁杂的<code>openssl</code>命令，几个简单的参数就可以生成一个本地可信的 https 证书了。更详细的用法直接看<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert#mkcert">官方文档</a>就好。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\abcfy\projects&gt; mkcert</span><br><span class="line">Using the <span class="built_in">local</span> CA at <span class="string">&quot;C:\Users\abcfy\AppData\Local\mkcert&quot;</span> ✨</span><br><span class="line">Usage of mkcert:</span><br><span class="line"></span><br><span class="line">        $ mkcert -install</span><br><span class="line">        Install the <span class="built_in">local</span> CA <span class="keyword">in</span> the system trust store.</span><br><span class="line"></span><br><span class="line">        $ mkcert example.org</span><br><span class="line">        Generate <span class="string">&quot;example.org.pem&quot;</span> and <span class="string">&quot;example.org-key.pem&quot;</span>.</span><br><span class="line"></span><br><span class="line">        $ mkcert example.com myapp.dev localhost 127.0.0.1 ::1</span><br><span class="line">        Generate <span class="string">&quot;example.com+4.pem&quot;</span> and <span class="string">&quot;example.com+4-key.pem&quot;</span>.</span><br><span class="line"></span><br><span class="line">        $ mkcert <span class="string">&quot;*.example.it&quot;</span></span><br><span class="line">        Generate <span class="string">&quot;_wildcard.example.it.pem&quot;</span> and <span class="string">&quot;_wildcard.example.it-key.pem&quot;</span>.</span><br><span class="line"></span><br><span class="line">        $ mkcert -uninstall</span><br><span class="line">        Uninstall the <span class="built_in">local</span> CA (but <span class="keyword">do</span> not delete it).</span><br><span class="line"></span><br><span class="line">For more options, run <span class="string">&quot;mkcert -help&quot;</span>.</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="信任-CA-证书"><a href="#信任-CA-证书" class="headerlink" title="信任 CA 证书"></a>信任 CA 证书</h2><blockquote>
+<p>⚠ Warning</p>
+<p>mkcert 自动生成的 <code>rootCA-key.pem</code> 文件提供了拦截来自本机安全请求的完整能力。不要分享这个文件。</p>
+</blockquote>
+<p>将 mkcert 使用的根证书加入本地可信 CA 中，以后由该 CA 签发的证书在<strong>本地</strong>都是可信的</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkcert -install</span><br><span class="line">Using the <span class="built_in">local</span> CA at <span class="string">&quot;C:\Users\abcfy\AppData\Local\mkcert&quot;</span> ✨</span><br></pre></td></tr></table></figure>
+
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/0de3b4eac3183b34f7e328d39a1788b1.png" alt="Screenshot_2022-09-23_09-25-20"></p>
+<p>可能不支持火狐浏览器</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/f8b0365166f9ba08b5257e8f8c232956.png" alt="Screenshot_2022-09-23_09-26-21"></p>
+<p>然后可以在 Windows 的可信 CA 列表找到该证书：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/9a52a10dd981b643ff5b733864266102.png" alt="Screenshot_2022-09-23_09-31-26"></p>
+<p>在 MacOS 的证书列表同样也可以找到:</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/0339b0d1642ff7727102e475c73ecdc3.png"></p>
+<h2 id="安装-nginx"><a href="#安装-nginx" class="headerlink" title="安装 nginx"></a>安装 nginx</h2><p>去官网 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://nginx.org/en/download.html">下载 nginx</a> 或使用包管理器安装，具体步骤不再赘述</p>
+<h2 id="生成自签证书"><a href="#生成自签证书" class="headerlink" title="生成自签证书"></a>生成自签证书</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># mkcert domain1 [domain2 [...]]</span></span><br><span class="line">mkcert localhost 127.0.0.1</span><br><span class="line"><span class="comment"># 直接跟多个要签发的域名或 ip 就行了，比如签发一个仅本机访问的证书(可以通过127.0.0.1和localhost，以及 ipv6 地址::1访问)</span></span><br><span class="line">mkcert localhost 127.0.0.1 ::1</span><br><span class="line">Using the <span class="built_in">local</span> CA at <span class="string">&quot;C:\Users\abcfy\AppData\Local\mkcert&quot;</span> ✨</span><br><span class="line"></span><br><span class="line">Created a new certificate valid <span class="keyword">for</span> the following names 📜</span><br><span class="line"> - <span class="string">&quot;localhost&quot;</span></span><br><span class="line"> - <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line"> - <span class="string">&quot;::1&quot;</span></span><br><span class="line"></span><br><span class="line">The certificate is at <span class="string">&quot;./localhost+2.pem&quot;</span> and the key at <span class="string">&quot;./localhost+2-key.pem&quot;</span> ✅</span><br><span class="line"></span><br><span class="line"><span class="comment"># 通过输出，我们可以看到成功生成了localhost+2.pem证书文件和localhost+2-key.pem私钥文件，只要在 web server 上使用这两个文件就可以了。</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 或者使用域名配合 hosts</span></span><br><span class="line">mkcert fulsun.top</span><br></pre></td></tr></table></figure>
+
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/3f1bd55b5bb32729bd9172a9d5092bac.png" alt="image-20220923112751149"></p>
+<p>会在当前目录生成证书文件和私钥文件，然后就可以用在 nginx 上了</p>
+<h2 id="使用生成的证书文件"><a href="#使用生成的证书文件" class="headerlink" title="使用生成的证书文件"></a>使用生成的证书文件</h2><p>默认生成的证书格式为<code>PEM</code>(Privacy Enhanced Mail)格式，任何支持<code>PEM</code>格式证书的程序都可以使用。比如常见的<code>Apache</code>或<code>Nginx</code>等</p>
+<p>修改 nginx 配置如下</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /usr/local/nginx/conf/nginx.conf </span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">443</span> ssl;</span><br><span class="line">    <span class="comment"># 修改为所需域名或者 localhost</span></span><br><span class="line">    <span class="attribute">server_name</span> <span class="regexp">*.example.com</span>;</span><br><span class="line">    <span class="attribute">index</span> index.html index.htm index.php default.html default.htm default.php;</span><br><span class="line">    <span class="attribute">root</span> html;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 修改为生成文件目录</span></span><br><span class="line">    <span class="attribute">ssl_certificate</span> <span class="string">&quot;cert/fulsun.top-key.pem&quot;</span>;</span><br><span class="line">    <span class="comment"># 修改为生成文件目录</span></span><br><span class="line">    <span class="attribute">ssl_certificate_key</span> <span class="string">&quot;cert/fulsun.top-key.pem&quot;</span>;</span><br><span class="line">    <span class="attribute">ssl_session_cache</span> shared:SSL:<span class="number">1m</span>; <span class="attribute">ssl_session_timeout</span> <span class="number">5m</span>;</span><br><span class="line">    <span class="attribute">ssl_ciphers</span> HIGH:!aNULL:!MD5; <span class="attribute">ssl_prefer_server_ciphers</span> <span class="literal">on</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment"># 此处为个人需求，代理请求到 80 端口</span></span><br><span class="line">    <span class="section">location</span> / &#123;</span><br><span class="line">        <span class="attribute">proxy_pass</span> http://127.0.0.1;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Host <span class="variable">$proxy_host</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;</span><br><span class="line">        <span class="attribute">proxy_set_header</span> Via <span class="string">&quot;nginx&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="检查是否生效"><a href="#检查是否生效" class="headerlink" title="检查是否生效"></a>检查是否生效</h2><p>运行 nginx 后访问，没有警告页面</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/aa62a8b8c8c2f8016116e624574b5aa3.png" alt="图 7"></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/edf0d9805fcaeae09992cade6f504c79.png" alt="图 6"></p>
+<p>之后如果证书过期的话再重新执行一遍命令即可</p>
+<h2 id="mkcert-其他选项"><a href="#mkcert-其他选项" class="headerlink" title="mkcert 其他选项"></a>mkcert 其他选项</h2><ul>
+<li><p>注意：需要将这些选项放在域名之前</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-cert-file FILE, -key-file FILE, -p12-file FILE</span><br><span class="line">  自定义输出路径/文件名。</span><br><span class="line"></span><br><span class="line">-client</span><br><span class="line">  生成用于客户端身份验证的证书。</span><br><span class="line"></span><br><span class="line">-ecdsa</span><br><span class="line">  使用 ECDSA 密钥生成证书。</span><br><span class="line"></span><br><span class="line">-pkcs12</span><br><span class="line">  生成 PKCS12 格式的证书。Java 程序通常不支持 PEM 格式的证书，但是支持 PKCS12 格式的证书。</span><br><span class="line"></span><br><span class="line">-csr CSR</span><br><span class="line">  根据提供的 CSR 生成证书。与除 -install 和 -cert-file 之外的所有其他选项冲突。</span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p>例子：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mkcert -key-file key.pem -cert-file cert.pem example.com *.example.com</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="局域网内使用"><a href="#局域网内使用" class="headerlink" title="局域网内使用"></a>局域网内使用</h2><p>参照 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.dteam.top/posts/2019-04/%E6%9C%AC%E5%9C%B0https%E5%BF%AB%E9%80%9F%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88mkcert.html">本地https快速解决方案</a></p>
+<p>有时候我们需要在局域网内测试 https 应用，这种环境可能不对外，因此也无法使用像 <code>Let&#39;s encrypt</code> 这种免费证书的方案给局域网签发一个可信的证书，而且 <code>Let&#39;s encrypt</code> 本身也不支持认证 ip。</p>
+<p>先来回忆一下证书可信的三个要素：</p>
+<ul>
+<li>由可信的 CA 机构签发</li>
+<li>访问的地址跟证书认证地址相符</li>
+<li>证书在有效期内</li>
+</ul>
+<p>如果期望我们自签证书在局域网内使用，以上三个条件都需要满足。很明显自签证书一定可以满足证书在有效期内，那么需要保证后两条。我们签发的证书必须匹配浏览器的地址栏，比如局域网的 ip 或者域名，此外还需要信任 CA。</p>
+<p>我们先重新签发一下证书，加上本机的局域网 ip 认证：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">PS C:\Users\taobao&gt; mkcert localhost 127.0.0.1 ::1 192.168.61.11</span><br><span class="line"></span><br><span class="line">Created a new certificate valid <span class="keyword">for</span> the following names 📜</span><br><span class="line"> - <span class="string">&quot;localhost&quot;</span></span><br><span class="line"> - <span class="string">&quot;127.0.0.1&quot;</span></span><br><span class="line"> - <span class="string">&quot;::1&quot;</span></span><br><span class="line"> - <span class="string">&quot;192.168.61.11&quot;</span></span><br><span class="line"></span><br><span class="line">The certificate is at <span class="string">&quot;./localhost+3.pem&quot;</span> and the key at <span class="string">&quot;./localhost+3-key.pem&quot;</span> ✅</span><br><span class="line"></span><br><span class="line">It will expire on 29 January 2027 🗓</span><br></pre></td></tr></table></figure>
+
+
+
+<p>再次验证发现使用 <code>https://192.168.61.11</code> 本机访问也是可信的。然后我们需要将 CA 证书发放给局域网内其他的用户。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用 mkcert -CAROOT 令可以列出 CA 证书的存放路径</span></span><br><span class="line">PS C:\Users\abcfy&gt; mkcert -CAROOT</span><br><span class="line">C:\Users\abcfy\AppData\Local\mkcert</span><br><span class="line"></span><br><span class="line">PS C:\Users\abcfy&gt; <span class="built_in">ls</span> $(mkcert -CAROOT)</span><br><span class="line"></span><br><span class="line">    目录：C:\Users\abcfy\AppData\Local\mkcert</span><br><span class="line"></span><br><span class="line">Mode                LastWriteTime         Length Name</span><br><span class="line">----                -------------         ------ ----</span><br><span class="line">-a----  2019-04-09-星期二  上午 1           2484 rootCA-key.pem</span><br><span class="line">                             2:16</span><br><span class="line">-a----  2019-04-09-星期二  上午 1           1651 rootCA.pem</span><br><span class="line">                             2:16</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 CA 路径下有两个文件 <code>rootCA-key.pem</code> 和 <code>rootCA.pem</code> 两个文件，用户需要信任 <code>rootCA.pem</code> 这个文件。将 <code>rootCA.pem</code> 拷贝一个副本，并命名为 <code>rootCA.crt</code>（因为 windows 并不识别 <code>pem</code> 扩展名，并且 Ubuntu 也不会将 <code>pem</code> 扩展名作为 CA 证书文件对待），将 <code>rootCA.crt</code> 文件分发给其他用户，手工导入。</p>
+<ul>
+<li>windows 导入证书的方法是双击这个文件，在证书导入向导中将证书导入 <code>受信任的根证书颁发机构</code> :</li>
+</ul>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/4-%E6%9C%AC%E5%9C%B0https%E7%8E%AF%E5%A2%83%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/5656eac6b3d34035834f4f8a18392181.png"></p>
+<ul>
+<li><p>MacOS 的做法也一样，同样选择将 CA 证书导入到受信任的根证书颁发机构。</p>
+</li>
+<li><p>Ubuntu 的做法可以将证书文件（必须是<code>crt</code>后缀）放入 <code>/usr/local/share/ca-certificates/</code> ，然后执行 <code>sudo update-ca-certificates</code></p>
+</li>
+<li><p>Android 和 iOS 信任 CA 证书的做法参考 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert#mobile-devices">官方文档</a>。</p>
+</li>
+<li><p>在局域网其他计算机就可以访问 https 而不报警了。我在另一台虚拟机 Ubuntu 上使用 curl 测试结果：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ curl -I https://192.168.31.170</span><br><span class="line">HTTP/1.0 200 OK</span><br><span class="line">Server: SimpleHTTP/0.6 Python/3.6.8</span><br><span class="line">Date: Tue, 09 Apr 2019 05:22:12 GMT</span><br><span class="line">Content-<span class="built_in">type</span>: text/html; charset=utf-8</span><br><span class="line">Content-Length: 1794</span><br><span class="line"></span><br><span class="line"><span class="comment"># 无警告，加上 `-v` 参数输出还会告诉证书是可信的。</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.nanoka.top/posts/d845bf65/">https://www.nanoka.top/posts/d845bf65/</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/FiloSottile/mkcert">https://github.com/FiloSottile/mkcert</a></p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.jianshu.com/p/7cb5c2cffaaa">https://www.jianshu.com/p/7cb5c2cffaaa</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/4709a84">https://fulsun.github.io/p/4709a84</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Nginx/">Nginx</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/008.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/7ba59769" title="提升网站速度gzip、expires"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">提升网站速度gzip、expires</div></div></a></div><div class="next-post pull-right"><a href="/p/ee9089be" title="URL地址的重写与跳转"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">URL地址的重写与跳转</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/eaf22a9f" title="Nginx静态资源部署与跨域访问"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-10</div><div class="title">Nginx静态资源部署与跨域访问</div></div></a></div><div><a href="/p/deab9856" title="Nginx介绍"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-28</div><div class="title">Nginx介绍</div></div></a></div><div><a href="/p/ab1b37cf" title="Nginx基本配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-29</div><div class="title">Nginx基本配置</div></div></a></div><div><a href="/p/2793eb31" title="Nginx日志管理"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-09</div><div class="title">Nginx日志管理</div></div></a></div><div><a href="/p/ea231d7a" title="Location的URI解析"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-06-30</div><div class="title">Location的URI解析</div></div></a></div><div><a href="/p/ee9089be" title="URL地址的重写与跳转"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2019-07-01</div><div class="title">URL地址的重写与跳转</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

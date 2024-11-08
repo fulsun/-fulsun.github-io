@@ -1,0 +1,554 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux介绍 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Linux介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux介绍">
+<meta property="og:url" content="https://fulsun.github.io/p/ddbe5190">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="Linux介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/008.webp">
+<meta property="article:published_time" content="2018-09-22T11:43:01.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.350Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/008.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/ddbe5190"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux介绍',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/008.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux介绍</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-09-22T11:43:01.000Z" title="发表于 2018-09-22 11:43:01">2018-09-22</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.350Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>12分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux介绍"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="Linux介绍"><a href="#Linux介绍" class="headerlink" title="Linux介绍"></a>Linux介绍</h2><h3 id="什么是Linux"><a href="#什么是Linux" class="headerlink" title="什么是Linux"></a>什么是Linux</h3><blockquote>
+<p>Linux系统是一套<strong>免费使用</strong>和<strong>自由传播</strong>的<strong>类UNIX操作系统</strong>（主要用在服务器上），是一个基于<strong>POSIX</strong>和<strong>UNIX</strong>的<strong>多用户</strong>、<strong>多任务</strong>、<strong>支持多线程</strong>和<strong>多CPU</strong>的操作系统。它能运行主要的UNIX工具软件、应用程序和网络协议。它支持32位和64位硬件。Linux继承了UNIX以网络为核心的设计思想，是一个性能稳定的多用户网络操作系统。</p>
+</blockquote>
+<h3 id="Linux产生背景"><a href="#Linux产生背景" class="headerlink" title="Linux产生背景"></a>Linux产生背景</h3><ul>
+<li><p>UNIX：操作系统，是美国AT&amp;T公司贝尔实验室于1969年完成的操作系统，最早由肯·汤普逊（Ken Thompson），丹尼斯·里奇（Dennis Ritchie）开发。在1971年首次对外发布，刚好在1971，丹尼斯·里奇（Dennis Ritchie）发明了C语言，后来在1973，Unix被他用C语言重新编写。Unix前身源自于MultiCS，叫UniCS，后来改名叫Unix。</p>
+</li>
+<li><p>POSIX：可移植操作系统接口（英语：Portable Operating System Interface of UNIX，缩写为POSIX），是IEEE（电气和电子工程师协会）为要在各种UNIX操作系统上运行软件，而定义API的一系列互相关联的标准的总称。</p>
+</li>
+<li><p>GNU：1983年，Richard Stallman（理查德·马修·斯托曼）创立GNU计划。一套完全自由的操作系统，其内容软件完全以GPL方式发布。这个操作系统是GNU计划的主要目标（发展出一套完整的开放源代码操作系统来取代Unix），名称来自GNU’s Not Unix!的递归缩写。</p>
+</li>
+<li><p>GPL：一种GNU通用公共许可协议，为保证GNU软件可以自由的使用、复制、修改和发布，<code>所有的GNU软件都有一份在禁止其他人添加任何限制的情况下授权所有权利给任何人的协议条款</code>，是一个被广泛使用的自由软件许可协议条款，保证终端用户运行、学习、分享（复制）及编辑软件之自由，<code>GPL是自由软件和开源软件的最流行许可证</code>，特色表现：</p>
+<ul>
+<li><p>取得软件与原始码：您可以根据自己的需求来执行这个自由软件</p>
+</li>
+<li><p>复制：您可以自由的复制该软件</p>
+</li>
+<li><p>修改：您可以将取得的原始码进行程序修改工作，使之适合您的工作</p>
+</li>
+<li><p>再发行：您可以将您修改过的程序，再度的自由发行，而不会与原先的撰写者冲突</p>
+</li>
+<li><p>回馈：您应该将您修改过的程序代码回馈于社群</p>
+<p> <img src= "/medias/detail/load.gif" data-lazy-src="/p/ddbe5190/5db05dec2bbf8b163e06c4cd8d3d71c3.jpg"></p>
+</li>
+</ul>
+</li>
+<li><p>1985年，Richard Stallman又创立了自由软件基金会（Free Software Foundation，FSF）来为GNU计划提供技术、法律以及财政支持。1990年，GNU计划开发主要项目有Emacs（文本编辑器）、GCC（GUN Compiler Collection，GNU编译器集合）、Bash等，GCC是一套GNU开发的编程语言编译器。还有开发一些UNIX系统的程序库和工具。</p>
+</li>
+<li><p>Linux操作系统诞生于1991年10月5日（这是第一次正式向外公布时间），与UNIX兼容，并在GPL条款下发布。现在，Linux产生了许多不同的Linux发行版本，但它们都使用了Linux内核。Linux可安装在各种计算机硬件设备中，比如手机、平板电脑、路由器、视频游戏控制台、台式计算机、大型机和超级计算机。</p>
+</li>
+<li><p>1992年，Linux与其他GUN软件结合，完全自由的GNU&#x2F;Linux操作系统正式诞生，简称Linux</p>
+</li>
+</ul>
+<h3 id="Linux特点"><a href="#Linux特点" class="headerlink" title="Linux特点"></a>Linux特点</h3><ol>
+<li>分时的多用户、多任务操作系统</li>
+<li>多数网络协议支持、方便的远程管理</li>
+<li>强大的内存管理和文件系统管理</li>
+<li>大量的可用的软件和免费的软件</li>
+<li>优良的稳定性和安全性</li>
+<li>良好的可移植性和灵活性</li>
+<li>可供选择的厂商多</li>
+</ol>
+<h3 id="Linux操作系统架构"><a href="#Linux操作系统架构" class="headerlink" title="Linux操作系统架构"></a>Linux操作系统架构</h3><p><img src= "/medias/detail/load.gif" data-lazy-src="/p/ddbe5190/d7cf0c4ad59b35686b64bf5f44a9c026.jpg"></p>
+<blockquote>
+<p>补充：linux内核必须加上一个“界面”软件，才能让用户去使用</p>
+</blockquote>
+<ul>
+<li>“界面”分两类：<ul>
+<li>命令行界面CLI SHELL（有很多种，最流行的一种是bash shell）</li>
+<li>图形界面GUI SHELL（也有很多种，目前最流行的有两种：gnome和kde）</li>
+</ul>
+</li>
+</ul>
+<h3 id="Linux内核"><a href="#Linux内核" class="headerlink" title="Linux内核"></a>Linux内核</h3><ul>
+<li><p>严格来讲，Linux不是一个操作系统，Linux只是一个操作系统中的内核。</p>
+</li>
+<li><p>内核建立了计算机软件与硬件之间通讯的平台，内核提供系统服务，比如文件管理、虚拟内存、设备I&#x2F;O、进程管理等。</p>
+</li>
+<li><p>内核官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.kernel.org/%E3%80%82%E7%9B%AE%E5%89%8D%E6%9C%80%E6%96%B0%E7%9A%84%E5%86%85%E6%A0%B8%E7%89%88%E6%9C%AC%EF%BC%9A4.13.5">http://www.kernel.org/。目前最新的内核版本：4.13.5</a></p>
+</li>
+<li><p>要注意区分linux发型版本和linux内核版本。两者不是同一个事物</p>
+</li>
+</ul>
+<h3 id="常见发行版"><a href="#常见发行版" class="headerlink" title="常见发行版"></a>常见发行版</h3><ul>
+<li><p>红帽企业系统（RedHat Enterprise Linux, RHEL）</p>
+<p>全球最大的开源技术厂商，全世界内使用最广泛的Linux发布套件，</p>
+<p>提供性能与稳定性极强的Linux套件系统并拥有完善的全球技术支持。</p>
+<p>官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.redhat.com/">http://www.redhat.com</a></p>
+</li>
+<li><p>社区企业操作系统（CentOS）</p>
+<p>最初是将红帽企业系统“重新编译&#x2F;发布”给用户免费使用而广泛使用，</p>
+<p>当前已正式加入红帽公司并继续保持免费（随RHEL更新而更新）。</p>
+<p>官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.centos.org/">http://www.centos.org/</a></p>
+</li>
+<li><p>红帽用户桌面版（Fedora [Linux]）</p>
+<p>最初由红帽公司发起的桌面版系统套件（目前已经不限于桌面版），</p>
+<p>用户可免费体验到最新的技术或工具，而功能成熟后加入到RHEL中。</p>
+<p>官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://fedora.redhat.com/">http://fedora.redhat.com</a></p>
+</li>
+<li><p>国际化组织的开源操作系统（Debian）</p>
+<p>提供超过37500种不同的自由软件且拥有很高的认可度，</p>
+<p>对于各类内核架构支持性良好，稳定性、安全性强更有免费的技术支持。</p>
+<p>官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.debian.org/">http://www.debian.org/</a></p>
+</li>
+<li><p>基于Debian的桌面版（Ubuntu）</p>
+<p>Ubuntu是一款基于Debian派生的产品，对新款硬件具有极强的兼容能力。</p>
+<p>普遍认为Ubuntu与Fedora都是极其出色的LINUX桌面系统。</p>
+<p>官网：<a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.ubuntulinux.org/">http://www.ubuntulinux.org/</a></p>
+</li>
+<li><p>当然还有国内的国防科技大学发行 麒麟kylin 和 中科院发行 红旗RedFlag。</p>
+</li>
+</ul>
+<h2 id="Linux的文件系统和目录结构"><a href="#Linux的文件系统和目录结构" class="headerlink" title="Linux的文件系统和目录结构"></a>Linux的文件系统和目录结构</h2><h3 id="硬盘分区管理"><a href="#硬盘分区管理" class="headerlink" title="硬盘分区管理"></a>硬盘分区管理</h3><ul>
+<li><p>linux系统的硬盘分区管理相关概念：</p>
+<ul>
+<li>对于分区表通常有<strong>MBR分区表和GPT分区表</strong></li>
+<li>对于磁盘大小小于2T的磁盘，我们可以使用fdisk和parted命令工具进行分区</li>
+</ul>
+</li>
+<li><p>对于MBR分区表的特点（通常使用fdisk命令进行分区）</p>
+<ul>
+<li>所支持的最大磁盘大小：2T</li>
+<li>最多<code>支持4个主分区</code>或者<code>是3个主分区加上一个扩展分区</code></li>
+</ul>
+</li>
+<li><p>对于GPT分区表的特点（使用parted命令进行分区）</p>
+<ul>
+<li>支持最大卷：18EB（1EB&#x3D;1024TB）</li>
+<li><code>最多支持128个主分区</code>，所以对于GPT的分区表来说，基本就没有什么主分区和逻辑分区的区别了。</li>
+</ul>
+</li>
+<li><p>可以分为主分区、扩展分区、逻辑分区</p>
+<table>
+<thead>
+<tr>
+<th>分区</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>主分区</td>
+<td>一个硬盘最多只能有4个主分区，主分区采用hdXN的格式，hdX为硬盘，N是1-4的数字，分别表示4个主分区，第一个硬盘的第一个主分区，表示为hda1，以此类推</td>
+</tr>
+<tr>
+<td>扩展分区</td>
+<td>扩展分区作为特殊的主分区需要占用硬盘分区表中4个分区记录中的1个记录</td>
+</tr>
+<tr>
+<td>逻辑分区</td>
+<td>逻辑分区只能建立在扩展分区中，可以建立文件系统。逻辑分区同样采用了hdXN 的格式，区别在于，逻辑分区的N是从5开始算的，第一个硬盘的第2个逻辑分区就为hda6</td>
+</tr>
+<tr>
+<td>IDE设备</td>
+<td>hda2, hdb3等等</td>
+</tr>
+<tr>
+<td>SCSI设备&#x2F;SATA设备</td>
+<td>sda2, sdb3等等</td>
+</tr>
+</tbody></table>
+</li>
+<li><p>硬盘采用hdX格式表示，X代表a.b.c.d</p>
+</li>
+<li><p>系统最多只有4个IDE设备，其中第一个IDE设备名称为hda，第4个为hdd</p>
+<table>
+<thead>
+<tr>
+<th>类型</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IDE</td>
+<td>一种较老的接口技术，价格低廉，兼容性强，传输速度可达133MB&#x2F;s</td>
+</tr>
+<tr>
+<td>SCSI</td>
+<td>主要应用于中、高端服务器中，支持热拔插，价格较高，其中UltraSCSI可达320MB&#x2F;S，UltraSCSI640可达640MB&#x2F;S</td>
+</tr>
+<tr>
+<td>SATA</td>
+<td>主要用于PC上，串口硬盘，可达6gbps</td>
+</tr>
+<tr>
+<td>SAS</td>
+<td>是一种串行链接的SCSI接口技术，向下兼容SATA，速度快</td>
+</tr>
+<tr>
+<td>USB</td>
+<td>一种便携的存储设备，USB3.0理论最大传输速度可达500MB&#x2F;s，现在最新的USB3.1Gen 2最高可达10Gbps</td>
+</tr>
+<tr>
+<td>并口</td>
+<td>同一线缆可以接多块设备，IDE和SCSI为并口硬盘；</td>
+</tr>
+<tr>
+<td>串口</td>
+<td>同一线缆只可以接一个设备，SATA、SAS和USB为串口，抗干扰能力强</td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+<h3 id="文件系统"><a href="#文件系统" class="headerlink" title="文件系统"></a>文件系统</h3><ul>
+<li><p>EXT2和EXT3都是Linux操作系统默认使用的文件系统，EXT3属于日志文件系统，比较出色。</p>
+</li>
+<li><p>swap文件系统在Linux系统的交换分区中使用，也是Linux系统默认支持的，一般设置为主机系统内存的2倍大小。其他的文件系统包裹 xfs、jfs 等，这些大多使用与商业的UNIX系统。</p>
+</li>
+<li><p>FAT文件系统Linux可以读写，NTFS中能读，不能写</p>
+</li>
+<li><p>Linux操作系统最经典的分配方案：</p>
+<ul>
+<li>&#x2F;boot：启动分区</li>
+<li>swap：交换分区</li>
+<li>&#x2F; ：根分区</li>
+</ul>
+</li>
+<li><p>Linux操作系统和windows操作系统使用的文件系统是不一样的。</p>
+<ul>
+<li><p>CentOS是EXT4格式 &#x2F;&#x2F; 查询方式：<code>cat /etc/fstab</code></p>
+</li>
+<li><p>Windows一般是NTFS</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="linux文件系统介绍"><a href="#linux文件系统介绍" class="headerlink" title="linux文件系统介绍"></a>linux文件系统介绍</h3><ul>
+<li><p>Linux根据文件形式主要将文件分为目录和普通文件，如下图：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/ddbe5190/aef4d0916514d06c6ebe5100e2fd3bac.jpg"></p>
+<ul>
+<li><p>Directory表示目录</p>
+</li>
+<li><p>Ordinary File表示普通文件</p>
+</li>
+</ul>
+</li>
+<li><p>如果像上图一样把Linux的文件系统看做是一棵树，那么：</p>
+<ul>
+<li>所有的Ordinary File都是叶子节点</li>
+<li>含有子节点的节点都一定是目录，因为只有目录下才有子目录或者普通文件，普通文件下是没有子级目录的，还是很好理解吧</li>
+</ul>
+</li>
+<li><p>普通文件和目录名称要求：<strong>文件和目录是区分大小写的</strong></p>
+<ol>
+<li><p>Uppercase letters (A-Z)</p>
+</li>
+<li><p>Lowercase letters (a-z)</p>
+</li>
+<li><p>Numbers (0-9)</p>
+</li>
+<li><p>Underscore (_)</p>
+</li>
+<li><p>Period(.)</p>
+</li>
+<li><p>Comma(,)</p>
+</li>
+</ol>
+</li>
+<li><p>Linux对文件的扩展名是没有强制要求的，甚至可以说没有扩展名之类的概念。但是通常我们创建文件或者保存文件的时候都还是最好给弄一个文件扩展名，这样非常有利于理解文件的内容，方便管理</p>
+</li>
+</ul>
+<h2 id="CentOS的目录结构"><a href="#CentOS的目录结构" class="headerlink" title="CentOS的目录结构"></a>CentOS的目录结构</h2><p><img src= "/medias/detail/load.gif" data-lazy-src="/p/ddbe5190/db9b14afb36c91e3506bf1fcd70c8c49.jpg"></p>
+<ul>
+<li><p><strong>系统启动必须：</strong></p>
+<ul>
+<li><p><strong>&#x2F;boot：</strong>存放的启动Linux 时使用的内核文件，包括连接文件以及镜像文件。</p>
+</li>
+<li><p><strong>&#x2F;etc：</strong>存放<strong>所有</strong>的系统需要的<strong>配置文件</strong>和<strong>子目录列表，</strong>更改目录下的文件可能会导致系统不能启动。</p>
+</li>
+<li><p><strong>&#x2F;lib</strong>：存放基本代码库（比如c++库），其作用类似于Windows里的DLL文件。几乎所有的应用程序都需要用到这些共享库。</p>
+</li>
+<li><p><strong>&#x2F;sys</strong>： 这是linux2.6内核的一个很大的变化。该目录下安装了2.6内核中新出现的一个文件系统 sysfs 。sysfs文件系统集成了下面3种文件系统的信息：针对进程信息的proc文件系统、针对设备的devfs文件系统以及针对伪终端的devpts文件系统。该文件系统是内核设备树的一个直观反映。当一个内核对象被创建的时候，对应的文件和目录也在内核对象子系统中</p>
+</li>
+<li><p><strong>&#x2F;proc</strong>：此目录的数据都在内存中，如系统核心，外部设备，网络状态，由于数据都存放于内存中，所以不占用磁盘空间，比较重要的目录有&#x2F;proc&#x2F;cpuinfo、&#x2F;proc&#x2F;interrupts、&#x2F;proc&#x2F;dma、&#x2F;proc&#x2F;ioports、&#x2F;proc&#x2F;net&#x2F;*等process</p>
+</li>
+</ul>
+</li>
+<li><p><strong>指令集合：</strong></p>
+<ul>
+<li><p><strong>&#x2F;bin：</strong>存放着最常用的程序和指令</p>
+</li>
+<li><p><strong>&#x2F;sbin：</strong>只有系统管理员能使用的程序和指令。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>外部文件管理：</strong></p>
+<ul>
+<li><p><strong>&#x2F;dev ：</strong>Device(设备)的缩写, 存放的是Linux的外部设备。<strong>注意：</strong>在Linux中访问设备和访问文件的方式是相同的。</p>
+</li>
+<li><p><strong>&#x2F;media</strong>：类windows的<strong>其他设备，</strong>例如U盘、光驱等等，识别后linux会把设备放到这个目录下。</p>
+</li>
+<li><p><strong>&#x2F;mnt</strong>：临时挂载别的文件系统的，我们可以将光驱挂载在&#x2F;mnt&#x2F;上，然后进入该目录就可以查看光驱里的内容了。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>临时文件：</strong></p>
+<ul>
+<li><p><strong>&#x2F;run</strong>：是一个临时文件系统，存储系统启动以来的信息。当系统重启时，这个目录下的文件应该被删掉或清除。如果你的系统上有 &#x2F;var&#x2F;run 目录，应该让它指向 run。</p>
+</li>
+<li><p><strong>&#x2F;lost+found</strong>：一般情况下为空的，系统非法关机后，这里就存放一些文件。</p>
+</li>
+<li><p><strong>&#x2F;tmp</strong>：这个目录是用来存放一些临时文件的。任何人都可以访问,重要数据不可放置在此目录下</p>
+</li>
+</ul>
+</li>
+<li><p><strong>账户：</strong></p>
+<ul>
+<li><p><strong>&#x2F;root</strong>：系统管理员的用户主目录。</p>
+</li>
+<li><p><strong>&#x2F;home</strong>：用户的主目录，以用户的账号命名的。</p>
+</li>
+<li><p><strong>&#x2F;usr</strong>：用户的很多应用程序和文件都放在这个目录下，类似于windows下的program files目录。</p>
+</li>
+<li><p><strong>&#x2F;usr&#x2F;bin：</strong>系统用户使用的应用程序与指令。</p>
+</li>
+<li><p><strong>&#x2F;usr&#x2F;sbin：</strong>超级用户使用的比较高级的管理程序和系统守护程序。</p>
+</li>
+<li><p><strong>&#x2F;usr&#x2F;src：</strong>内核源代码默认的放置目录。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>运行过程中要用：</strong></p>
+<ul>
+<li><p><strong>&#x2F;var</strong>：存放经常修改的数据，比如程序运行的日志文件（&#x2F;var&#x2F;log 目录下）。</p>
+</li>
+<li><p><strong>&#x2F;proc</strong>：管理<strong>内存空间！</strong>虚拟的目录，是系统内存的映射，我们可以直接访问这个目录来，获取系统信息。这个目录的内容不在硬盘上而是在内存里，我们也可以直接修改里面的某些文件来做修改。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>扩展用的：</strong></p>
+<ul>
+<li><p><strong>&#x2F;opt</strong>：默认是空的，我们安装额外软件可以放在这个里面。</p>
+</li>
+<li><p><strong>&#x2F;srv</strong>：存放服务启动后需要提取的数据<strong>（不用服务器就是空）</strong>如www服务需要访问的网页数据存放在&#x2F;srv&#x2F;www</p>
+</li>
+</ul>
+</li>
+<li><p>软件安装</p>
+<ul>
+<li>&#x2F;selinux：selinux软件目录，用于保证系统安全</li>
+<li>&#x2F;opt：给主机额外安装软件所摆放的目录。</li>
+<li>&#x2F;usr：应用程序存放目录，<ul>
+<li>&#x2F;usr&#x2F;bin 存放应用程序</li>
+<li>&#x2F;usr&#x2F;share 存放共享数据</li>
+<li>&#x2F;usr&#x2F;lib 存放不能直接运行的，却是许多程序运行所必需的一些函数库文件</li>
+<li>&#x2F;usr&#x2F;local:存放软件升级包</li>
+<li>&#x2F;usr&#x2F;share&#x2F;doc: 系统说明文件存放目录</li>
+<li>&#x2F;usr&#x2F;share&#x2F;man: 程序说明文件存放目录，使用man ls时会查询&#x2F;usr&#x2F;share&#x2F;man&#x2F;man1&#x2F;ls.1.gz的内容建议单独分区，设置较大的磁盘空间</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>使用建议：</p>
+<ol>
+<li>用户应该将文件存储在自己的主目录及其子目录下</li>
+<li>系统绝大多数设置都在&#x2F;etc目录下</li>
+<li>不要修改&#x2F;或者&#x2F;usr目录下的任何内容，除非你真的清楚你在做什么，也就是说&#x2F;目录最好和安装好系统之初保持一致</li>
+<li>大多数工具和应用软件程序都安装在&#x2F;bin，&#x2F;sbin，&#x2F;usr&#x2F;bin，&#x2F;usr&#x2F;sbin，&#x2F;usr&#x2F;local&#x2F;bin</li>
+<li>文件或者目录都有唯一的绝对路径，没有盘符的概念</li>
+</ol>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/ddbe5190">https://fulsun.github.io/p/ddbe5190</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux/">Linux</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/008.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/f9a8da1b" title="VMware安装Centos7"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/006.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">VMware安装Centos7</div></div></a></div><div class="next-post pull-right"><a href="/p/5251a307" title="IDEA的多模块使用"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">IDEA的多模块使用</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/73b4571" title="Linux镜像源"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-01</div><div class="title">Linux镜像源</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E4%BB%8B%E7%BB%8D"><span class="toc-text">Linux介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFLinux"><span class="toc-text">什么是Linux</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E4%BA%A7%E7%94%9F%E8%83%8C%E6%99%AF"><span class="toc-text">Linux产生背景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E7%89%B9%E7%82%B9"><span class="toc-text">Linux特点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E6%9E%B6%E6%9E%84"><span class="toc-text">Linux操作系统架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Linux%E5%86%85%E6%A0%B8"><span class="toc-text">Linux内核</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E5%8F%91%E8%A1%8C%E7%89%88"><span class="toc-text">常见发行版</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux%E7%9A%84%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E5%92%8C%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">Linux的文件系统和目录结构</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E7%AE%A1%E7%90%86"><span class="toc-text">硬盘分区管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">文件系统</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F%E4%BB%8B%E7%BB%8D"><span class="toc-text">linux文件系统介绍</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CentOS%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">CentOS的目录结构</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

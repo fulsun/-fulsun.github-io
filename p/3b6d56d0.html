@@ -1,0 +1,544 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringMVC 获取请求参数 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC 获取请求参数">
+<meta property="og:url" content="https://fulsun.github.io/p/3b6d56d0">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/009.webp">
+<meta property="article:published_time" content="2024-07-16T03:14:28.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.010Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/009.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/3b6d56d0"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringMVC 获取请求参数',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/009.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringMVC 获取请求参数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-16T03:14:28.000Z" title="发表于 2024-07-16 03:14:28">2024-07-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.010Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringMVC/">SpringMVC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.1k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>23分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringMVC 获取请求参数"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="通过-Servlet-API-获取"><a href="#通过-Servlet-API-获取" class="headerlink" title="通过 Servlet API 获取"></a>通过 Servlet API 获取</h2><p>将<code>HttpServletRequest</code>作为控制器方法的形参，此时<code>HttpServletRequest</code>类型的参数表示封装了当前请求的请求报文的对象</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testServletAPI&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testServletAPI</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">password</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;password&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;,password=&quot;</span> + password);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span></span></span><br><span class="line"><span class="tag">  <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/paramController/testServletAPI(username=&#x27;admin&#x27;,password=&#x27;123456&#x27;)&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>通过 Servlet API 获取&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;0a302bfe98c0d00429bdd743fb107d6d.gif)</p>
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin,password=<span class="number">123456</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Q</strong>：为何将<code>HttpServletRequest request</code>传入 testServletAPI() 方法中就可以使用？</p>
+<p><strong>A</strong>：SpringMVC 的 IOC 容器帮我们注入了<code>HttpServletRequest</code>请求对象，同时<code>DispatherServlet</code>为我们调用 testServletAPI() 方法时自动给<code>request</code>参数赋了值，因此可以在方法形参位置传入请求对象<code>HttpServletRequest</code>就可以直接使用其<code>getParameter()</code>方法获取参数</p>
+</blockquote>
+<p>尽管上述 Servlet API 原生方式可以获取请求参数，但是这样做就没有必要了。因为 SpringMVC 中帮我们封装好了更加便捷的方式获取请求参数</p>
+<h2 id="通过控制器方法形参获取"><a href="#通过控制器方法形参获取" class="headerlink" title="通过控制器方法形参获取"></a>通过控制器方法形参获取</h2><p>在控制器方法的形参位置，设置和请求参数同名的形参，当浏览器发送请求，匹配到请求映射时，在<code>DispatcherServlet</code>中就会将请求参数赋值给相应的形参</p>
+<blockquote>
+<p><strong>注意</strong>：在<code>@RequestMapping</code>注解的“路径中的占位符”一节中，我们测试过了 restful 风格在不使用<code>@PathVariable</code>转而通过同名形参的方式，试图获取<em>占位符</em>的值，不过 SpringMVC 并没有很智能地给我们为同名参数赋值。但是这里 SpringMVC 允许我们使用同名形参为<em>请求参数</em>赋值。这是<em>占位符</em>和<em>请求参数</em>的一个区别，需要注意区分！！！</p>
+</blockquote>
+<h3 id="同名形参"><a href="#同名形参" class="headerlink" title="同名形参"></a>同名形参</h3><p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam</span><span class="params">(String username, String password)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;,password=&quot;</span> + password);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/paramController/testParam(username=&#x27;admin&#x27;,password=&#x27;123456&#x27;)&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>通过控制器方法形参获取&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;74e7b260fedf35c874aced899df4eed5.gif)</p>
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=admin,password=<span class="number">123456</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="同名形参多值"><a href="#同名形参多值" class="headerlink" title="同名形参多值"></a>同名形参多值</h3><p>若请求所传输的请求参数中有多值情况，此时可以在控制器方法的形参中设置<em>字符串数组</em>或者<em>字符串类型</em>的形参接收此请求参数</p>
+<ul>
+<li>若使用字符串数组类型的形参，此参数的数组中包含了每一个数据</li>
+<li>若使用字符串类型的形参，此参数的值为每个数据中间使用逗号拼接的结果</li>
+</ul>
+<p>当某个请求参数有多个值时，比如前台含有复选框的情况，还能否使用这种方式呢？“实践出真知”，现在就进行测试</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam2</span><span class="params">(String username, String password, String hobby)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;, password=&quot;</span> + password + <span class="string">&quot;, hobby=&quot;</span> + hobby);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--为了更直观地在地址栏中看到请求参数，这里使用get类型请求方式--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;paramController/testParam2&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;get&quot;</span>&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  密码：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  爱好：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">name</span>=<span class="string">&quot;hobby&quot;</span> <span class="attr">value</span>=<span class="string">&quot;Spring&quot;</span> /&gt;</span>Spring</span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">name</span>=<span class="string">&quot;hobby&quot;</span> <span class="attr">value</span>=<span class="string">&quot;SpringMVC&quot;</span> /&gt;</span>SpringMVC</span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;checkbox&quot;</span> <span class="attr">name</span>=<span class="string">&quot;hobby&quot;</span> <span class="attr">value</span>=<span class="string">&quot;SpringBoot&quot;</span> /&gt;</span>SpringBoot</span><br><span class="line">  <span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试请求参数&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;35614257b88e6c142eac81be5c9788bb.gif)</p>
+<p>前台请求路径中复选框的值为<code>hobby=Spring&amp;hobby=SpringMVC&amp;hobby=SpringBoot</code>，即出现了多个<code>hobby=value</code>的情况</p>
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=hah, password=<span class="number">111111</span>, hobby=Spring,SpringMVC,SpringBoot</span><br></pre></td></tr></table></figure>
+
+<p>可见 SpringMVC 的控制器方法，对多个<code>hobby</code>值使用了<code>,</code>进行拼接并赋值给同名形参</p>
+<blockquote>
+<p><strong>扩展</strong>：如果这里使用 Servlet API 进行获取请求参数，就不能使用<code>getParameter()</code>方法获取 hobby 值了，而要使用<code>getParameterValues()</code>方法</p>
+<p>后台代码测试</p>
+<p>后台日志信息：通过<code>getParameter()</code>只能获取到 hobby 的第一个值，而<code>getParameterValues()</code>可以以数组的形式返回 hobby 的所有值</p>
+<p>当然还是那句话：不建议在 SpringMVC 中使用原生 Servlet API 方法！！！这里稍作回顾和了解即可</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testServletAPI2&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testServletAPI2</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line"> <span class="type">String</span> <span class="variable">hobby</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;hobby&quot;</span>);</span><br><span class="line"> String[] hobby2 = request.getParameterValues(<span class="string">&quot;hobby&quot;</span>);</span><br><span class="line"> System.out.println(<span class="string">&quot;hobby=&quot;</span> + hobby + <span class="string">&quot;, hobby2=&quot;</span> + Arrays.toString(hobby2));</span><br><span class="line"> <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=sdfg, password=sdfg, hobby=Spring, hobby2=[Spring, SpringMVC, SpringBoot]</span><br></pre></td></tr></table></figure>
+
+<p>另外，控制器方法中使用<code>String</code>类型的数组接收 hobby 值也是可以的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam3</span><span class="params">(String username, String password, String[] hobby)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;, password=&quot;</span> + password + <span class="string">&quot;, hobby=&quot;</span> + Arrays.toString(hobby));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=aaaaaaaaa, password=aaaaaaaa, hobby=[Spring, SpringMVC, SpringBoot]</span><br></pre></td></tr></table></figure>
+
+<h2 id="RequestParam"><a href="#RequestParam" class="headerlink" title="@RequestParam "></a><a href="/RequestParam">@RequestParam </a></h2><p><code>@RequestParam</code>是将请求参数和控制器方法的形参创建映射关系</p>
+<p>一共有三个属性：</p>
+<ul>
+<li><code>value</code>：指定为形参赋值的请求参数的参数名</li>
+<li><code>required</code>：设置是否必须传输此请求参数，默认值为<code>true</code><ul>
+<li>若设置为<code>true</code>，则当前请求必须传输<code>value</code>所指定的请求参数，若没有传输该请求参数，且没有设置<code>defaultValue</code>属性，则页面报错<code>400：Required String parameter&#39;xxx&#39;is not present</code>；</li>
+<li>若设置为<code>false</code>，则当前请求不是必须传输<code>value</code>所指定的请求参数，若没有传输，则注解所标识的形参的值为<code>null</code></li>
+</ul>
+</li>
+<li><code>defaultValue</code>：不管<code>required</code>属性值为<code>true</code>或<code>false</code>，当<code>value</code>所指定的请求参数没有传输或传输的值为空值时，则使用默认值为形参赋值</li>
+</ul>
+<p>实际开发中，请求参数与控制器方法形参未必一致，一旦出现这种情况，还能否接收到请求参数了呢？</p>
+<p>这里简单地将前台<code>name=&quot;username&quot;</code>改为<code>name=&quot;user_name&quot;</code>进行测试，看下后台日志信息，果然没有接收到 user_name 这个请求参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=<span class="literal">null</span>, password=aaaaaaaa, hobby=[Spring, SpringMVC, SpringBoot]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>扩展思考</strong>：这里也侧面证明一件事，SpringMVC 中对请求参数的赋值是根据是否同名来决定的，而不会根据参数在方法上的第几个位置决定，也就是说 SpringMVC 没有考虑将<em>请求参数个数、类型与顺序</em>与<em>控制器方法形参个数、类型与顺序</em>进行绑定。如果我们来设计 SpringMVC，应该考虑这种方案么？</p>
+<p>个人觉得，这种方案虽然可以实现与 Java 重载方法的一一绑定关系，但实际操作起来有一定难度：</p>
+<ul>
+<li>比如数字类型可以当作 String 处理，也可以当作 Integer 处理，不好区分</li>
+<li>退一步来讲，如果考虑重载方法，SpringMVC 底层势必要对类中所有重载方法进行循环，判断是否满足个数、类型和顺序的要求，性能上一定有所影响</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>而限制请求路径和请求方式不能完全相同的话，就没有这种苦恼了。即使是重载方法，通过不同请求路径或请求方法来界定到底访问哪个方法就可以了</p>
+<p>SpringMVC 借助注解的方式，将请求参数与控制器方法形参关系绑定的决定权，交到开发者的手中。这种开发思维启发我们，如果有些功能不能很好地在底层进行实现，甚至可能会留下很多隐患时，还不如交给实际使用者，由他们去决定，否则很容易被使用者诟病（没有，我没有暗示某语言啊(●’◡’●)）</p>
+</blockquote>
+<p>此时使用<code>@RequestParam</code>注解就可以实现请求参数与控制器方法形参的绑定</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam3</span><span class="params">(<span class="meta">@RequestParam(&quot;user_name&quot;)</span> String username, String password, String[] hobby)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;, password=&quot;</span> + password + <span class="string">&quot;, hobby=&quot;</span> + Arrays.toString(hobby));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=ss, password=aaaaa, hobby=[Spring, SpringMVC, SpringBoot]</span><br></pre></td></tr></table></figure>
+
+<p>关于<code>@RequestParam</code>怎么使用，可以看下源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Target(ElementType.PARAMETER)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> RequestParam &#123;</span><br><span class="line">    <span class="meta">@AliasFor(&quot;name&quot;)</span></span><br><span class="line">    String <span class="title function_">value</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AliasFor(&quot;value&quot;)</span></span><br><span class="line">    String <span class="title function_">name</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">boolean</span> <span class="title function_">required</span><span class="params">()</span> <span class="keyword">default</span> <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    String <span class="title function_">defaultValue</span><span class="params">()</span> <span class="keyword">default</span> ValueConstants.DEFAULT_NONE;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>name</code>和<code>value</code>：绑定的请求参数名，互为别名，用哪个都一样</li>
+<li><code>required</code>属性：默认为<code>true</code>，表示必须要有此参数，不传则报错；不确定是否传参又不想报错，赋值为<code>false</code>即可</li>
+<li><code>defaultValue</code>属性：不管<code>required</code>是<code>true</code>还是<code>false</code>，只要请求参数值为空（<code>&quot;&quot;</code>或<code>null</code>），就为形参附上此值</li>
+</ul>
+<h3 id="required"><a href="#required" class="headerlink" title="required"></a>required</h3><p><code>required</code>默认为<code>true</code>，即要求该请求参数不能为空。因为是默认值，所以添加<code>required=&quot;true&quot;</code>与不写<code>required</code>属性是一样的</p>
+<p>这里先测试下默认情况下不传对应请求参数时系统的反应如何，只需要将<code>user_name</code>一行注释即可，或直接在浏览器地址栏删除该请求参数也一样</p>
+<p>测试结果</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;d8c6404cabdde706bce995864e45c2ce.png)</p>
+<p>报错信息：<code>400</code>错误的请求，必须的请求参数’user_name’…不存在</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">HTTP Status 400 - Required request parameter &#x27;user_name&#x27; for method parameter</span><br><span class="line">type String is not present</span><br></pre></td></tr></table></figure>
+
+<p>经测试，不论是为 username 传空值还是不传值，都是<code>400</code>错误</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/testParam3?user_name=&amp;password=11&amp;hobby=Spring&amp;hobby=SpringMVC</span><br><span class="line">/testParam3?password=11&amp;hobby=Spring&amp;hobby=SpringMVC</span><br></pre></td></tr></table></figure>
+
+<p>如果将<code>required</code>设置为<code>false</code>，还会报错吗？</p>
+<p>后台测试代码：只需要对<code>@RequestParam(&quot;user_name&quot;)</code>稍作改动，修改为<code>@RequestParam(value = &quot;user_name&quot;, required = false)</code>即可</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam3</span><span class="params">(<span class="meta">@RequestParam(value = &quot;user_name&quot;, required = false)</span> String username, String password, String[] hobby)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;, password=&quot;</span> + password + <span class="string">&quot;, hobby=&quot;</span> + Arrays.toString(hobby));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果：可以发现，这次并没有报<code>400</code>错误</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;c3c3842b34ef95b2bce84d19b8d66957.png)</p>
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=<span class="literal">null</span>, password=<span class="number">1111</span>, hobby=[Spring, SpringMVC]</span><br></pre></td></tr></table></figure>
+
+<p>这是不传 user_name 的情况，如果是传空值呢？</p>
+<p>测试结果：同样访问成功，没有报<code>400</code>错误</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;341ce2a4078cfca711435c3b17f844a1.png)</p>
+<p>后台日志信息</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=, password=<span class="number">111</span>, hobby=[Spring, SpringMVC]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Q</strong>：不是说默认是<code>true</code>吗？为什么在没有使用<code>@RequestParam</code>注解时，也能正常访问呢？</p>
+<p><strong>A</strong>：这个默认值本身就是在使用<code>@RequestParam</code>注解时生效的，如果都没有使用到<code>@RequestParam</code>，就没有相应限制了</p>
+</blockquote>
+<h3 id="defaultValue"><a href="#defaultValue" class="headerlink" title="defaultValue"></a>defaultValue</h3><p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testParam3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParam3</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="meta">@RequestParam(value = &quot;user_name&quot;, required = false, defaultValue = &quot;heh&quot;)</span> String username,</span></span><br><span class="line"><span class="params">    String password, String[] hobby)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username + <span class="string">&quot;, password=&quot;</span> + password + <span class="string">&quot;, hobby=&quot;</span> + Arrays.toString(hobby));</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求路径：传空值和不传值两种情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">/testParam3?user_name=&amp;password=asdf&amp;hobby=Spring&amp;hobby=SpringMVC</span><br><span class="line">/testParam3?password=asdf&amp;hobby=Spring&amp;hobby=SpringMVC</span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=heh, password=asdf, hobby=[Spring, SpringMVC]</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，不管是为 username 传空值还是不传值，最终都会被赋上默认值</p>
+<p>这里将<code>required</code>修改为<code>true</code>，即默认值的情况，发现也是可以请求成功的</p>
+<blockquote>
+<p><strong>注意</strong>：<code>required</code>一节测试中，在<code>required</code>的默认值情况下，没有为请求参数赋值传值或传空值，会产生<code>400</code>的错误。</p>
+<p>而只要为请求参数设置默认值，即使用<code>@RequestParam</code>注解的<code>defaultValue</code>属性赋上值，就不会有<code>400</code>错误了。</p>
+<p>换句话说，只要设置了<code>defaultValue</code>属性值，<code>required</code>属性就失效形同虚设了</p>
+</blockquote>
+<h2 id="RequestHeader"><a href="#RequestHeader" class="headerlink" title="@RequestHeader "></a><a href="/RequestHeader">@RequestHeader </a></h2><p><code>@RequestHeader</code>是将请求头信息和控制器方法的形参创建映射关系</p>
+<p>一共有三个属性：<code>value</code>、<code>required</code>、<code>defaultValue</code>，用法同<code>@RequestParam</code></p>
+<p>因为<code>@RequestHeader</code>与<code>@RequestParam</code>别无二致，所以这里我们简单测试下效果</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testHeader&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testHeader</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="meta">@RequestHeader(value = &quot;Host&quot;)</span> String host,</span></span><br><span class="line"><span class="params">    <span class="meta">@RequestHeader(value = &quot;Test&quot;, required = false, defaultValue = &quot;RequestHeader&quot;)</span> String test)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Host=&quot;</span> + host + <span class="string">&quot;, test=&quot;</span> + test);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>请求路径</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://localhost:8080/SpringMVC/paramController/testParam4</span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Host=localhost:8080, test=RequestHeader</span><br></pre></td></tr></table></figure>
+
+<h2 id="CookieValue"><a href="#CookieValue" class="headerlink" title="@CookieValue "></a><a href="/CookieValue">@CookieValue </a></h2><p><code>@CookieValue</code>是将 Cookie 数据和控制器方法的形参创建映射关系</p>
+<p>一共有三个属性：<code>value</code>、<code>required</code>、<code>defaultValue</code>，用法同<code>@RequestParam</code></p>
+<blockquote>
+<p><strong>注意</strong>：</p>
+<ul>
+<li>在<code>JSP</code>中，<code>Session</code>依赖于<code>Cookie</code>，<code>Session</code>是服务器端的会话技术，<code>Cookie</code>是客户端的会话技术。</li>
+<li>会话技术默认的生命周期是浏览器开启和浏览器关闭，只要浏览器不关闭，<code>Cookie</code>将一直存在。</li>
+<li>调用<code>getSession()</code>方法时，首先会检测请求报文中是否有携带<code>JSESSIONID</code>的<code>Cookie</code>。如果没有，说明当前会话是第一次创建<code>Session</code>对象，则<ul>
+<li>在服务端创建一个<code>Cookie</code>，以键值对形式存储。键是固定的<code>JSESSIONID</code>，值是一个 UUID 随机序列</li>
+<li>在服务端创建一个<code>HttpSession</code>对象，并放在服务器所维护的 Map 集合中。Map 的键是<code>JSESSIONID</code>的值，值就是<code>HttpSession</code>对象</li>
+<li>最后把<code>Cookie</code>相应给浏览器客户端，此时<code>JSESSIONID</code>的<code>Cookie</code>存在于响应报文中。每次浏览器向服务器发送请求都会携带<code>Cookie</code>，此后<code>JSESSIONID</code>的<code>Cookie</code>将存在于请求报文中</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>为了能获取到<code>Cookie</code>值，需要先调用下<code>getSession()</code>方法。我们直接在之前的 testServletAPI() 方法中稍作修改</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testServletAPI&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testServletAPI</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line">    <span class="type">HttpSession</span> <span class="variable">session</span> <span class="operator">=</span> request.getSession();</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首次发送请求后，F12 查看前台该请求的<em>响应报文</em>信息</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;bb8847cb5079d1ad26537d07c676c637.png)</p>
+<p>会发现在<code>Set-Cookie</code>属性中存在<code>JSESSIONID=xxx</code>的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Set-Cookie: JSESSIONID=C3DFF845C38BF655C02DDA0BD2DD5638; Path=/SpringMVC; HttpOnly</span><br></pre></td></tr></table></figure>
+
+<p>后面每次发送请求，<code>JSESSIONID</code>的<code>Cookie</code>将会放在<em>请求报文</em>信息</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;2da835d12f7f024de7c35ef57fbf898f.png)</p>
+<p>会发现在<code>Cookie</code>属性中存在<code>JSESSIONID=xxx</code>的信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Cookie: JSESSIONID=C3DFF845C38BF655C02DDA0BD2DD5638</span><br></pre></td></tr></table></figure>
+
+<p>经过上面的折腾，我们产生了<code>Cookie</code>数据，现在我们就可以使用<code>@CookieValue</code>注解进行操作了。正片开始~</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testCookie&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testCookie</span><span class="params">(</span></span><br><span class="line"><span class="params">    <span class="meta">@CookieValue(value = &quot;JSESSIONID&quot;)</span> String jSessionId,</span></span><br><span class="line"><span class="params">    <span class="meta">@CookieValue(value = &quot;Test&quot;, required = false, defaultValue = &quot;CookieValue&quot;)</span> String test)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;jSessionId=&quot;</span> + jSessionId + <span class="string">&quot;, test=&quot;</span> + test);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台请求报文信息</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;a47d7af4bfb55b92ce5589cd9d795c36.png)</p>
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">jSessionId=C3DFF845C38BF655C02DDA0BD2DD5638, test=CookieValue</span><br></pre></td></tr></table></figure>
+
+<h2 id="通过实体类获取"><a href="#通过实体类获取" class="headerlink" title="通过实体类获取"></a>通过实体类获取</h2><p>可以在控制器方法的形参位置设置一个实体类类型的形参，此时浏览器传输的请求参数的参数名和实体类中的属性名一致，那么请求参数就会为此属性赋值</p>
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/paramController/testBean&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  密码：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  性别：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;男人&quot;</span> /&gt;</span>男</span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;女人&quot;</span> /&gt;</span>女<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  年龄：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  邮箱：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试请求参数&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testBean&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testBean</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    System.out.println(user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>User 类：要求属性名与请求参数名一致</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> String gender;</span><br><span class="line">    <span class="keyword">private</span> String age;</span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line">    <span class="comment">// Setter、Getter方法略</span></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User&#123;&quot;</span> +<span class="string">&quot;username=&#x27;&quot;</span> + username + <span class="string">&#x27;\&#x27;&#x27;</span> + <span class="string">&quot;, password=&#x27;&quot;</span> + password + <span class="string">&#x27;\&#x27;&#x27;</span> + <span class="string">&quot;, gender=&#x27;&quot;</span> + gender + <span class="string">&#x27;\&#x27;&#x27;</span> +<span class="string">&quot;, age=&#x27;&quot;</span> + age + <span class="string">&#x27;\&#x27;&#x27;</span> + <span class="string">&quot;, email=&#x27;&quot;</span> + email + <span class="string">&#x27;\&#x27;&#x27;</span> +<span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;843c335340942bc9e5546107f5a7a3c3.gif)</p>
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">User&#123;username=&#x27;aa&#x27;, password=&#x27;11&#x27;, gender=&#x27;å¥³äºº&#x27;, age=&#x27;12&#x27;, email=&#x27;123@qq.com&#x27;&#125;</span><br><span class="line">User&#123;username=&#x27;aa&#x27;, password=&#x27;11&#x27;, gender=&#x27;ç·äºº&#x27;, age=&#x27;12&#x27;, email=&#x27;123@qq.com&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>貌似基本成功了，但却出现了乱码的情况，什么原因呢？</p>
+<h2 id="处理乱码问题"><a href="#处理乱码问题" class="headerlink" title="处理乱码问题"></a>处理乱码问题</h2><blockquote>
+<p><strong>注意</strong>：在 Servlet 阶段，是通过<code>request.setCharacterEncoding(&quot;UTF-8&quot;);</code>的方式解决乱码问题的。虽然 SpringMVC 中可以使用<code>HttpServletRequest</code>对象，但是没有效果。原因也很简单，是因为请求参数获取在前，设置编码格式在后</p>
+</blockquote>
+<p>事实胜于雄辩，简单测试下</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testServletAPI3&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testServletAPI3</span><span class="params">(HttpServletRequest request)</span> <span class="keyword">throws</span> UnsupportedEncodingException &#123;</span><br><span class="line">    request.setCharacterEncoding(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">    <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">    System.out.println(<span class="string">&quot;username=&quot;</span> + username);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/paramController/testServletAPI3&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试请求参数&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=å¼ ä¸</span><br></pre></td></tr></table></figure>
+
+<p>可能你会说，上面的测试都是<code>post</code>请求，如果是<code>get</code>请求呢？<del>问得好，下次不要问了</del></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/paramController/testServletAPI3(username=&#x27;张三&#x27;)&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>通过setCharacterEncoding设置编码&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=张三</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>Q</strong>：这是为什么呢？怎么<code>get</code>请求还搞特殊？</p>
+<p><strong>A</strong>：这是因为 Tomcat 的 conf 目录下的 <code>server.xml</code>中配置了<code>URIEncoding=&quot;UTF-8&quot;</code>的原因。这样<code>get</code>请求的乱码问题就可以一次性解决了</p>
+<p>如果一开始就没有配置，那<code>get</code>请求也会乱码，所以拜托不是<code>get</code>请求搞特殊了喂！</p>
+<p><strong>Q</strong>：既然在<code>server.xml</code>配置下编码格式就行了，为什么只支持<code>get</code>请求啊？还说不是搞特殊？</p>
+<p><strong>A</strong>：…你赢了</p>
+<p><strong>Q</strong>：退一步来说，<code>post</code>请求能不能在请求参数获取之后再去处理也可以吧，只要知道其本身的编码</p>
+<p><strong>A</strong>：试一下咯</p>
+</blockquote>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">Connector</span> <span class="attr">port</span>=<span class="string">&quot;8080&quot;</span> <span class="attr">protocol</span>=<span class="string">&quot;HTTP/1.1&quot;</span> <span class="attr">connectionTimeout</span>=<span class="string">&quot;20000&quot;</span> <span class="attr">redirectPort</span>=<span class="string">&quot;8443&quot;</span> <span class="attr">URIEncoding</span>=<span class="string">&quot;UTF-8&quot;</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>我们先通过 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://www.mytju.com/classcode/tools/messycoderecover.asp">在线乱码恢复</a> 看下，乱码的文本实际编码是什么</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;ca520de5e73219629f9294907e93ee0e.png)</p>
+<p>很显然，乱码本身为<code>ISO-8859-1</code>格式，我们转换为<code>UTF-8</code>编码格式即可</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 对其进行iso-8859-1解码并重新UTF-8编码</span></span><br><span class="line">username = <span class="keyword">new</span> <span class="title class_">String</span>(username.getBytes(<span class="string">&quot;ISO-8859-1&quot;</span>), <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">System.out.println(<span class="string">&quot;username=&quot;</span> + username);</span><br></pre></td></tr></table></figure>
+
+<p>后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=张三</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>有上述测试可知，要想处理乱码问题，思路有二：</p>
+<ol>
+<li>获取请求参数之后，手动解码编码。但是这种方式要求每次处理<code>post</code>请求的请求参数都要手动处理，太不人性化了吧。<del>你嫌烦，我还嫌烦呢</del>（❌）</li>
+<li>获取请求参数之前“做手脚”：发送请求之前，也就是在<code>Servlet</code>处理请求之前（👌）</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>那什么组件时在<code>Servlet</code>之前执行的呢？</p>
+<p>众所周知 <del>（我不知道）</del>，JavaWeb 服务器中三大组件：监听器、过滤器、<code>Servlet</code>。很显然，监听器和过滤器都在<code>Servlet</code>之前</p>
+<ul>
+<li><code>ServletContextListener</code>监听器：只是来监听<code>ServletContext</code>的创建和销毁，都是只执行一次</li>
+<li><code>Filter</code>过滤器：只要设置了过滤路径，只要当前所访问的请求地址满足过滤路径，那么都会被过滤器过滤</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>很显然，用过滤器就可以做到在发送请求之前“做手脚”，这样所有请求都要经过过滤器的处理，再交给<code>DispatherServlet</code>处理</p>
+<p>但是，这个过滤不需要我们写，SpringMVC 已为我们准备好了，只要再<code>web.xml</code>中进行配置即可</p>
+</blockquote>
+<p>我们先对<code>web.xml</code>进行配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--处理编码--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>forceResponseEncoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>重启后测试，看下后台日志信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">username=张三</span><br></pre></td></tr></table></figure>
+
+<p>Perfect! 配置很简单，测试结果立竿见影，乱码问题得到了解决</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;188d718c2a271f76c03428fa501912f1.gif)</p>
+<blockquote>
+<p>“知其然，知其所以然”</p>
+</blockquote>
+<p>这个神奇的<code>CharacterEncodingFilter</code>到底干了什么？我们一起来看下源码一探究竟</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;1c4f02ee7aa4ad275b9a09a46550b9ae.png)</p>
+<p>我们知道，在<code>&lt;init-param&gt;</code>标签中配置的属性值，其实就是为对应类进行的属性注入。这里可以很清楚地看到<code>encoding</code>和<code>forceResponseEncoding</code>两个属性值，同时注意到<code>encoding</code>被<code>@Nullable</code>注解修饰，表示其可以为空，<code>forceResponseEncoding</code>默认为<code>false</code>，即不配置不生效</p>
+<p>另外，看一个<code>Filter</code>最重要的找它的<code>doFilter()</code>方法</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;04b3f690fff54af24860bcf1e97675ec.png)</p>
+<p>可以看到，<code>CharacterEncodingFilter</code>类中并没有<code>doFilter()</code>方法，那去它的基类中找找吧~</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;459e7aeb55700eb45a673bc2e506b05f.png)</p>
+<p>直接读源码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title function_">doFilter</span><span class="params">(ServletRequest request, ServletResponse response, FilterChain filterChain)</span></span><br><span class="line">    <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">    <span class="comment">// 就是判断是不是http请求和相应，不管</span></span><br><span class="line">    <span class="keyword">if</span> (!(request <span class="keyword">instanceof</span> HttpServletRequest) || !(response <span class="keyword">instanceof</span> HttpServletResponse)) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ServletException</span>(<span class="string">&quot;OncePerRequestFilter just supports HTTP requests&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 拿到一些了对象和参数，继续往下看看有什么用处</span></span><br><span class="line">    <span class="type">HttpServletRequest</span> <span class="variable">httpRequest</span> <span class="operator">=</span> (HttpServletRequest) request;</span><br><span class="line">    <span class="type">HttpServletResponse</span> <span class="variable">httpResponse</span> <span class="operator">=</span> (HttpServletResponse) response;</span><br><span class="line">    <span class="type">String</span> <span class="variable">alreadyFilteredAttributeName</span> <span class="operator">=</span> getAlreadyFilteredAttributeName();</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">hasAlreadyFilteredAttribute</span> <span class="operator">=</span> request.getAttribute(alreadyFilteredAttributeName) != <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 三个条件判断，一一看下</span></span><br><span class="line">    <span class="comment">// 1、跳过转发或不过滤的，就直接进行过滤链的下一个请求（确信）</span></span><br><span class="line">    <span class="keyword">if</span> (skipDispatch(httpRequest) || shouldNotFilter(httpRequest)) &#123;</span><br><span class="line">        filterChain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 2、已经过滤属性的，多了一层判断，貌似时处理错误转发的？（不太懂）</span></span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (hasAlreadyFilteredAttribute) &#123;</span><br><span class="line">        <span class="keyword">if</span> (DispatcherType.ERROR.equals(request.getDispatcherType())) &#123;</span><br><span class="line">            doFilterNestedErrorDispatch(httpRequest, httpResponse, filterChain);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        filterChain.doFilter(request, response);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 3、其他情况（应该就是正常情况吧）：设置下属性，再走 doFilterInternal 方法（还有印象吗？这个方法我们在其子类CharacterEncodingFilter中看到过的，那就顺藤摸瓜）</span></span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        request.setAttribute(alreadyFilteredAttributeName, Boolean.TRUE);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            doFilterInternal(httpRequest, httpResponse, filterChain);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">finally</span> &#123;</span><br><span class="line">            request.removeAttribute(alreadyFilteredAttributeName);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>回到<code>CharacterEncodingFilter</code>中看下<code>doFilterInternal()</code>方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doFilterInternal</span><span class="params">(</span></span><br><span class="line"><span class="params">    HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span></span><br><span class="line">    <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">	<span class="comment">// 获取编码格式，很明显就是获取web.xml中的配置值了（确信）</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">encoding</span> <span class="operator">=</span> getEncoding();</span><br><span class="line">    <span class="keyword">if</span> (encoding != <span class="literal">null</span>) &#123;</span><br><span class="line">        <span class="comment">// 二选一：配置了forceRequestEncoding为true或者请求的字符编码没有被设置，就给请求对象设置编码格式</span></span><br><span class="line">        <span class="keyword">if</span> (isForceRequestEncoding() || request.getCharacterEncoding() == <span class="literal">null</span>) &#123;</span><br><span class="line">            request.setCharacterEncoding(encoding);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 配置了forceResponseEncoding为true，就给响应对象设置编码格式</span></span><br><span class="line">        <span class="keyword">if</span> (isForceResponseEncoding()) &#123;</span><br><span class="line">            response.setCharacterEncoding(encoding);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    filterChain.doFilter(request, response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以看出</p>
+<ul>
+<li>没有在<code>web.xml</code>设置编码格式就不管了，爱咋咋地</li>
+<li>设置了<code>encoding</code>就看下是请求对象还是响应对象<ul>
+<li>请求对象：如果打开了<code>forceRequestEncoding</code>即<em>强制请求编码</em>开关，就给设置下编码；就算没打开这个开关，只要请求对象还没有设置过字符编码格式，那就给它设置下</li>
+<li>响应对象：只有打开了<code>forceResponseEncoding</code>即<em>强制响应编码</em>开关，才给设置编码</li>
+</ul>
+</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>获取请求的方式有两种：</p>
+<ul>
+<li>通过 Servlet API 获取（不推荐）</li>
+<li>通过控制器方法获取（就是要用它，不然学 SpringMVC 干什么，<del>不是</del>）</li>
+</ul>
+<p>SpringMVC 获取请求参数的注解：<code>@RequestParam</code>、<code>@RequestHeader</code>、<code>@CookieValue</code></p>
+<ul>
+<li>都是作用在控制器方法上的形参的（就是获取请求参数的，还能作用在别的地方？）</li>
+<li>都有三个属性：<code>value</code>&#x2F;<code>name</code>、<code>required</code>、<code>defaultValue</code>（这不是四个吗？<del>呸</del>）</li>
+<li>主要解决形参和请求参数名不同名的问题，其次是必填问题，最后是缺省值的问题（顺序确定对吗？<del>别误人子弟了，不是，我错了</del>）</li>
+</ul>
+<p>如果请求参数与控制器方法形参同名，就可以不用上述的<code>@RequestParam</code>注解</p>
+<p>如果请求参数有多个值，通过字符串类型或字符数组类型都可以获取</p>
+<p>如果请求参数与控制器方法形参对象属性同名，同理。即满足同名条件时，SpringMVC 中允许通过实体类接收请求参数</p>
+<blockquote>
+<p><strong>Q</strong>：那请求头和<code>Cookie</code>呢，同名也可以不加注解么？</p>
+<p><strong>A</strong>：大哥，这刚开始我是没想到的，不过我又回头试了下，确信不可以！</p>
+</blockquote>
+<p>最后附上导图，仅供参考</p>
+<p>![](3-SpringMVC 获取请求参数&#x2F;bdc37eb1bb6f688e8c14000c182331e1.png)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/3b6d56d0">https://fulsun.github.io/p/3b6d56d0</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringMVC/">SpringMVC</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/009.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/d259d27d" title="SpringMVC 视图"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringMVC 视图</div></div></a></div><div class="next-post pull-right"><a href="/p/78b93ee9" title="RequestMapping注解"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">RequestMapping注解</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/c981d7b3" title="SpringMVC 简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 简介</div></div></a></div><div><a href="/p/777f3582" title="SpringMVC的执行流程"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC的执行流程</div></div></a></div><div><a href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC基于cors的跨域解决方案</div></div></a></div><div><a href="/p/78b93ee9" title="RequestMapping注解"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">RequestMapping注解</div></div></a></div><div><a href="/p/93f9b498" title="SpringMVC域对象共享数据"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC域对象共享数据</div></div></a></div><div><a href="/p/d259d27d" title="SpringMVC 视图"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 视图</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-Servlet-API-%E8%8E%B7%E5%8F%96"><span class="toc-text">通过 Servlet API 获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E6%8E%A7%E5%88%B6%E5%99%A8%E6%96%B9%E6%B3%95%E5%BD%A2%E5%8F%82%E8%8E%B7%E5%8F%96"><span class="toc-text">通过控制器方法形参获取</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E5%90%8D%E5%BD%A2%E5%8F%82"><span class="toc-text">同名形参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%8C%E5%90%8D%E5%BD%A2%E5%8F%82%E5%A4%9A%E5%80%BC"><span class="toc-text">同名形参多值</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RequestParam"><span class="toc-text">@RequestParam </span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#required"><span class="toc-text">required</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#defaultValue"><span class="toc-text">defaultValue</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RequestHeader"><span class="toc-text">@RequestHeader </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CookieValue"><span class="toc-text">@CookieValue </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E5%AE%9E%E4%BD%93%E7%B1%BB%E8%8E%B7%E5%8F%96"><span class="toc-text">通过实体类获取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%84%E7%90%86%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98"><span class="toc-text">处理乱码问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

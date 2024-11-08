@@ -1,0 +1,587 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>RequestMapping注解 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="RequestMapping注解">
+<meta property="og:url" content="https://fulsun.github.io/p/78b93ee9">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/011.webp">
+<meta property="article:published_time" content="2024-07-16T01:14:28.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:06.986Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/011.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/78b93ee9"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'RequestMapping注解',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:06'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/011.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">RequestMapping注解</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-16T01:14:28.000Z" title="发表于 2024-07-16 01:14:28">2024-07-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:06.986Z" title="更新于 2024-11-08 13:02:06">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringMVC/">SpringMVC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">6.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>26分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="RequestMapping注解"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="功能"><a href="#功能" class="headerlink" title="功能"></a>功能</h2><p>从注解名称上我们可以看到，<code>@RequestMapping</code>注解的作用就是将请求和处理请求的控制器方法关联起来，建立映射关系</p>
+<p>SpringMVC 接收到指定的请求，就会来找到在映射关系中对应的控制器方法来处理这个请求</p>
+<p><strong>控制器中有多个方法对应同一个请求的情况</strong></p>
+<p>这是一种特殊情况，我们定义至少两个控制类，其中定义的控制器方法上<code>@ReqeustMapping</code>指定同一请求路径</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">index</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;index&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestMappingController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">index</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;target&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果存在两个或多个控制器，其控制器方法的<code>@RequestMapping</code>一致，即多个控制器方法试图都想要处理同一个请求时，这时启动 Tomcat 时会抛出<code>BeanCreationException</code>异常，并指明<code>There is already &#39;helloController&#39; bean method</code>即 helloController 中存在处理同意请求的控制器方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">org.springframework.beans.factory.BeanCreationException: Error creating bean with name <span class="string">&#x27;org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping&#x27;</span>: Invocation of init method failed; nested exception is java.lang.IllegalStateException: Ambiguous mapping. Cannot map <span class="string">&#x27;requestMappingController&#x27;</span> method</span><br><span class="line">com.vectorx.springmvc.s00_helloworld.RequestMappingController#index()</span><br><span class="line">to &#123; [/]&#125;: There is already <span class="string">&#x27;helloController&#x27;</span> bean method</span><br><span class="line">com.vectorx.springmvc.s00_helloworld.HelloController#index() mapped.</span><br></pre></td></tr></table></figure>
+
+<p>但是这显然是不合理的，当一个系统方法很多，很难完全避免两个或多个同名方法的存在，那该怎么办呢？</p>
+<h2 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h2><p>查看<code>@RequestMapping</code>注解的源码，可以清楚地看到<code>@Target</code>中有<code>TYPE</code>和<code>METHOD</code>两个属性值，表示其可以作用在类或方法上</p>
+<p>![](2-@RequestMapping 注解&#x2F;63bb8dfd16ebad28111567e31091edad.png)</p>
+<p>也就是说<code>@RequestMapping</code>不仅可以在控制器方法上进行使用，也可以在控制器类上进行使用。那两种方式有什么区别呢？</p>
+<ul>
+<li><code>@RequestMapping</code>标识一个类：设置映射请求的请求路径的初始信息</li>
+<li><code>@RequestMapping</code>标识一个方法：设置映射请求的请求路径的具体信息</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/requestMappingController&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestMappingController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(&quot;/success&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">success</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台创建超链接，超链接跳转路径 &#x3D; 控制器上<code>@RequestMapping</code>映射请求的初始路径 + 控制器方法上<code>@RequestMapping</code>映射请求的具体路径，即<code>/requestMappingController/success</code>，再将其使用<code>Tymeleaf</code>的<code>@&#123;&#125;</code>语法包裹起来，这样<code>Tymeleaf</code>会为我们自动加上上下文路径</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span>&gt;</span>访问指定页面success.html<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;a92ac8de73fa659aaacbce9b6a9ccc93.gif)</p>
+<p>这样就可以为不同的控制器方法，在设置映射请求的请求路径时，指定不同的初始信息，从而避免<strong>控制器中有多个方法对应同一个请求的情况</strong>，这也就解决了之前的问题</p>
+<h2 id="value-属性"><a href="#value-属性" class="headerlink" title="value 属性"></a>value 属性</h2><p><code>@RequestMapping</code>注解的<code>value</code>属性有哪些用途呢？</p>
+<ul>
+<li><strong>请求映射</strong>：通过请求的请求地址匹配请求映射</li>
+<li><strong>匹配多个请求</strong>：是一个字符串类型的数组，表示该请求映射能够匹配多个请求地址所对应的</li>
+<li><strong>必须设置</strong>：至少通过一个请求地址匹配请求映射</li>
+</ul>
+<h3 id="匹配多个请求"><a href="#匹配多个请求" class="headerlink" title="匹配多个请求"></a>匹配多个请求</h3><p>查看<code>@RequestMapping</code>注解的源码，会发现其<code>value</code>属性返回值为 String 类型的数组，这也说明了之所以<code>@RequestMapping</code>注解的<code>value</code>属性可以匹配多个请求的原因。通过为<code>value</code>属性指定多个值的方式，就可以对个多个请求建立请求映射</p>
+<p>![](2-@RequestMapping 注解&#x2F;f054770a065c274d9caf3c8a52fabc1c.png)</p>
+<p>在控制器方法上的<code>@RequestMapping</code>中新增一个<code>/test</code>请求映射</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &#123;&quot;/success&quot;, &quot;/test&quot;&#125;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">success</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台创建一个<code>/test</code>的请求路径的超链接，以便进行测试</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/test&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>&gt;测试RequestMapping注解的value属性--&gt;/test&lt;/a</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;e89ab6514cc0e71309ad32db6814d0b0.gif)</p>
+<p>这样，同一个控制器方法就可以实现对多个请求进行统一处理</p>
+<h2 id="method-属性"><a href="#method-属性" class="headerlink" title="method 属性"></a>method 属性</h2><p><code>@RequestMapping</code>注解的<code>method</code>属性有哪些用途呢？</p>
+<ul>
+<li>通过请求的请求方式（<code>GET</code>或<code>POST</code>）匹配请求映射</li>
+</ul>
+<blockquote>
+<p>1、常用的请求方式有 4 种：GET、POST、PUT、DELETE</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>GET 用于查询数据</li>
+<li>POST 用于添加数据</li>
+<li>PUT 用于更新数据</li>
+<li>DELETE 用户删除数据</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>但是很多情况下，习惯上会让 POST 承担更多的职责，即通过 POST 进行增、删、改的操作，可以说是“一个人揽了三个人的活”</p>
+</blockquote>
+<blockquote>
+<p>2、还有 4 种不常用的请求：HEAD、PATCH、OPTIONS、TRACE</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>HEAD 获取响应的报头，检查超链接的有效性、网页是否被修改，多用于自动搜索机器人获取网页的标志信息，获取 rss 种子信息，或者传递安全认证信息等</li>
+<li>PATCH 用于更新数据</li>
+<li>OPTIONS 用于测试服务器，解决同源策略和跨域请求问题</li>
+<li>TRACE 用于测试或诊断</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>有的资料还会介绍 CONNECT 请求，好像用于 HTTP 代理的，很少人听过，当然用的更少（我也是刚知道，有懂的求科普）</p>
+</blockquote>
+<ul>
+<li>是一个<code>RequestMethod</code>类型的数组，表示该请求映射能够匹配多种请求方式的请求</li>
+</ul>
+<blockquote>
+<p>源码为证：<code>RequestMethod[] method() default &#123;&#125;;</code></p>
+</blockquote>
+<p>同时注意到<code>method</code>属性默认值为空数组，是否说明控制器方法不添加<code>method</code>属性时，不同的请求方法都能够匹配呢？</p>
+<h3 id="1）无-method-时匹配哪些请求方式？"><a href="#1）无-method-时匹配哪些请求方式？" class="headerlink" title="1）无 method 时匹配哪些请求方式？"></a>1）无 method 时匹配哪些请求方式？</h3><p>通过测试验证猜想</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/test&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试RequestMapping注解的method属性--&gt;GET&lt;/a</span><br><span class="line">&gt;</span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/test&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试RequestMapping注解的method属性--&gt;POST&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果：事实证明，控制器方法不添加<code>method</code>属性时，可以接收<code>GET</code>和<code>POST</code>的请求，那么应该是默认不对请求方式限制了</p>
+<p>![](2-@RequestMapping 注解&#x2F;6461d5624581108c5326257da98be15b.gif)</p>
+<p>本着严谨的态度，再测试下是否在不添加<code>method</code>属性时，默认也支持<code>PUT</code>和<code>DELETE</code>请求</p>
+<p>不过，<code>PUT</code>和<code>DELETE</code>请求比较特殊，需要使用到隐藏域，且<code>method</code>固定为<code>POST</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/test&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;put&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试RequestMapping注解的method属性--&gt;PUT&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/test&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试RequestMapping注解的method属性--&gt;DELETE&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>同时在<code>web.xml</code>中需要添加隐藏域请求方式的过滤器配置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果也是成功的</p>
+<p>![](2-@RequestMapping 注解&#x2F;d2196a9d1c3d03a1e337ce7185a02ee1.gif)</p>
+<blockquote>
+<p>存疑点：本来也想测试下<code>HEAD</code>、<code>PTACH</code>、<code>OPTIONS</code>和<code>TRACE</code>这几种不常用的请求方式的，但是发现 form 表单好像不支持这些请求方式。即使使用隐藏域，也会变成<code>GET</code>的请求方式。很疑惑这些请求方式要怎么模拟，有懂的求科普。这里记录下，留个印象，以待后续考古o(╯□╰)o</p>
+</blockquote>
+<h3 id="2）不满足-method-会怎样？"><a href="#2）不满足-method-会怎样？" class="headerlink" title="2）不满足 method 会怎样？"></a>2）不满足 method 会怎样？</h3><p><strong>值得注意的是</strong></p>
+<p>若当前请求的请求地址满足请求映射的<code>value</code>属性，但是请求方式不满足<code>method</code>属性，则浏览器报错</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">HTTP</span> <span class="title class_">Status</span> <span class="number">405</span> - <span class="title class_">Request</span> method <span class="string">&#x27;POST&#x27;</span> not supported</span><br></pre></td></tr></table></figure>
+
+<p>![](2-@RequestMapping 注解&#x2F;4e150e700ac4e9a826cd2639c7192fc1.png)</p>
+<p>代码验证</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &#123;&quot;/success&quot;, &quot;/test&quot;&#125;, method = RequestMethod.GET)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">success</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>验证结果：确实报了 405。同理可以将<code>method</code>属性值中<code>GET</code>改成<code>POST</code>、<code>PUT</code>和<code>DELETE</code>对应进行验证即可，这里就不一一验证了</p>
+<p>![](2-@RequestMapping 注解&#x2F;071815acc12e1cc1776b6e63b0f71048.png)</p>
+<blockquote>
+<p>虽然无关紧要，但就是好奇为嘛我的是中文提示(灬°ω°灬)</p>
+</blockquote>
+<blockquote>
+<p>发现这个版本 tomcat 的 lib 包中有 i18n 相关 jar 包，原来是做了国际化，“不一定有用”的知识又增加了~</p>
+</blockquote>
+<blockquote>
+<p>![](2-@RequestMapping 注解&#x2F;f43eab5045386fe2b335f02097b0afe0.png)</p>
+</blockquote>
+<h3 id="3）派生注解"><a href="#3）派生注解" class="headerlink" title="3）派生注解"></a>3）派生注解</h3><p>对于处理指定请求方式的控制器方法，SpringMVC 中提供了<code>@RequestMapping</code>的派生注解</p>
+<ul>
+<li>处理<code>GET</code>请求的映射-&gt;<code>@GetMapping</code></li>
+<li>处理<code>POST</code>请求的映射-&gt;<code>@PostMapping</code></li>
+<li>处理<code>PUT</code>请求的映射-&gt;<code>@PutMapping</code></li>
+<li>处理<code>DELETE</code>请求的映射-&gt;<code>@DeleteMapping</code></li>
+</ul>
+<p>这里对于派生注解很容易理解，用数学上的等价解释就是</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@GetMapping(value=<span class="string">&quot;...&quot;</span>)&lt;==&gt;@RequestMapping(value=<span class="string">&quot;...&quot;</span>,method=RequestMethod.GET)</span><br><span class="line">@PostMapping(value=<span class="string">&quot;...&quot;</span>)&lt;==&gt;@RequestMapping(value=<span class="string">&quot;...&quot;</span>,method=RequestMethod.POST)</span><br><span class="line">@PutMapping(value=<span class="string">&quot;...&quot;</span>)&lt;==&gt;@RequestMapping(value=<span class="string">&quot;...&quot;</span>,method=RequestMethod.PUT)</span><br><span class="line">@DeleteMapping(value=<span class="string">&quot;...&quot;</span>)&lt;==&gt;@RequestMapping(value=<span class="string">&quot;...&quot;</span>,method=RequestMethod.DELETE)</span><br></pre></td></tr></table></figure>
+
+<p>通过代码进行测试,后台代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/requestMappingController&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RequestMappingController</span> &#123;</span><br><span class="line">    <span class="meta">@GetMapping(&quot;/success&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">successGet</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;successget&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PostMapping(&quot;/success&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">successPost</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;successpost&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@PutMapping(&quot;/success&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">successPut</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;successput&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@DeleteMapping(&quot;/success&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">successDelete</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;successdelete&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span>&gt;</span>测试GetMapping<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试PostMapping&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;put&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试PutMapping&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试DeleteMapping&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>别忘了，新增四个测试页面<code>successget.html</code>、<code>successpost.html</code>、<code>successput.html</code>和<code>successdelete.html</code>，在这个四个不同页面中标注不同的内容以示区分</p>
+<p>![](2-@RequestMapping 注解&#x2F;b26534e502baca16d581dead26d50204.png)</p>
+<p>验证结果：可以看到，<code>GET</code>&#x2F;<code>POST</code>&#x2F;<code>PUT</code>&#x2F;<code>DELETE</code>等请求方式，均能够被正常接收和处理</p>
+<p>![](2-@RequestMapping 注解&#x2F;25582113e76970d84e47f69fa05af6fe.gif)</p>
+<h3 id="4）form-表单支持哪些请求方式？"><a href="#4）form-表单支持哪些请求方式？" class="headerlink" title="4）form 表单支持哪些请求方式？"></a>4）form 表单支持哪些请求方式？</h3><ul>
+<li>常用的请求方式有<code>GET</code>，<code>POST</code>，<code>PUT</code>，<code>DELETE</code>，但是目前浏览器只支持<code>GET</code>和<code>POST</code>（OS：刚才还有点疑惑的，这里好像“水落石出了”）</li>
+<li>若在 form 表单提交时，为<code>method</code>设置了其他请求方式的字符串（<code>PUT</code>或<code>DELETE</code>），则按照默认的<code>GET</code>请求方式处理</li>
+<li>若要发送<code>PUT</code>和<code>DELETE</code>请求，则需要通过 Spring 提供的过滤器<code>HiddenHttpMethodFilter</code>，在 restful 部分会讲到（OS：我上面刚自己研究了下，没想到老师这里会讲<code>^_^</code>）</li>
+</ul>
+<p>如果去除过滤器<code>HiddenHttpMethodFilter</code>的配置，同时注释掉隐藏域的代码，并将<code>method</code>为<code>post</code>值改成<code>put</code>和<code>delete</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;put&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--    &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;put&quot;/&gt;--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试PutMapping&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/requestMappingController/success&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;delete&quot;</span>&gt;</span></span><br><span class="line">  <span class="comment">&lt;!--    &lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;delete&quot;/&gt;--&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;测试DeleteMapping&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>按照上述的说法，会按照默认的<code>GET</code>请求方式处理，这里进行验证</p>
+<p>![](2-@RequestMapping 注解&#x2F;ff84bc67fc45e8df9433a38d1704cb4d.gif)</p>
+<p>可以发现，本应走<code>PUT</code>和<code>DELETE</code>方式的请求，都被<code>GET</code>请求方式的控制器方法处理了。如果这里控制器中连相应<code>GET</code>请求方式都没有定义的话，肯定是报 405 了。这里注释掉<code>@GetMapping</code>的请求方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//@GetMapping(&quot;/success&quot;)</span></span><br><span class="line"><span class="comment">//public String successGet() &#123;</span></span><br><span class="line"><span class="comment">//    return &quot;successget&quot;;</span></span><br><span class="line"><span class="comment">//&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>验证结果：显而易见</p>
+<p>![](2-@RequestMapping 注解&#x2F;1de9bb24506bcb5bf416607d384d364a.gif)</p>
+<h2 id="params-属性"><a href="#params-属性" class="headerlink" title="params 属性"></a>params 属性</h2><p><code>@RequestMapping</code>注解的<code>params</code>属性通过请求的请求参数匹配请求映射</p>
+<p>它是一个字符串类型的数组，可以通过四种表达式设置请求参数和请求映射的匹配关系</p>
+<ul>
+<li><code>param</code>：要求请求映射所匹配的请求必须携带<code>param</code>请求参数</li>
+<li><code>!param</code>：要求请求映射所匹配的请求必须不能携带<code>param</code>请求参数</li>
+<li><code>param=value</code>：要求请求映射所匹配的请求必须携带<code>param</code>请求参数且<code>param=value</code></li>
+<li><code>param!=value</code>：要求请求映射所匹配的请求必须携带<code>param</code>请求参数但是<code>param!=value</code></li>
+</ul>
+<p>若当前请求满足<code>@RequestMapping</code>注解的<code>value</code>和<code>method</code>属性，但是不满足<code>params</code>属性，此时页面显示<code>400</code>错误，即请求不匹配</p>
+<h3 id="1）param"><a href="#1）param" class="headerlink" title="1）param"></a>1）param</h3><p>这里指定<code>params</code>的值指定为<code>username</code>，这就要求请求中必须携带<code>username</code>的请求参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">        value = &#123;&quot;/testParams&quot;&#125;,</span></span><br><span class="line"><span class="meta">        params = &#123;&quot;username&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParams</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码：分别不加请求参数和加上请求参数，进行测试</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testParams&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试RequestMapping注解的params属性==&gt;testParams&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testParams?username=admin&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试RequestMapping注解的params属性==&gt;testParams?username=admin&lt;/a</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;a947a634c8966b11e79cc14c28cb6aba.gif)</p>
+<p>可以发现，当配置了<code>params</code>属性并指定相应的请求参数时，请求中必须要携带相应的请求参数信息，否则前台就会报抛出<code>400</code>的错误信息，符合预期</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">HTTP</span> <span class="title class_">Status</span> <span class="number">400</span>：<span class="title class_">Parameter</span> conditions <span class="string">&quot;username&quot;</span> not met <span class="keyword">for</span> actual request parameters</span><br></pre></td></tr></table></figure>
+
+<p>不过在<code>Tymeleaf</code>中使用问号的方式会有错误提示，虽然不影响功能，但不想要错误提示的话，最好通过<code>(...,...)</code>的方式进行包裹，多个参数间通过<code>,</code>隔开</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span></span></span><br><span class="line"><span class="tag">  <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testParams(username=&#x27;admin&#x27;, password=123456)&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试RequestMapping注解的params属性==&gt;testParams(username=&#x27;admin&#x27;,</span><br><span class="line">  password=123456)&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试验证</p>
+<p>![](2-@RequestMapping 注解&#x2F;cd1103b28a8c51a23672714dab02ac84.gif)</p>
+<p>可以发现，通过括号包裹的方式，<code>Tymeleaf</code>最终会帮我们将其解析成<code>?username=admin&amp;password=123456</code>的格式</p>
+<blockquote>
+<p>存疑点：实测发现，&#96;&#96;testParams(username&#x3D;’admin’, password&#x3D;123456)<code>改成</code>testParams(username&#x3D;admin, password&#x3D;123456)<code>，即</code>admin&#96;不加单引号也是可以的，这与课堂上所讲的并不一致，此点存疑</p>
+</blockquote>
+<h3 id="2）-param"><a href="#2）-param" class="headerlink" title="2）!param"></a>2）!param</h3><p>这里将<code>params = &#123;&quot;username&quot;&#125;</code>中<code>username</code>前加上<code>!</code>即可，即<code>params = &#123;&quot;!username&quot;&#125;</code>，这就要求请求中的请求参数中不能携带<code>username</code>请求参数</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">    value = &#123;&quot;/testParams&quot;&#125;,</span></span><br><span class="line"><span class="meta">    params = &#123;&quot;!username&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParams</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;648e41108048984aa384509159f4878c.gif)</p>
+<p>可以发现，没有携带<code>username</code>请求参数的请求变得能够正常访问，而携带了<code>username</code>请求参数的请求反而出现了<code>400</code>的异常信息，符合预期</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable constant_">HTTP</span> <span class="title class_">Status</span> <span class="number">400</span>：<span class="title class_">Parameter</span> conditions <span class="string">&quot;!username&quot;</span> not met <span class="keyword">for</span> actual request <span class="attr">parameters</span>: username=&#123;admin&#125;, password=&#123;<span class="number">123456</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3）param-value"><a href="#3）param-value" class="headerlink" title="3）param&#x3D;value"></a>3）param&#x3D;value</h3><p>这里<code>params</code>的值指定为<code>username=admin</code>的形式，即要求请求中不仅要携带<code>username</code>的请求参数，且值为<code>admin</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">    value = &#123;&quot;/testParams&quot;&#125;,</span></span><br><span class="line"><span class="meta">    params = &#123;&quot;username=admin&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParams</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;69780f520a2a864c97b7a74af43f3ce5.gif)</p>
+<p>可以发现，不携带<code>username</code>请求参数的请求和携带<code>username</code>请求参数但不为<code>admin</code>的请求，均提示<code>400</code>的请求错误，符合预期</p>
+<h3 id="4）param-value"><a href="#4）param-value" class="headerlink" title="4）param!&#x3D;value"></a>4）param!&#x3D;value</h3><p>这里将<code>params</code>的值指定为<code>username!=admin</code>，即要求请求中不仅要携带<code>username</code>的请求参数，且值不能为<code>admin</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">    value = &#123;&quot;/testParams&quot;&#125;,</span></span><br><span class="line"><span class="meta">    params = &#123;&quot;username!=admin&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testParams</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;0f5c7f94ac31fafc105348d76f9db78a.gif)</p>
+<p>实际测试结果发现：不携带<code>username</code>请求参数的请求和携带<code>username</code>请求参数但值不为<code>admin</code>的请求，可以正常访问；而携带<code>username</code>请求参数但值为<code>admin</code>的请求，不能正常访问，不完全符合预期</p>
+<blockquote>
+<p>存疑点：不携带<code>username</code>请求参数的请求能够正常访问，这一点不符合课程中讲解的内容，此点存疑</p>
+</blockquote>
+<h2 id="headers-属性"><a href="#headers-属性" class="headerlink" title="headers 属性"></a>headers 属性</h2><p><code>@RequestMapping</code>注解的<code>headers</code>属性通过请求的请求头信息匹配请求映射</p>
+<p>它是一个字符串类型的数组，可以通过四种表达式设置请求头信息和请求映射的匹配关系</p>
+<ul>
+<li><code>header</code>：要求请求映射所匹配的请求必须携带<code>header</code>请求头信息</li>
+<li><code>header</code>：要求请求映射所匹配的请求必须不能携带<code>header</code>请求头信息</li>
+<li><code>header=value</code>：要求请求映射所匹配的请求必须携带<code>header</code>请求头信息且<code>header=value</code></li>
+<li><code>header!=value</code>：要求请求映射所匹配的请求必须携带<code>header</code>请求头信息且<code>header!=value</code></li>
+</ul>
+<p>若当前请求满足<code>@RequestMapping</code>注解的<code>value</code>和<code>method</code>属性，但是不满足<code>headers</code>属性，此时页面显示<code>404</code>错误，即资源未找到</p>
+<p>测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">    value = &#123;&quot;/testHeaders&quot;&#125;,</span></span><br><span class="line"><span class="meta">    headers = &#123;&quot;Host=localhost:8081&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testHeaders</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;f4b0cf4a4cfeda2c08937c22d83cf346.gif)</p>
+<p>因为我本地<code>tomcat</code>启动端口是<code>8080</code>，所以是匹配不成功的，此时显示<code>404</code>错误，符合预期</p>
+<p>再将端口号修改为<code>8080</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(</span></span><br><span class="line"><span class="meta">    value = &#123;&quot;/testHeaders&quot;&#125;,</span></span><br><span class="line"><span class="meta">    headers = &#123;&quot;Host=localhost:8080&quot;&#125;</span></span><br><span class="line"><span class="meta">)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testHeaders</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;bc5016a8697ea8887c78df87fe949f7c.gif)</p>
+<p>这一次，因为端口号一致，所以成功跳转，符合预期</p>
+<h2 id="Ant-风格路径"><a href="#Ant-风格路径" class="headerlink" title="Ant 风格路径"></a>Ant 风格路径</h2><ul>
+<li><code>?</code>：表示任意的单个字符</li>
+<li><code>*</code>：表示任意的0个或多个字符</li>
+<li><code>**</code>：表示任意的一层或多层目录。注意：在使用<code>**</code>时，只能使用<code>/**/xxx</code>的方式</li>
+</ul>
+<blockquote>
+<p>探子来报：<code>**</code>经实测，0 层目录也可以，这里严谨来说，应该是“表示任意层目录”</p>
+</blockquote>
+<h3 id="1）"><a href="#1）" class="headerlink" title="1）?"></a>1）?</h3><p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ant风格路径</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/a?a/testAnt&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testAnt</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">Ant风格路径——?：<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a1a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/a1a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aaa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/aaa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aaaa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/aaaa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a/a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/a/a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a?a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a?a/testAnt==&gt;/a?a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;1e7e1d620c5be3d2d4efa658b4010876.gif)</p>
+<p>可以发现，<code>/a?a/testAnt</code>能够匹配的路径有</p>
+<ul>
+<li><code>/a1a/testAnt</code></li>
+<li><code>/aaa/testAnt</code></li>
+</ul>
+<p>不能匹配的路径有</p>
+<ul>
+<li><code>/testAnt</code></li>
+<li><code>/aaaa/testAnt</code></li>
+<li><code>/a/a/testAnt</code></li>
+<li><code>/a?a/testAnt</code></li>
+</ul>
+<p>即证明，<code>?</code>修饰的路径，有且必须有一个字符代替<code>?</code>的位置，即只能匹配单个字符，且不能为<code>/</code>和<code>?</code>这两种特殊字符（因为<code>/</code>和<code>?</code>在 url 路径中比较特殊，除此之外其他单个字符均可），符合预期</p>
+<h3 id="2）"><a href="#2）" class="headerlink" title="2）*"></a>2）*</h3><p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ant风格路径</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/a*a/testAnt&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testAnt</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ant风格路径——*：<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a*a/testAnt==&gt;/aa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a1a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a*a/testAnt==&gt;/a1a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aaaaa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a*a/testAnt==&gt;/aaaaa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;14d0933c50b6e99e54ea65d021fb3168.gif)</p>
+<p>可以发现，<code>/a*a/testAnt</code>能够匹配的路径有</p>
+<ul>
+<li><code>/aa/testAnt</code></li>
+<li><code>/a1a/testAnt</code></li>
+<li><code>/aaaaa/testAnt</code></li>
+</ul>
+<p>即证明，<code>*</code>修饰的路径，允许 0 个或多个字符代替<code>*</code>的位置，符合预期</p>
+<h3 id="3）"><a href="#3）" class="headerlink" title="3）**"></a>3）**</h3><p>上面说到，在使用<code>**</code>时，只能使用<code>/**/xxx</code>的方式，这里对其进行验证</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ant风格路径</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/a**a/testAnt&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testAnt</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Ant风格路径——**：<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/aa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a1a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a1a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a1a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a11a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a**a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a**a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/aaaaa/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/aaaaa/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a/a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a/a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a/d/e/a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a/d/e/a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;a0165556593a3963686ee5d4fb875ccc.gif)</p>
+<p>可以发现，<code>/a**a/testAnt</code>能够匹配的路径有</p>
+<ul>
+<li><code>/aa/testAnt</code></li>
+<li><code>/a1a/testAnt</code></li>
+<li><code>/a11a/testAnt</code></li>
+<li><code>/a**a/testAnt</code></li>
+<li><code>/aaaaa/testAnt</code></li>
+</ul>
+<p>不能匹配的路径有</p>
+<ul>
+<li><code>/a/a/testAnt</code></li>
+<li><code>/a/d/e/a/testAnt</code></li>
+</ul>
+<p>不符合预期</p>
+<blockquote>
+<p>存疑点：这里<code>/a**a/</code>多层路径不能匹配，而 0 个或多个字符能够匹配，这与课程中的“两颗星真的就是两颗星”不符，其匹配规则与<code>/a*a/</code>一致，即<code>/a**a/ &lt;==&gt; /a*a/</code>，两颗星与一颗星作用相同，此点存疑</p>
+</blockquote>
+<p>上述只是对<code>**</code>的错误用法时的匹配规则，下面才是真正对<code>**</code>的正确用法验证，请看</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//ant风格路径</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/**/testAnt&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testAnt</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Ant风格路径——**：<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/a/a/a/a/testAnt&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试ant风格路径_/a**a/testAnt==&gt;/a/a/a/a/testAnt&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;0a74c8b2bea0c1a74b7f560ce4b82284.gif)</p>
+<p>可以发现，不管中间添加多少层路径都是能够匹配成功的，符合预期</p>
+<h2 id="路径中的占位符"><a href="#路径中的占位符" class="headerlink" title="路径中的占位符"></a>路径中的占位符</h2><ul>
+<li>原始方式：<code>/deleteUser?id=1</code></li>
+<li>rest 方式：<code>/deleteuser/11</code></li>
+</ul>
+<p>SpringMVC 路径中的占位符常用于 restful 风格中，当请求路径中将某些数据通过路径的方式传输到服务器中，就可以在相应的<code>@RequestMapping</code>注解的<code>value</code>属性中通过占位符<code>&#123;xxx&#125;</code>表示传输的数据，再通过<code>@PathVariable</code>注解，将占位符所表示的数据赋值给控制器方法的形参</p>
+<h3 id="无注解形参"><a href="#无注解形参" class="headerlink" title="无注解形参"></a>无注解形参</h3><ul>
+<li>测试条件：①只使用<code>&#123;xxx&#125;</code>占位符而不使用<code>@PathVariable</code>注解；②形参名称与请求中的占位符名称同名</li>
+<li>测试目的：①请求能否匹配成功；②同名形参是否能够接收到请求路径中的占位符</li>
+</ul>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRest/&#123;id&#125;/&#123;username&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRest</span><span class="params">(String id, String username)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;id=&quot;</span> + id + <span class="string">&quot;, username=&quot;</span> + username);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">路径中的占位符：<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testRest/1/admin&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试路径中的占位符==&gt;/testRest/1/admin&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;f8760ab731d82605922f5cdd51cfc975.gif)</p>
+<p>后台日志</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=<span class="literal">null</span>, username=<span class="literal">null</span></span><br></pre></td></tr></table></figure>
+
+<p>可以发现，请求能够匹配成功，但是同名形参无法接收到占位符的值</p>
+<h3 id="带注解形参"><a href="#带注解形参" class="headerlink" title="带注解形参"></a>带注解形参</h3><p>查看<code>PathVariable</code>注解源码</p>
+<p>![](2-@RequestMapping 注解&#x2F;024f74de960ba08eb11fb3f37d0d59d0.png)</p>
+<p>可以看到，它只能作用在方法参数上，那么怎么用就一目了然了</p>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRest/&#123;id&#125;/&#123;username&#125;&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRest</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> String id, <span class="meta">@PathVariable(&quot;username&quot;)</span> String username)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;id=&quot;</span> + id + <span class="string">&quot;, username=&quot;</span> + username);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;a7f9363bd3580aaf2161411ee7f81d58.gif)</p>
+<p>后台日志</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">id=<span class="number">1</span>, username=admin</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，请求能够匹配成功，形参通过<code>@PathVariable</code>注解接收到了占位符的值</p>
+<h3 id="不设置占位符"><a href="#不设置占位符" class="headerlink" title="不设置占位符"></a>不设置占位符</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;a th:href=<span class="string">&quot;@&#123;/requestMappingController/testRest&#125;&quot;</span>&gt;测试路径中的占位符==&gt;/testRest&lt;/a&gt;&lt;br/&gt;</span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;8f8d0b924a17491fd8381ef246568c41.gif)</p>
+<p>可以看到，没有占位符时，直接显示了<code>404</code>错误，即表示路径中存在占位符的控制器方法不能匹配未设置占位符的请求</p>
+<p>也就是说，路径中存在占位符的控制器方法，只能接收带了对应占位符的请求</p>
+<h3 id="占位符为空值或空格"><a href="#占位符为空值或空格" class="headerlink" title="占位符为空值或空格"></a>占位符为空值或空格</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testRest///&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试路径中的占位符_空值==&gt;/testRest///&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/requestMappingController/testRest/ / /&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>测试路径中的占位符_空格==&gt;/testRest/ / /&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p>![](2-@RequestMapping 注解&#x2F;14f86cb4fb1e5c503e7244aa49189a96.gif)</p>
+<p>同时占位符为空格的情况是，后台打印了日志：<code>id= , username=</code></p>
+<p>可以看到，</p>
+<ul>
+<li>空值匹配失败，报了<code>404</code>错误</li>
+<li>空格匹配成功，路劲中对其解析成了对应的<code>URL</code>编码，即<code>%20</code></li>
+</ul>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>由以上情况测试结果可以得出</p>
+<ul>
+<li>SpringMVC 支持路径中含有占位符的形式</li>
+<li>占位符只能通过<code>@PathVariable</code>注解获取（就目前所学知识而言）</li>
+<li>占位符可以匹配特殊字符——空格，但不能匹配空字符</li>
+</ul>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>@RequestMapping</code>注解</p>
+<ul>
+<li>功能：将请求和处理请求的控制器方法关联起来，建立映射关系</li>
+<li>位置：作用在类上（请求路径的初始信息）；作用在方法上（请求路径的具体信息）</li>
+<li><code>value</code>属性：可以匹配多个请求路径，匹配失败报<code>404</code></li>
+<li><code>method</code>属性：支持<code>GET</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code>，默认不限制，匹配失败报<code>405</code></li>
+<li><code>params</code>属性：四种方式，<code>param</code>、<code>!param</code>、<code>param==value</code>、<code>param!=value</code>，匹配失败报<code>400</code></li>
+<li><code>headers</code>属性：四种方式，<code>header</code>、<code>!header</code>、<code>header==value</code>、<code>header!=value</code>，匹配失败报<code>400</code></li>
+<li>支持 Ant 风格路径：<code>?</code>（单个字符）、<code>*</code>（0 或多个字符）和<code>**</code>（0 或多层路径）</li>
+<li>支持路径中的占位符：<code>&#123;xxx&#125;</code>占位符、<code>@PathVariable</code>赋值形参</li>
+</ul>
+<p>以下导图仅供参考</p>
+<p>![](2-@RequestMapping 注解&#x2F;c9d567abe0924495aaefb7537b00bafc.png)</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/78b93ee9">https://fulsun.github.io/p/78b93ee9</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringMVC/">SpringMVC</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/011.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/3b6d56d0" title="SpringMVC 获取请求参数"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringMVC 获取请求参数</div></div></a></div><div class="next-post pull-right"><a href="/p/c981d7b3" title="SpringMVC 简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringMVC 简介</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/c981d7b3" title="SpringMVC 简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 简介</div></div></a></div><div><a href="/p/777f3582" title="SpringMVC的执行流程"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC的执行流程</div></div></a></div><div><a href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC基于cors的跨域解决方案</div></div></a></div><div><a href="/p/3b6d56d0" title="SpringMVC 获取请求参数"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 获取请求参数</div></div></a></div><div><a href="/p/93f9b498" title="SpringMVC域对象共享数据"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC域对象共享数据</div></div></a></div><div><a href="/p/d259d27d" title="SpringMVC 视图"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 视图</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%9F%E8%83%BD"><span class="toc-text">功能</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%8D%E7%BD%AE"><span class="toc-text">位置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#value-%E5%B1%9E%E6%80%A7"><span class="toc-text">value 属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%B9%E9%85%8D%E5%A4%9A%E4%B8%AA%E8%AF%B7%E6%B1%82"><span class="toc-text">匹配多个请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#method-%E5%B1%9E%E6%80%A7"><span class="toc-text">method 属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%89%E6%97%A0-method-%E6%97%B6%E5%8C%B9%E9%85%8D%E5%93%AA%E4%BA%9B%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="toc-text">1）无 method 时匹配哪些请求方式？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%89%E4%B8%8D%E6%BB%A1%E8%B6%B3-method-%E4%BC%9A%E6%80%8E%E6%A0%B7%EF%BC%9F"><span class="toc-text">2）不满足 method 会怎样？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%89%E6%B4%BE%E7%94%9F%E6%B3%A8%E8%A7%A3"><span class="toc-text">3）派生注解</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%BC%89form-%E8%A1%A8%E5%8D%95%E6%94%AF%E6%8C%81%E5%93%AA%E4%BA%9B%E8%AF%B7%E6%B1%82%E6%96%B9%E5%BC%8F%EF%BC%9F"><span class="toc-text">4）form 表单支持哪些请求方式？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#params-%E5%B1%9E%E6%80%A7"><span class="toc-text">params 属性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%89param"><span class="toc-text">1）param</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%89-param"><span class="toc-text">2）!param</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%89param-value"><span class="toc-text">3）param&#x3D;value</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4%EF%BC%89param-value"><span class="toc-text">4）param!&#x3D;value</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#headers-%E5%B1%9E%E6%80%A7"><span class="toc-text">headers 属性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ant-%E9%A3%8E%E6%A0%BC%E8%B7%AF%E5%BE%84"><span class="toc-text">Ant 风格路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%EF%BC%89"><span class="toc-text">1）?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%EF%BC%89"><span class="toc-text">2）*</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3%EF%BC%89"><span class="toc-text">3）**</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E5%BE%84%E4%B8%AD%E7%9A%84%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="toc-text">路径中的占位符</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E6%B3%A8%E8%A7%A3%E5%BD%A2%E5%8F%82"><span class="toc-text">无注解形参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E6%B3%A8%E8%A7%A3%E5%BD%A2%E5%8F%82"><span class="toc-text">带注解形参</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E8%AE%BE%E7%BD%AE%E5%8D%A0%E4%BD%8D%E7%AC%A6"><span class="toc-text">不设置占位符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%A0%E4%BD%8D%E7%AC%A6%E4%B8%BA%E7%A9%BA%E5%80%BC%E6%88%96%E7%A9%BA%E6%A0%BC"><span class="toc-text">占位符为空值或空格</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

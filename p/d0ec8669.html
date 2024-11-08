@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>JVM的常量池 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="class 文件常量池、运行时常量池、字符串常量池、基本类型包装类常量池的介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM的常量池">
+<meta property="og:url" content="https://fulsun.github.io/p/d0ec8669">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="class 文件常量池、运行时常量池、字符串常量池、基本类型包装类常量池的介绍">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/003.webp">
+<meta property="article:published_time" content="2024-01-23T21:01:39.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.382Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="JVM">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/003.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/d0ec8669"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'JVM的常量池',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/003.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">JVM的常量池</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-23T21:01:39.000Z" title="发表于 2024-01-23 21:01:39">2024-01-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.382Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/JVM/">JVM</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="JVM的常量池"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="常量池概述"><a href="#常量池概述" class="headerlink" title="常量池概述"></a>常量池概述</h2><p>JVM 的常量池主要有以下几种：</p>
+<ul>
+<li>class 文件常量池</li>
+<li>运行时常量池</li>
+<li>字符串常量池</li>
+<li>基本类型包装类常量池</li>
+</ul>
+<p>它们相互之间关系大致如下图所示：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/d0ec8669/93c92bc5897c54bf40ba866c42409519.png"></p>
+<ol>
+<li>每个 class 的字节码文件中都有一个常量池，里面是编译后即知的该 class 会用到的 <code>字面量</code> 与 <code>符号引用</code>，这就是 <code>class文件常量池</code>。JVM 加载 class，会将其类信息，包括 class 文件常量池置于方法区中。</li>
+<li>class 类信息及其 class 文件常量池是字节码的二进制流，它代表的是一个类的静态存储结构，JVM 加载类时，需要将其转换为方法区中的 <code>java.lang.Class</code> 类的对象实例；同时，会将 class 文件常量池中的内容导入 <code>运行时常量池</code>。</li>
+<li>运行时常量池中的常量对应的内容只是字面量，比如一个 “字符串”，它还不是 String 对象；当 Java 程序在运行时执行到这个 “字符串” 字面量时，会去 <code>字符串常量池</code> 里找该字面量的对象引用是否存在，存在则直接返回该引用，不存在则在 Java 堆里创建该字面量对应的 String 对象，并将其引用置于字符串常量池中，然后返回该引用。</li>
+<li>Java 的基本数据类型中，除了两个浮点数类型，其他的基本数据类型都在各自内部实现了常量池，但都在 [-128~127] 这个范围内。</li>
+</ol>
+<p>下面分别对每个常量池具体梳理一下。</p>
+<h2 id="class-文件常量池"><a href="#class-文件常量池" class="headerlink" title="class 文件常量池"></a>class 文件常量池</h2><p>java 的源代码 <code>.java</code> 文件在编译之后会生成 <code>.class</code> 文件，class 文件需要严格遵循 JVM 规范才能被 JVM 正常加载，它是一个二进制字节流文件，里面包含了 class 文件常量池的内容。</p>
+<h3 id="查看一个-class-文件内容"><a href="#查看一个-class-文件内容" class="headerlink" title="查看一个 class 文件内容"></a>查看一个 class 文件内容</h3><p>jdk 提供了 <code>javap</code> 命令，用于对 class 文件进行反汇编，输出类相关信息。该命令用法如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">用法: javap &lt;options&gt; &lt;classes&gt;</span><br><span class="line">其中, 可能的选项包括:</span><br><span class="line">  -help  --help  -?        输出此用法消息</span><br><span class="line">  -version                 版本信息</span><br><span class="line">  -v  -verbose             输出附加信息</span><br><span class="line">  -l                       输出行号和本地变量表</span><br><span class="line">  -public                  仅显示公共类和成员</span><br><span class="line">  -protected               显示受保护的/公共类和成员</span><br><span class="line">  -package                 显示程序包/受保护的/公共类</span><br><span class="line">                           和成员 (默认)</span><br><span class="line">  -p  -private             显示所有类和成员</span><br><span class="line">  -c                       对代码进行反汇编</span><br><span class="line">  -s                       输出内部类型签名</span><br><span class="line">  -sysinfo                 显示正在处理的类的</span><br><span class="line">                           系统信息 (路径, 大小, 日期, MD5 散列)</span><br><span class="line">  -constants               显示最终常量</span><br><span class="line">  -classpath &lt;path&gt;        指定查找用户类文件的位置</span><br><span class="line">  -cp &lt;path&gt;               指定查找用户类文件的位置</span><br><span class="line">  -bootclasspath &lt;path&gt;    覆盖引导类文件的位置</span><br></pre></td></tr></table></figure>
+
+<p>例如，我们可以编写一个简单的类，如下：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">public class Student &#123;</span><br><span class="line">    private final String name = &quot;张三&quot;;</span><br><span class="line">    private final int entranceAge = 18;</span><br><span class="line">    private String evaluate = &quot;优秀&quot;;</span><br><span class="line">    private int scores = 95;</span><br><span class="line">    private Integer level = 5;</span><br><span class="line"></span><br><span class="line">    public String getEvaluate() &#123;</span><br><span class="line">        return evaluate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setEvaluate(String evaluate) &#123;</span><br><span class="line">        String tmp = &quot;+&quot;;</span><br><span class="line">        this.evaluate = evaluate + tmp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getScores() &#123;</span><br><span class="line">        return scores;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setScores(int scores) &#123;</span><br><span class="line">        final int base = 10;</span><br><span class="line">        System.out.println(&quot;base:&quot; + base);</span><br><span class="line">        this.scores = scores + base;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public Integer getLevel() &#123;</span><br><span class="line">        return level;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setLevel(Integer level) &#123;</span><br><span class="line">        this.level = level;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>对其进行编译和反汇编：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">javac Student.java</span><br><span class="line"></span><br><span class="line">javap -v Student.class</span><br><span class="line"></span><br><span class="line"># over</span><br></pre></td></tr></table></figure>
+
+<p>得到以下反汇编结果:</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br></pre></td><td class="code"><pre><span class="line">Classfile /home/work/sources/open_projects/lib-zc-crypto/src/test/java/Student.class</span><br><span class="line">  Last modified 2021-1-4; size 1299 bytes</span><br><span class="line">  MD5 checksum 06dfdad9da59e2a64d62061637380969</span><br><span class="line">  Compiled from &quot;Student.java&quot;</span><br><span class="line">public class Student</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br><span class="line">  flags: ACC_PUBLIC, ACC_SUPER</span><br><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #19.#48        // java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 = String             #49            // 张三</span><br><span class="line">   #3 = Fieldref           #18.#50        // Student.name:Ljava/lang/String;</span><br><span class="line">   #4 = Fieldref           #18.#51        // Student.entranceAge:I</span><br><span class="line">   #5 = String             #52            // 优秀</span><br><span class="line">   #6 = Fieldref           #18.#53        // Student.evaluate:Ljava/lang/String;</span><br><span class="line">   #7 = Fieldref           #18.#54        // Student.scores:I</span><br><span class="line">   #8 = Methodref          #55.#56        // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;</span><br><span class="line">   #9 = Fieldref           #18.#57        // Student.level:Ljava/lang/Integer;</span><br><span class="line">  #10 = String             #58            // +</span><br><span class="line">  #11 = Class              #59            // java/lang/StringBuilder</span><br><span class="line">  #12 = Methodref          #11.#48        // java/lang/StringBuilder.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #13 = Methodref          #11.#60        // java/lang/StringBuilder.append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span><br><span class="line">  #14 = Methodref          #11.#61        // java/lang/StringBuilder.toString:()Ljava/lang/String;</span><br><span class="line">  #15 = Fieldref           #62.#63        // java/lang/System.out:Ljava/io/PrintStream;</span><br><span class="line">  #16 = String             #64            // base:10</span><br><span class="line">  #17 = Methodref          #65.#66        // java/io/PrintStream.println:(Ljava/lang/String;)V</span><br><span class="line">  #18 = Class              #67            // Student</span><br><span class="line">  #19 = Class              #68            // java/lang/Object</span><br><span class="line">  #20 = Utf8               name</span><br><span class="line">  #21 = Utf8               Ljava/lang/String;</span><br><span class="line">  #22 = Utf8               ConstantValue</span><br><span class="line">  #23 = Utf8               entranceAge</span><br><span class="line">  #24 = Utf8               I</span><br><span class="line">  #25 = Integer            18</span><br><span class="line">  #26 = Utf8               evaluate</span><br><span class="line">  #27 = Utf8               scores</span><br><span class="line">  #28 = Utf8               level</span><br><span class="line">  #29 = Utf8               Ljava/lang/Integer;</span><br><span class="line">  #30 = Utf8               &lt;init&gt;</span><br><span class="line">  #31 = Utf8               ()V</span><br><span class="line">  #32 = Utf8               Code</span><br><span class="line">  #33 = Utf8               LineNumberTable</span><br><span class="line">  #34 = Utf8               getEvaluate</span><br><span class="line">  #35 = Utf8               ()Ljava/lang/String;</span><br><span class="line">  #36 = Utf8               setEvaluate</span><br><span class="line">  #37 = Utf8               (Ljava/lang/String;)V</span><br><span class="line">  #38 = Utf8               getScores</span><br><span class="line">  #39 = Utf8               ()I</span><br><span class="line">  #40 = Utf8               setScores</span><br><span class="line">  #41 = Utf8               (I)V</span><br><span class="line">  #42 = Utf8               getLevel</span><br><span class="line">  #43 = Utf8               ()Ljava/lang/Integer;</span><br><span class="line">  #44 = Utf8               setLevel</span><br><span class="line">  #45 = Utf8               (Ljava/lang/Integer;)V</span><br><span class="line">  #46 = Utf8               SourceFile</span><br><span class="line">  #47 = Utf8               Student.java</span><br><span class="line">  #48 = NameAndType        #30:#31        // &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #49 = Utf8               张三</span><br><span class="line">  #50 = NameAndType        #20:#21        // name:Ljava/lang/String;</span><br><span class="line">  #51 = NameAndType        #23:#24        // entranceAge:I</span><br><span class="line">  #52 = Utf8               优秀</span><br><span class="line">  #53 = NameAndType        #26:#21        // evaluate:Ljava/lang/String;</span><br><span class="line">  #54 = NameAndType        #27:#24        // scores:I</span><br><span class="line">  #55 = Class              #69            // java/lang/Integer</span><br><span class="line">  #56 = NameAndType        #70:#71        // valueOf:(I)Ljava/lang/Integer;</span><br><span class="line">  #57 = NameAndType        #28:#29        // level:Ljava/lang/Integer;</span><br><span class="line">  #58 = Utf8               +</span><br><span class="line">  #59 = Utf8               java/lang/StringBuilder</span><br><span class="line">  #60 = NameAndType        #72:#73        // append:(Ljava/lang/String;)Ljava/lang/StringBuilder;</span><br><span class="line">  #61 = NameAndType        #74:#35        // toString:()Ljava/lang/String;</span><br><span class="line">  #62 = Class              #75            // java/lang/System</span><br><span class="line">  #63 = NameAndType        #76:#77        // out:Ljava/io/PrintStream;</span><br><span class="line">  #64 = Utf8               base:10</span><br><span class="line">  #65 = Class              #78            // java/io/PrintStream</span><br><span class="line">  #66 = NameAndType        #79:#37        // println:(Ljava/lang/String;)V</span><br><span class="line">  #67 = Utf8               Student</span><br><span class="line">  #68 = Utf8               java/lang/Object</span><br><span class="line">  #69 = Utf8               java/lang/Integer</span><br><span class="line">  #70 = Utf8               valueOf</span><br><span class="line">  #71 = Utf8               (I)Ljava/lang/Integer;</span><br><span class="line">  #72 = Utf8               append</span><br><span class="line">  #73 = Utf8               (Ljava/lang/String;)Ljava/lang/StringBuilder;</span><br><span class="line">  #74 = Utf8               toString</span><br><span class="line">  #75 = Utf8               java/lang/System</span><br><span class="line">  #76 = Utf8               out</span><br><span class="line">  #77 = Utf8               Ljava/io/PrintStream;</span><br><span class="line">  #78 = Utf8               java/io/PrintStream</span><br><span class="line">  #79 = Utf8               println</span><br><span class="line">&#123;</span><br><span class="line">  方法信息，此处省略...</span><br><span class="line">&#125;</span><br><span class="line">SourceFile: &quot;Student.java&quot;</span><br></pre></td></tr></table></figure>
+
+<p>其中的 <code>Constant pool</code> 就是 class 文件常量池，使用 <code>#</code> 加数字标记每个“常量”。</p>
+<h3 id="class-文件常量池的内容"><a href="#class-文件常量池的内容" class="headerlink" title="class 文件常量池的内容"></a>class 文件常量池的内容</h3><p>class 文件常量池存放的是该 class 编译后即知的，在运行时将会用到的各个“常量”。注意这个常量不是编程中所说的 <code>final</code> 修饰的变量，而是 <code>字面量</code> 和 <code>符号引用</code>，如下图所示：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/d0ec8669/625ddb281b108e07cfa677cb3c3b1c88.png"></p>
+<h4 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h4><p>字面量大约相当于 Java 代码中的双引号字符串和常量的实际的值，包括：</p>
+<p>1.文本字符串，即代码中用双引号包裹的字符串部分的值。例如刚刚的例子中，有三个字符串：<code>&quot;张三&quot;</code>，<code>&quot;优秀&quot;</code>，<code>&quot;+&quot;</code>，它们在 class 文件常量池中分别对应：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#49 = Utf8               张三</span><br><span class="line">#52 = Utf8               优秀</span><br><span class="line">#58 = Utf8               +</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这里的 <code>#49</code> 就是 <code>&quot;张三&quot;</code> 的字面量，它不是一个 String 对象，只是一个使用 utf8 编码的文本字符串而已。</p>
+</blockquote>
+<p>2.用 final 修饰的成员变量，例如，<code>private static final int entranceAge = 18;</code> 这条语句定义了一个 final 常量 <code>entranceAge</code>，它的值是 <code>18</code>，对应在 class 文件常量池中就有：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#25 = Integer            18</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意，只有 final 修饰的成员变量如 <code>entranceAge</code>，才会在常量池中存在对应的字面量。而非 final 的成员变量 <code>scores</code>，以及局部变量 <code>base</code>(即使使用 final 修饰了)，它们的字面量都不会在常量池中定义。</p>
+</blockquote>
+<h4 id="符号引用"><a href="#符号引用" class="headerlink" title="符号引用"></a>符号引用</h4><p>符号引用包括：</p>
+<p>1.类和接口的全限定名，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">#11 = Class              #59            // java/lang/StringBuilder</span><br><span class="line">#59 = Utf8               java/lang/StringBuilder</span><br></pre></td></tr></table></figure>
+
+<p>2.方法的名称和描述符，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">#38 = Utf8               getScores</span><br><span class="line">#39 = Utf8               ()I</span><br><span class="line"></span><br><span class="line">#40 = Utf8               setScores</span><br><span class="line">#41 = Utf8               (I)V</span><br></pre></td></tr></table></figure>
+
+<p>以及这种对其他类的方法的引用：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#8 = Methodref          #55.#56        // java/lang/Integer.valueOf:(I)Ljava/lang/Integer;</span><br><span class="line"></span><br><span class="line">#55 = Class              #69            // java/lang/Integer</span><br><span class="line">#69 = Utf8               java/lang/Integer</span><br><span class="line"></span><br><span class="line">#56 = NameAndType        #70:#71        // valueOf:(I)Ljava/lang/Integer;</span><br><span class="line">#70 = Utf8               valueOf</span><br><span class="line">#71 = Utf8               (I)Ljava/lang/Integer;</span><br></pre></td></tr></table></figure>
+
+<p>3.字段的名称和描述符，例如：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#3 = Fieldref           #18.#50        // Student.name:Ljava/lang/String;</span><br><span class="line"></span><br><span class="line">#18 = Class              #67            // Student</span><br><span class="line">#67 = Utf8               Student</span><br><span class="line"></span><br><span class="line">#50 = NameAndType        #20:#21        // name:Ljava/lang/String;</span><br><span class="line">#20 = Utf8               name</span><br><span class="line">#21 = Utf8               Ljava/lang/String;</span><br></pre></td></tr></table></figure>
+
+<p>以及这种局部变量：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#64 = Utf8               base:10</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h2><p>JVM 在加载某个 class 的时候，需要完成以下任务：</p>
+<ol>
+<li>通过该 class 的全限定名来获取它的二进制字节流，即读取其字节码文件。其内容包括 <code>class文件常量池</code> 中介绍的 class 文件常量池。</li>
+<li>将读入的字节流从静态存储结构转换为方法区中的运行时的数据结构。</li>
+<li>在 Java 堆中生成该 class 对应的类对象，代表该 class 原信息。这个类对象的类型是 <code>java.lang.Class</code>，它与普通对象不同的地方在于，普通对象一般都是在 new 之后创建的，而类对象是在类加载的时候创建的，且是单例。</li>
+</ol>
+<p>而上述过程的第二步，就包含了将 class 文件常量池内容导入运行时常量池。class 文件常量池是一个 class 文件对应一个常量池，而运行时常量池只有一个，多个 class 文件常量池中的相同字符串只会对应运行时常量池中的一个字符串。</p>
+<p>运行时常量池除了导入 class 文件常量池的内容，还会保存符号引用对应的直接引用(实际内存地址)。这些直接引用是 JVM 在类加载之后的链接(验证、准备、解析)阶段从符号引用翻译过来的。</p>
+<p>此外，运行时常量池具有动态性的特征，它的内容并不是全部来源与编译后的 class 文件，在运行时也可以通过代码生成常量并放入运行时常量池。比如 <code>String.intern()</code> 方法。</p>
+<blockquote>
+<p><code>String.intern()</code> 方法的分析见后续章节。</p>
+</blockquote>
+<p>要注意的是，运行时常量池中保存的“常量”依然是 <code>字面量</code> 和 <code>符号引用</code>。比如字符串，这里放的仍然是单纯的文本字符串，而不是 String 对象。</p>
+<blockquote>
+<p>String 对象到底放在哪里？什么时候创建？下面的章节开始梳理。</p>
+</blockquote>
+<h2 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h2><p>如前所述，class 文件常量池和运行时常量池中，都没有直接存储字面量对应的实际对象，比如 String 对象。那么 String 对象到底是什么时候在哪里创建的呢？</p>
+<h3 id="字面量赋值创建-String-对象"><a href="#字面量赋值创建-String-对象" class="headerlink" title="字面量赋值创建 String 对象"></a>字面量赋值创建 String 对象</h3><p>我们以下面这个简单的例子来说明使用字面量赋值方法来创建一个 String 对象的大致流程：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">String s = &quot;黄河之水天上来&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>当 Java 虚拟机启动成功后，上面的字符串 <code>&quot;黄河之水天上来&quot;</code> 的字面量已经进入运行时常量池；</p>
+<p>然后主线程开始运行，第一次执行到这条语句时，JVM 会根据运行时常量池中的这个字面量去 <code>字符串常量池</code> 寻找其中是否有该字面量对应的 String 对象的引用。注意是引用。</p>
+<p>如果没找到，就会去 Java 堆创建一个值为 <code>&quot;黄河之水天上来&quot;</code> 的 String 对象，并将该对象的引用保存到 <code>字符串常量池</code>，然后返回该引用；如果找到了，说明之前已经有其他语句通过相同的字面量赋值创建了该 String 对象，直接返回引用即可。</p>
+<h3 id="字符串常量池-1"><a href="#字符串常量池-1" class="headerlink" title="字符串常量池"></a>字符串常量池</h3><p>字符串常量池，是 JVM 用来维护字符串实例的一个引用表。在 HotSpot 虚拟机中，它被实现为一个全局的 StringTable，底层是一个 c++的 hashtable。它将字符串的字面量作为 key，实际堆中创建的 String 对象的引用作为 value。</p>
+<p>字符串常量池在逻辑上属于方法区，但 JDK1.7 开始，就被挪到了堆区。</p>
+<p>String 的字面量被导入 JVM 的运行时常量池时，并不会马上试图在字符串常量池加入对应 String 的引用，而是等到程序实际运行时，要用到这个字面量对应的 String 对象时，才会去字符串常量池试图获取或者加入 String 对象的引用。因此它是懒加载的。</p>
+<h3 id="new-String-与-String-intern"><a href="#new-String-与-String-intern" class="headerlink" title="new String()与 String.intern()"></a>new String()与 String.intern()</h3><p>通过下面的例子，可以帮助我们加深对字符串常量池的理解。</p>
+<p>例 1：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 语句1</span><br><span class="line">String s1 = new String(&quot;asdf&quot;);</span><br><span class="line"></span><br><span class="line">// 语句2</span><br><span class="line">System.out.println(s1 == &quot;asdf&quot;);</span><br></pre></td></tr></table></figure>
+
+<p>这个例子中假设 <code>&quot;asdf&quot;</code> 是首次被执行，那么语句 1 会创建两个 String 对象。一个是 JVM 拿字面量 <code>&quot;asdf&quot;</code> 去字符串常量池试图获取其对应 String 对象的引用，因为是首次执行，所以没找到，于是在堆中创建了一个 <code>&quot;asdf&quot;</code> 的 String 对象，并将其引用保存到字符串常量池中，然后返回；返回之后，因为 <code>new</code> 的存在，JVM 又在堆中创建了与 <code>&quot;asdf&quot;</code> 等值的另一个 String 对象。因此这条语句创建了两个 String 对象，它们值相等，都是 <code>&quot;asdf&quot;</code>，但是引用(内存地址)不同，所以语句 2 返回 false。</p>
+<p>例 2：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// 语句3</span><br><span class="line">String s3 = new String(&quot;a&quot;) + new String(&quot;b&quot;);</span><br><span class="line"></span><br><span class="line">// 语句4</span><br><span class="line">s3.intern();</span><br><span class="line"></span><br><span class="line">// 语句5</span><br><span class="line">String s4 = &quot;ab&quot;;</span><br><span class="line"></span><br><span class="line">// 语句6</span><br><span class="line">System.out.println(s3 == s4);</span><br></pre></td></tr></table></figure>
+
+<p>这个例子也假设相关字符串字面量都是首次被执行到，那么语句 3 会创建 5 个对象：两个 “a”，其中一个的引用被保存在字符串常量池；两个 “b”，其中一个的引用被保存在字符串常量池；一个 “ab”，其引用没有被保存在字符串常量池。</p>
+<blockquote>
+<p>两个 String 对象用 “+” 拼接会被优化为 StringBuffer 的 append 拼接，然后 toString 方法，与 new 一样会直接在堆中创建对象。</p>
+</blockquote>
+<p>语句 4 要注意，JDK1.6 和 JDK1.7 开始，String.intern()的执行逻辑是不一样的。</p>
+<ul>
+<li>JDK1.6 会判断 “ab” 在字符串常量池中不存在，于是创建新的 “ab” 对象并将其引用保存到字符串常量池。</li>
+<li>JDK1.7 开始，判断 “ab” 在字符串常量池里不存在的话，会直接把 <code>s3</code> 的引用保存到字符串常量池。</li>
+</ul>
+<p>因此对于语句 6，如果是 JDK1.6 及以前的版本，结果就是 false；而如果是 JDK1.7 开始的版本，结果就是 true。</p>
+<blockquote>
+<p>如果没有语句 4，那么语句 6 结果一定是 false。</p>
+</blockquote>
+<h3 id="字符串常量池是否会被-GC"><a href="#字符串常量池是否会被-GC" class="headerlink" title="字符串常量池是否会被 GC"></a>字符串常量池是否会被 GC</h3><p>字符串常量池本身不会被 GC，但其中保存的引用所指向的 String 对象们是可以被回收的。否则字符串常量池总是 “只进不出”，那么很可能会导致内存泄露。</p>
+<p>在 HotSpot 的字符串常量池实现 StringTable 中，提供了相应的接口用于支持 GC，不同的 GC 策略会在适当的时候调用它们。一般实在 Full GC 的时候，额外调用 StringTable 的对应接口做可达性分析，将不可达的 String 对象的引用从 StringTable 中移除掉并销毁其指向的 String 对象。</p>
+<h2 id="封装类常量池"><a href="#封装类常量池" class="headerlink" title="封装类常量池"></a>封装类常量池</h2><p>除了字符串常量池，Java 的基本类型的封装类大部分也都实现了常量池。包括 <code>Byte,Short,Integer,Long,Character,Boolean</code>，注意，浮点数据类型 <code>Float,Double</code> 是没有常量池的。</p>
+<p>封装类的常量池是在各自内部类中实现的，比如 <code>IntegerCache</code>(<code>Integer</code> 的内部类)，自然也位于堆区。</p>
+<p>要注意的是，这些常量池是有范围的：</p>
+<ul>
+<li>Byte, Short, Integer, Long : [-128~127]</li>
+<li>Character : [0~127]</li>
+<li>Boolean : [True, False]</li>
+</ul>
+<p>例如下面的代码，注意其结果：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">Integer i1 = 127;</span><br><span class="line">Integer i2 = 127;</span><br><span class="line">System.out.println(i1 == i2);</span><br><span class="line"></span><br><span class="line">Integer i3 = 128;</span><br><span class="line">Integer i4 = 128;</span><br><span class="line">System.out.println(i3 == i4);</span><br><span class="line"></span><br><span class="line">Integer i5 = -128;</span><br><span class="line">Integer i6 = -128;</span><br><span class="line">System.out.println(i5 == i6);</span><br><span class="line"></span><br><span class="line">Integer i7 = -129;</span><br><span class="line">Integer i8 = -129;</span><br><span class="line">System.out.println(i7 == i8);</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/d0ec8669">https://fulsun.github.io/p/d0ec8669</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JVM/">JVM</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/003.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/91e798bc" title="Java内存模型"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Java内存模型</div></div></a></div><div class="next-post pull-right"><a href="/p/7215a5ae" title="java8添加并查看GC日志"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">java8添加并查看GC日志</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/654e767c" title="Class文件结构"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-07</div><div class="title">Class文件结构</div></div></a></div><div><a href="/p/cdffca23" title="虚拟机类加载机制"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/006.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-08</div><div class="title">虚拟机类加载机制</div></div></a></div><div><a href="/p/11595de" title="运行时数据区"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/003.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-17</div><div class="title">运行时数据区</div></div></a></div><div><a href="/p/91e798bc" title="Java内存模型"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-23</div><div class="title">Java内存模型</div></div></a></div><div><a href="/p/ddb92a08" title="垃圾收集器与内存分配策略"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-17</div><div class="title">垃圾收集器与内存分配策略</div></div></a></div><div><a href="/p/7215a5ae" title="java8添加并查看GC日志"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-01-23</div><div class="title">java8添加并查看GC日志</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%A6%82%E8%BF%B0"><span class="toc-text">常量池概述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#class-%E6%96%87%E4%BB%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">class 文件常量池</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E4%B8%80%E4%B8%AA-class-%E6%96%87%E4%BB%B6%E5%86%85%E5%AE%B9"><span class="toc-text">查看一个 class 文件内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#class-%E6%96%87%E4%BB%B6%E5%B8%B8%E9%87%8F%E6%B1%A0%E7%9A%84%E5%86%85%E5%AE%B9"><span class="toc-text">class 文件常量池的内容</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="toc-text">字面量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%A6%E5%8F%B7%E5%BC%95%E7%94%A8"><span class="toc-text">符号引用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C%E6%97%B6%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">运行时常量池</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">字符串常量池</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E9%9D%A2%E9%87%8F%E8%B5%8B%E5%80%BC%E5%88%9B%E5%BB%BA-String-%E5%AF%B9%E8%B1%A1"><span class="toc-text">字面量赋值创建 String 对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0-1"><span class="toc-text">字符串常量池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#new-String-%E4%B8%8E-String-intern"><span class="toc-text">new String()与 String.intern()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E9%87%8F%E6%B1%A0%E6%98%AF%E5%90%A6%E4%BC%9A%E8%A2%AB-GC"><span class="toc-text">字符串常量池是否会被 GC</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%81%E8%A3%85%E7%B1%BB%E5%B8%B8%E9%87%8F%E6%B1%A0"><span class="toc-text">封装类常量池</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

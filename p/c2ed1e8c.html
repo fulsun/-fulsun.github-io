@@ -1,0 +1,411 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Springboot的事务管理 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一个订单操作（创建订单、商品库存的扣减两个基本操作）。如果创建订单成功，要为这两个操作用事务包括起来，保证这两个操作要么都成功，要么都失败">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Springboot的事务管理">
+<meta property="og:url" content="https://fulsun.github.io/p/c2ed1e8c">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="一个订单操作（创建订单、商品库存的扣减两个基本操作）。如果创建订单成功，要为这两个操作用事务包括起来，保证这两个操作要么都成功，要么都失败">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/010.webp">
+<meta property="article:published_time" content="2021-06-18T08:00:33.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.074Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="JAVA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/010.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/c2ed1e8c"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Springboot的事务管理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/010.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Springboot的事务管理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-18T08:00:33.000Z" title="发表于 2021-06-18 08:00:33">2021-06-18</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.074Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringBoot/">SpringBoot</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>14分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Springboot的事务管理"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><ul>
+<li><p>在开发应用时，通常业务人员的一个操作实际上是对数据库读写的多步操作的结合。由于数据操作在顺序执行的过程中，任何一步操作都有可能发生异常，异常会导致后续操作无法完成，此时由于业务逻辑并未正确的完成，之前成功操作的数据并不可靠，如果要让这个业务正确的执行下去，通常有实现方式：</p>
+<ol>
+<li>记录失败的位置，问题修复之后，从上一次执行失败的位置开始继续执行后面要做的业务逻辑</li>
+<li>在执行失败的时候，回退本次执行的所有过程，让操作恢复到原始状态，带问题修复之后，重新执行原来的业务逻辑</li>
+</ol>
+</li>
+<li><p>事务就是针对上述方式2的实现。</p>
+</li>
+</ul>
+<h2 id="Spring-Boot中的事务管理"><a href="#Spring-Boot中的事务管理" class="headerlink" title="Spring Boot中的事务管理"></a>Spring Boot中的事务管理</h2><ul>
+<li>在Spring Boot中，当我们使用了<code>spring-boot-starter-jdbc</code>或<code>spring-boot-starter-data-jpa</code>依赖的时候，框架会自动默认分别注入DataSourceTransactionManager或JpaTransactionManager。所以我们不需要任何额外配置就可以用<code>@Transactional</code>注解进行事务的使用。</li>
+</ul>
+<h2 id="测试环境"><a href="#测试环境" class="headerlink" title="测试环境"></a>测试环境</h2><ul>
+<li><p>搭建一个web项目，使用h2数据库来测试事务，这里引用flyway的工程进行测试</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependencies</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.flywaydb<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>flyway-core<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.h2database<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>h2<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependencies</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>编写service类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"><span class="keyword">import</span> org.springframework.stereotype.Service;</span><br><span class="line"><span class="keyword">import</span> tk.fulsun.demo.entity.User;</span><br><span class="line"><span class="keyword">import</span> tk.fulsun.demo.service.UserService;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UserServiceImpl</span> <span class="keyword">implements</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate jdbcTemplate;</span><br><span class="line"></span><br><span class="line">    UserServiceImpl(JdbcTemplate jdbcTemplate) &#123;</span><br><span class="line">        <span class="built_in">this</span>.jdbcTemplate = jdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">create</span><span class="params">(String name, Integer age)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.update(<span class="string">&quot;insert into USER(NAME, AGE) values(?, ?)&quot;</span>, name, age);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> List&lt;User&gt; <span class="title function_">getByName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        List&lt;User&gt; users =</span><br><span class="line">            jdbcTemplate.query(</span><br><span class="line">            <span class="string">&quot;select * from USER where NAME = ?&quot;</span>,</span><br><span class="line">            (resultSet, i) -&gt; &#123;</span><br><span class="line">                <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>();</span><br><span class="line">                user.setId(resultSet.getLong(<span class="string">&quot;ID&quot;</span>));</span><br><span class="line">                user.setName(resultSet.getString(<span class="string">&quot;NAME&quot;</span>));</span><br><span class="line">                user.setAge(resultSet.getInt(<span class="string">&quot;AGE&quot;</span>));</span><br><span class="line">                <span class="keyword">return</span> user;</span><br><span class="line">            &#125;,</span><br><span class="line">            name);</span><br><span class="line">        <span class="keyword">return</span> users;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">deleteByName</span><span class="params">(String name)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.update(<span class="string">&quot;delete from USER where NAME = ?&quot;</span>, name);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">getAllUsers</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.queryForObject(<span class="string">&quot;select count(1) from USER&quot;</span>, Integer.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">int</span> <span class="title function_">deleteAllUsers</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> jdbcTemplate.update(<span class="string">&quot;delete from USER&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="手动制造异常"><a href="#手动制造异常" class="headerlink" title="手动制造异常"></a>手动制造异常</h3><ul>
+<li><p>修改create方法这样通过创建时User实体的age属性为0的时候就可以触发异常产生。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="type">int</span> <span class="title function_">create</span><span class="params">(String name, Integer age)</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (age &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>(<span class="string">&quot;年龄不能小于0&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> jdbcTemplate.update(<span class="string">&quot;insert into USER(NAME, AGE) values(?, ?)&quot;</span>, name, age);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="测试类"><a href="#测试类" class="headerlink" title="测试类"></a>测试类</h3><ul>
+<li><p>执行测试用例，可以看到控制台中抛出了如下异常，关于age字段的错误：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">UserServiceTest</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span> <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Test</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">    userService.create(<span class="string">&quot;张三&quot;</span>, <span class="number">18</span>);</span><br><span class="line">    userService.create(<span class="string">&quot;李四&quot;</span>, <span class="number">0</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">java.lang.RuntimeException: 年龄不能小于<span class="number">0</span></span><br><span class="line"></span><br><span class="line">	at tk.fulsun.demo.service.impl.UserServiceImpl.create(UserServiceImpl.java:<span class="number">26</span>)</span><br><span class="line">	at tk.fulsun.demo.service.UserServiceTest.test1(UserServiceTest.java:<span class="number">18</span>)</span><br><span class="line">	...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>内存数据库下，使用controller接口测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/test&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">TransactiionTestController</span> &#123;</span><br><span class="line">  <span class="meta">@Autowired</span> <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@GetMapping(&quot;/create&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> String <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      userService.create(<span class="string">&quot;张三&quot;</span>, <span class="number">18</span>);</span><br><span class="line">      userService.create(<span class="string">&quot;李四&quot;</span>, <span class="number">0</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">      <span class="keyword">return</span> e.getMessage();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查询数据库, 执行到一半之后因为异常中断了，张三的数据正确插入而李四没有成功插入</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM USER;</span><br><span class="line">ID  	NAME  	AGE</span><br><span class="line">1	张三	18</span><br><span class="line">(1 row, 0 ms)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果这10条数据需要全部成功或者全部失败，那么这时候就可以使用事务来实现，做法非常简单，我们只需要在函数上添加<code>@Transactional</code>注解即可。</p>
+<ul>
+<li><p>不能使用try&#x2F;catch ,catch“吃了异常”导致@Transactional失效</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@GetMapping(&quot;/create&quot;)</span></span><br><span class="line"><span class="meta">@Transactional</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">test1</span><span class="params">()</span> &#123;</span><br><span class="line">    userService.create(<span class="string">&quot;张三&quot;</span>, <span class="number">18</span>);</span><br><span class="line">    userService.create(<span class="string">&quot;李四&quot;</span>, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;OK&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>访问 <a target="_blank" rel="noopener external nofollow noreferrer" href="http://localhost:8080/test/create">http://localhost:8080/test/create</a> 后，可以看到异常信息，查询数据库数据为空，成功实现了自动回滚。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="事务详解"><a href="#事务详解" class="headerlink" title="事务详解"></a>事务详解</h2><ul>
+<li><p>上面主要通过单元测试演示了如何使用<code>@Transactional</code>注解来声明一个函数需要被事务管理，通常我们单元测试为了保证每个测试之间的数据独立，会使用<code>@Rollback</code>注解让每个单元测试都能在结束时回滚。</p>
+</li>
+<li><p>而真正在开发业务逻辑时，我们通常在service层接口中使用<code>@Transactional</code>来对各个业务逻辑进行事务管理的配置，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UserService</span> &#123;</span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    User <span class="title function_">update</span><span class="params">(String name, String password)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="Transactional"><a href="#Transactional" class="headerlink" title="@Transactional"></a>@Transactional</h3><ul>
+<li>默认的事务配置，可以满足一些基本的事务需求</li>
+<li>但是当我们项目较大较复杂时（比如，有多个数据源等），这时候需要在声明事务时，指定不同的事务管理器。</li>
+<li>对于不同数据源的可以设置事务管理配置。在声明事务时，只需要通过value属性指定配置的事务管理器名即可，例如：<code>@Transactional(value=&quot;transactionManagerPrimary&quot;)</code>。</li>
+</ul>
+<h3 id="隔离级别"><a href="#隔离级别" class="headerlink" title="隔离级别"></a>隔离级别</h3><ul>
+<li><p>隔离级别是指若干个并发的事务之间的隔离程度，与我们开发时候主要相关的场景包括：脏读取、重复读、幻读。</p>
+</li>
+<li><p>我们可以看<code>org.springframework.transaction.annotation.Isolation</code>枚举类中定义了五个表示隔离级别的值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Isolation</span> &#123;</span><br><span class="line">    DEFAULT(-<span class="number">1</span>),</span><br><span class="line">    READ_UNCOMMITTED(<span class="number">1</span>),</span><br><span class="line">    READ_COMMITTED(<span class="number">2</span>),</span><br><span class="line">    REPEATABLE_READ(<span class="number">4</span>),</span><br><span class="line">    SERIALIZABLE(<span class="number">8</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>DEFAULT</code>：这是默认值，表示使用底层数据库的默认隔离级别。对大部分数据库而言，通常这值就是：<code>READ_COMMITTED</code>。</li>
+<li><code>READ_UNCOMMITTED</code>：该隔离级别表示一个事务可以读取另一个事务修改但还没有提交的数据。该级别不能防止脏读和不可重复读，因此很少使用该隔离级别。</li>
+<li><code>READ_COMMITTED</code>：该隔离级别表示一个事务只能读取另一个事务已经提交的数据。该级别可以防止脏读，这也是大多数情况下的推荐值。</li>
+<li><code>REPEATABLE_READ</code>：该隔离级别表示一个事务在整个过程中可以多次重复执行某个查询，并且每次返回的记录都相同。即使在多次查询之间有新增的数据满足该查询，这些新增的记录也会被忽略。该级别可以防止脏读和不可重复读。</li>
+<li><code>SERIALIZABLE</code>：所有的事务依次逐个执行，这样事务之间就完全不可能产生干扰，也就是说，该级别可以防止脏读、不可重复读以及幻读。但是这将严重影响程序的性能。通常情况下也不会用到该级别。</li>
+</ul>
+</li>
+<li><p>指定方法：通过使用<code>isolation</code>属性设置，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional(isolation = Isolation.DEFAULT)</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="传播行为"><a href="#传播行为" class="headerlink" title="传播行为"></a>传播行为</h3><ul>
+<li><p>所谓事务的传播行为是指，如果在开始当前事务之前，一个事务上下文已经存在，此时有若干选项可以指定一个事务性方法的执行行为。</p>
+</li>
+<li><p>我们可以看<code>org.springframework.transaction.annotation.Propagation</code>枚举类中定义了6个表示传播行为的枚举值：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> <span class="title class_">Propagation</span> &#123;</span><br><span class="line">    REQUIRED(<span class="number">0</span>),</span><br><span class="line">    SUPPORTS(<span class="number">1</span>),</span><br><span class="line">    MANDATORY(<span class="number">2</span>),</span><br><span class="line">    REQUIRES_NEW(<span class="number">3</span>),</span><br><span class="line">    NOT_SUPPORTED(<span class="number">4</span>),</span><br><span class="line">    NEVER(<span class="number">5</span>),</span><br><span class="line">    NESTED(<span class="number">6</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>REQUIRED</code>：如果当前存在事务，则加入该事务；如果当前没有事务，则创建一个新的事务。</li>
+<li><code>SUPPORTS</code>：如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式继续运行。</li>
+<li><code>MANDATORY</code>：如果当前存在事务，则加入该事务；如果当前没有事务，则抛出异常。</li>
+<li><code>REQUIRES_NEW</code>：创建一个新的事务，如果当前存在事务，则把当前事务挂起。</li>
+<li><code>NOT_SUPPORTED</code>：以非事务方式运行，如果当前存在事务，则把当前事务挂起。</li>
+<li><code>NEVER</code>：以非事务方式运行，如果当前存在事务，则抛出异常。</li>
+<li><code>NESTED</code>：如果当前存在事务，则创建一个事务作为当前事务的嵌套事务来运行；如果当前没有事务，则该取值等价于<code>REQUIRED</code>。</li>
+</ul>
+</li>
+<li><p>指定方法：通过使用<code>propagation</code>属性设置，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Transactional(propagation = Propagation.REQUIRED)</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li>传播行为有七种，不仅要知道这七种分别是什么意思，还要知道分别适合哪种场景使用。</li>
+<li>在service1(batchinset)中调用了service2(insert)方法，则service2可以定义以下不同事物传播行为<ul>
+<li>PROPAGATION_REQUIRED<ul>
+<li>解释：如果当前存在事物，则加入该事物；如果不存在事物，则创建一个新的事物。该行为一般被设置为默认</li>
+<li>场景：多个事务操作嵌套,service2使用默认行为，出现异常会导致回滚</li>
+</ul>
+</li>
+<li>PROPAGATION_SUPPORTS<ul>
+<li>解释：如果当前存在事物，则加入该事物；如果不存在事物，则直接执行</li>
+<li>场景：该模式是否支持事务，看调用它的方法是否有事务支持。<ul>
+<li>service1无事务，service2使用该行为，出现异常会不会导致回滚</li>
+<li>service1有事务，service2使用该行为，出现异常会会导致回滚</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PROPAGATION_MANDATORY (mandatory中文是强制性的意思)<ul>
+<li>解释：强制要求当前存在一个事物，如果不存在则抛出异常</li>
+<li>场景：service2需要事物支持但自身又不管理事务提交或回滚，即强制要求前面的方法创建并管理一个事物给它用<ul>
+<li>service1无事务，service2使用该行为，会抛出了异常，提示没有存在的事务。</li>
+<li>service1有事务，service2使用该行为，出现异常会会导致回滚</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>PROPAGATION_REQUIRES_NEW<ul>
+<li>解释：不管当前是否存在事物，必定创建一个新事物，如果当前存在事物这个事物会被挂起。新事物在层级上与之前的事物是平级的，两者互不干扰</li>
+<li>场景：如service2事物的失败不想影响到service1事物的成功提交，可以使用这个行为，如订单和扣款是个事务操作，订单服务中调用付款服务，付款失败后不希望取消订单。</li>
+</ul>
+</li>
+<li>PROPAGATION_NOT_SUPPORTED<ul>
+<li>解释：以非事务的方式运行，如果当前存在事务，暂停当前的事务（能不能挂起还得看对应的事务管理器是否支持挂起事物）</li>
+<li>场景：略</li>
+</ul>
+</li>
+<li>PROPAGATION_NEVER<ul>
+<li>解释：永远不使用事物，如果存在事物，抛出异常</li>
+<li>场景：略</li>
+</ul>
+</li>
+<li>PROPAGATION_NESTED<ul>
+<li>解释：如果不存在事物，则创建一个新的；如果存在事物，则在当前事务的一个嵌套事物中执行，嵌套事物的层级关系是外层事物的子事物，子事物执行的时候，外层事物不会被挂起，且子事物与外层事物共有事物状态（没有隔离）</li>
+<li>场景：将一个大事物分解为多个小事物执行，根据小事物的执行状态决定大事物的执行流程</li>
+<li>外围方法没有事务：这种情况跟REQUIRED是一样的，会新建一个事务。</li>
+<li>外围方法如果存在事务：这种情况就会嵌套事务。<ul>
+<li>所谓嵌套事务，大意就是，</li>
+<li>外围事务回滚，内嵌事务一定回滚</li>
+<li>而内嵌事务可以单独回滚而不影响外围主事务和其他子事务。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="多数据源的事务管理"><a href="#多数据源的事务管理" class="headerlink" title="多数据源的事务管理"></a>多数据源的事务管理</h2><ul>
+<li>在一个Spring Boot项目中，连接多个数据源还是比较常见的。</li>
+<li>当我们采用多数据源的时候，同时也会出现一个这样的特殊场景：我们希望对A数据源的更新和B数据源的更新具备事务性。</li>
+<li>这样的例子很常见，比如：在订单库中创建一条订单记录，同时还需要在商品库中扣减商品库存。如果库存扣减失败，那么我们希望订单创建也能够回滚。</li>
+<li>如果这两条数据在一个数据库中，那么通过上面的事务管理就能轻松解决了。但是，当这两个操作位于不同的数据库中，那么就无法实现了。</li>
+</ul>
+<h3 id="什么是JTA"><a href="#什么是JTA" class="headerlink" title="什么是JTA"></a>什么是JTA</h3><ul>
+<li><p>JTA，全称：Java Transaction API。JTA事务比JDBC事务更强大。一个JTA事务可以有多个参与者，而一个JDBC事务则被限定在一个单一的数据库连接。所以，当我们在同时操作多个数据库的时候，使用JTA事务就可以弥补JDBC事务的不足。</p>
+</li>
+<li><p>在Spring Boot 2.x中，整合了这两个JTA的实现：</p>
+<ul>
+<li>Atomikos：可以通过引入<code>spring-boot-starter-jta-atomikos</code>依赖来使用</li>
+<li>Bitronix：可以通过引入<code>spring-boot-starter-jta-bitronix</code>依赖来使用</li>
+</ul>
+</li>
+<li><p>由于Bitronix自Spring Boot 2.3.0开始不推荐使用，所以我们将使用Atomikos作为例子来介绍JTA的使用。</p>
+</li>
+</ul>
+<h3 id="事务管理实现"><a href="#事务管理实现" class="headerlink" title="事务管理实现"></a>事务管理实现</h3><h4 id="场景设定"><a href="#场景设定" class="headerlink" title="场景设定"></a>场景设定</h4><ul>
+<li>假设我们有两个库，分别为：test1和test2</li>
+<li>这两个库中都有一张User表，我们希望这两张表中的数据是一致的</li>
+<li>假设这两张表中都已经有一条数据：name&#x3D;ccc，age&#x3D;20；因为这两张表中数据是一致的，所以要update的时候，就必须两个库中的User表更新时候，要么都成功，要么都失败。</li>
+</ul>
+<h3 id="传统方式配置多个数据源"><a href="#传统方式配置多个数据源" class="headerlink" title="传统方式配置多个数据源"></a>传统方式配置多个数据源</h3><ul>
+<li><p>具体参考之前的多数据源配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfiguration</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.primary&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">primaryDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@ConfigurationProperties(prefix = &quot;spring.datasource.secondary&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> DataSource <span class="title function_">secondaryDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> DataSourceBuilder.create().build();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Primary</span></span><br><span class="line">    <span class="keyword">public</span> JdbcTemplate <span class="title function_">primaryJdbcTemplate</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@Qualifier(&quot;primaryDataSource&quot;)</span> DataSource primaryDataSource)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JdbcTemplate</span>(primaryDataSource);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> JdbcTemplate <span class="title function_">secondaryJdbcTemplate</span><span class="params">(</span></span><br><span class="line"><span class="params">        <span class="meta">@Qualifier(&quot;secondaryDataSource&quot;)</span> DataSource secondaryDataSource)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JdbcTemplate</span>(secondaryDataSource);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Service</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AtomikosTestService</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate primaryJdbcTemplate;</span><br><span class="line">    <span class="keyword">private</span> JdbcTemplate secondaryJdbcTemplate;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AtomikosTestService</span><span class="params">(JdbcTemplate primaryJdbcTemplate, JdbcTemplate secondaryJdbcTemplate)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.primaryJdbcTemplate = primaryJdbcTemplate;</span><br><span class="line">        <span class="built_in">this</span>.secondaryJdbcTemplate = secondaryJdbcTemplate;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">tx</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 修改test1库中的数据</span></span><br><span class="line">        primaryJdbcTemplate.update(<span class="string">&quot;update user set age = ? where name = ?&quot;</span>, <span class="number">30</span>, <span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">        <span class="comment">// 修改test2库中的数据</span></span><br><span class="line">        secondaryJdbcTemplate.update(<span class="string">&quot;update user set age = ? where name = ?&quot;</span>, <span class="number">30</span>, <span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Transactional</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">tx2</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">// 修改test1库中的数据</span></span><br><span class="line">        primaryJdbcTemplate.update(<span class="string">&quot;update user set age = ? where name = ?&quot;</span>, <span class="number">40</span>, <span class="string">&quot;ccc&quot;</span>);</span><br><span class="line">        <span class="comment">// 模拟：修改test2库之前抛出异常</span></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">RuntimeException</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>当发生异常的时候，事务不起作用了</p>
+<p>​ <img src= "/medias/detail/load.gif" data-lazy-src="/p/c2ed1e8c/0ce838004bbb2dfcafd6172ef60ee9d5.png"></p>
+</li>
+</ul>
+<h3 id="JTA方式"><a href="#JTA方式" class="headerlink" title="JTA方式"></a>JTA方式</h3><h4 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h4><ol>
+<li><p>在<code>pom.xml</code>中加入JTA的实现Atomikos的Starter</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jta-atomikos<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在<code>application.properties</code>配置文件中配置两个test1和test2数据源</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span></span><br><span class="line">  <span class="attr">jta:</span></span><br><span class="line">    <span class="attr">enabled:</span> <span class="literal">true</span></span><br><span class="line">    <span class="attr">atomikos:</span></span><br><span class="line">      <span class="attr">datasource:</span></span><br><span class="line">        <span class="attr">primary:</span></span><br><span class="line">          <span class="attr">xa-data-source-class-name:</span> <span class="string">org.h2.jdbcx.JdbcDataSource</span></span><br><span class="line">          <span class="attr">xa-properties:</span></span><br><span class="line">            <span class="attr">url:</span> <span class="string">jdbc:h2:mem:testdbsa</span></span><br><span class="line">            <span class="attr">user:</span> <span class="string">sa</span></span><br><span class="line">            <span class="attr">password:</span></span><br><span class="line">          <span class="attr">unique-resource-name:</span> <span class="string">test1</span></span><br><span class="line">          <span class="attr">max-pool-size:</span> <span class="number">25</span></span><br><span class="line">          <span class="attr">min-pool-size:</span> <span class="number">3</span></span><br><span class="line">          <span class="attr">max-lifetime:</span> <span class="number">20000</span></span><br><span class="line">          <span class="attr">borrow-connection-timeout:</span> <span class="number">10000</span></span><br><span class="line">        <span class="attr">secondary:</span></span><br><span class="line">          <span class="attr">xa-data-source-class-name:</span> <span class="string">com.mysql.cj.jdbc.MysqlXADataSource</span></span><br><span class="line">          <span class="attr">xa-properties:</span></span><br><span class="line">            <span class="attr">url:</span> <span class="string">jdbc:mysql://192.168.56.101:3306/test2</span></span><br><span class="line">            <span class="attr">user:</span> <span class="string">test</span></span><br><span class="line">            <span class="attr">password:</span> <span class="number">123456</span></span><br><span class="line">          <span class="attr">unique-resource-name:</span> <span class="string">test2</span></span><br><span class="line">          <span class="attr">max-pool-size:</span> <span class="number">25</span></span><br><span class="line">          <span class="attr">min-pool-size:</span> <span class="number">3</span></span><br><span class="line">          <span class="attr">max-lifetime:</span> <span class="number">20000</span></span><br><span class="line">          <span class="attr">borrow-connection-timeout:</span> <span class="number">10000</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>数据源配置</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> tk.fulsun.demo.config;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.atomikos.jdbc.AtomikosDataSourceBean;</span><br><span class="line"><span class="keyword">import</span> javax.sql.DataSource;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Qualifier;</span><br><span class="line"><span class="keyword">import</span> org.springframework.boot.context.properties.ConfigurationProperties;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Primary;</span><br><span class="line"><span class="keyword">import</span> org.springframework.jdbc.core.JdbcTemplate;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> fulsun</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@description</span>: 数据源的配置信息</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 6/11/2021 3:20 PM</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataSourceConfiguration</span> &#123;</span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@Primary</span></span><br><span class="line">  <span class="meta">@ConfigurationProperties(prefix = &quot;spring.jta.atomikos.datasource.primary&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> DataSource <span class="title function_">primaryDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AtomikosDataSourceBean</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="meta">@ConfigurationProperties(prefix = &quot;spring.jta.atomikos.datasource.secondary&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> DataSource <span class="title function_">secondaryDataSource</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AtomikosDataSourceBean</span>();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> JdbcTemplate <span class="title function_">primaryJdbcTemplate</span><span class="params">(</span></span><br><span class="line"><span class="params">      <span class="meta">@Qualifier(&quot;primaryDataSource&quot;)</span> DataSource primaryDataSource)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JdbcTemplate</span>(primaryDataSource);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="meta">@Bean</span></span><br><span class="line">  <span class="keyword">public</span> JdbcTemplate <span class="title function_">secondaryJdbcTemplate</span><span class="params">(</span></span><br><span class="line"><span class="params">      <span class="meta">@Qualifier(&quot;secondaryDataSource&quot;)</span> DataSource secondaryDataSource)</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">JdbcTemplate</span>(secondaryDataSource);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新测试异常发生后的结果,数据保持一致</p>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
+<li><a target="_blank" rel="noopener external nofollow noreferrer" href="https://blog.csdn.net/Mutou_ren/article/details/103049501">https://blog.csdn.net/Mutou_ren/article/details/103049501</a></li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/c2ed1e8c">https://fulsun.github.io/p/c2ed1e8c</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/JAVA/">JAVA</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/010.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/4d6ee177" title="Springboot缓存"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Springboot缓存</div></div></a></div><div class="next-post pull-right"><a href="/p/d5d2d172" title="使用Flyway管理数据库版本"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/012.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用Flyway管理数据库版本</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/1efd412c" title="整合RocketMQ"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-04</div><div class="title">整合RocketMQ</div></div></a></div><div><a href="/p/6e826ca7" title="整合SwaggerUI"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-08</div><div class="title">整合SwaggerUI</div></div></a></div><div><a href="/p/48dc5881" title="整合日志框架"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/003.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="title">整合日志框架</div></div></a></div><div><a href="/p/e1021c00" title="Spring Boot 注解"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="title">Spring Boot 注解</div></div></a></div><div><a href="/p/e2db08f0" title="整合fastjson"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-09</div><div class="title">整合fastjson</div></div></a></div><div><a href="/p/5d750020" title="多数据源配置"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-06-11</div><div class="title">多数据源配置</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1"><span class="toc-text">事务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-Boot%E4%B8%AD%E7%9A%84%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="toc-text">Spring Boot中的事务管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83"><span class="toc-text">测试环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E5%88%B6%E9%80%A0%E5%BC%82%E5%B8%B8"><span class="toc-text">手动制造异常</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E7%B1%BB"><span class="toc-text">测试类</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E8%AF%A6%E8%A7%A3"><span class="toc-text">事务详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Transactional"><span class="toc-text">@Transactional</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%9A%94%E7%A6%BB%E7%BA%A7%E5%88%AB"><span class="toc-text">隔离级别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E6%92%AD%E8%A1%8C%E4%B8%BA"><span class="toc-text">传播行为</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">应用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%95%B0%E6%8D%AE%E6%BA%90%E7%9A%84%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86"><span class="toc-text">多数据源的事务管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJTA"><span class="toc-text">什么是JTA</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E7%AE%A1%E7%90%86%E5%AE%9E%E7%8E%B0"><span class="toc-text">事务管理实现</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E8%AE%BE%E5%AE%9A"><span class="toc-text">场景设定</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%A0%E7%BB%9F%E6%96%B9%E5%BC%8F%E9%85%8D%E7%BD%AE%E5%A4%9A%E4%B8%AA%E6%95%B0%E6%8D%AE%E6%BA%90"><span class="toc-text">传统方式配置多个数据源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JTA%E6%96%B9%E5%BC%8F"><span class="toc-text">JTA方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="toc-text">添加依赖</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83"><span class="toc-text">参考</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

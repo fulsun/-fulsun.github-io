@@ -1,0 +1,758 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Linux 命令 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="CentOS配置静态IP和YUM源。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 命令">
+<meta property="og:url" content="https://fulsun.github.io/p/9da1ef6b">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="CentOS配置静态IP和YUM源。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/002.webp">
+<meta property="article:published_time" content="2018-09-25T12:52:53.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.354Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Linux命令">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/002.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/9da1ef6b"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Linux 命令',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/002.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Linux 命令</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-09-25T12:52:53.000Z" title="发表于 2018-09-25 12:52:53">2018-09-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.354Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Linux/">Linux</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">9.2k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>37分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Linux 命令"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="yum-安装常用软件"><a href="#yum-安装常用软件" class="headerlink" title="yum 安装常用软件"></a>yum 安装常用软件</h2><ul>
+<li><p>lrzsz支持xshell和SecureCRT上传下载 rz命令本地上传文件到服务器,sz命令发送文件到本地</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@centos8 ~]# yum -y install vim tree net-tools wget curl lrzsz</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="PS1变量"><a href="#PS1变量" class="headerlink" title="PS1变量"></a>PS1变量</h2><ul>
+<li><p>open in Terminal:打开终端</p>
+</li>
+<li><p>Linux以回车键表示命令结束，如果linux命令需要折行输入，那么可以以<code>\</code>表示每行结束</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># [用户名@主机名称 当前位置] # 代表管理员 $ 普通用户</span></span><br><span class="line">[hadoop@hadoop ~]$ su root</span><br><span class="line">Password:</span><br><span class="line">[root@hadoop hadoop]#</span><br><span class="line"><span class="comment"># 这个命令提示符是可以改变的。通过PS1系统变量改变，比如：</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先查看PS1变量的结果值：</span></span><br><span class="line">[hadoop@hadoop01 mazhonghua]$ <span class="built_in">echo</span> <span class="variable">$PS1</span></span><br><span class="line">[\u@\h \W]\$</span><br><span class="line"><span class="comment"># \u：用户名，\h：主机名，\w：工作目录，\$：用户表示，root是$，普通用户是#</span></span><br><span class="line"><span class="comment"># 然后更改该值：</span></span><br><span class="line">[hadoop@hadoop01 mazhonghua]$ PS1=<span class="string">&quot;[\t][\u@\h \W]\$ &quot;</span></span><br><span class="line"><span class="comment"># 这是Linux定义变量的方式</span></span><br><span class="line"><span class="comment">#接下来命令提示符就会变成：</span></span><br><span class="line">[11:48:45][hadoop@hadoop01 mazhonghua]$</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><h3 id="命令的格式"><a href="#命令的格式" class="headerlink" title="命令的格式"></a>命令的格式</h3><ol>
+<li>选项 :<ul>
+<li><code>-</code>简写单词(短模式)</li>
+<li><code>--</code>单词 (长模式)</li>
+<li>也可以使用组合格式，比如：<code>-a -l</code> 等价于<code>-la</code>或者<code>-al </code></li>
+</ul>
+</li>
+</ol>
+<ul>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="http://man.linuxde.net/">http://man.linuxde.net/</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.jb51.net/linux/">Linux常用命令全集-脚本之家 (jb51.net)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://wangchujiang.com/linux-command/">Linux命令搜索引擎 命令</a></p>
+</li>
+</ul>
+<h3 id="归纳分类"><a href="#归纳分类" class="headerlink" title="归纳分类"></a>归纳分类</h3><table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th>命令</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">文件管理</td>
+<td>mkdir, rmdir, mv, rm, cp, touch, cat, tac, echo, more, less, head, tail, file, find, rename, ln, pwd, scp, alias</td>
+</tr>
+<tr>
+<td align="left">磁盘管理</td>
+<td>ls, cd, du, df, mount, unmounts, fdisk</td>
+</tr>
+<tr>
+<td align="left">文档处理</td>
+<td>wc, sort, uniq, cut, sed, awk, grep, vi, diff</td>
+</tr>
+<tr>
+<td align="left">用户和组</td>
+<td>useradd, usermod, passwd, userdel, groupadd, groupdel, chgrp, su</td>
+</tr>
+<tr>
+<td align="left">文件传输</td>
+<td>get, put, wget</td>
+</tr>
+<tr>
+<td align="left">网络通信</td>
+<td>telnet, nc, ifconfig, ping, netstat, ip, host</td>
+</tr>
+<tr>
+<td align="left">备份压缩</td>
+<td>gzip, bzip2, bunzip2, tar, zip</td>
+</tr>
+<tr>
+<td align="left">系统管理</td>
+<td>exit, kill, last, ps, top, free, pstree, reboot, halt, shutdown, sudo, who, w, whoami, whereis, which, last, whatis</td>
+</tr>
+<tr>
+<td align="left">系统设置</td>
+<td>clear, set, unset, hwclock, time, date,</td>
+</tr>
+<tr>
+<td align="left">其他</td>
+<td>history, hostname, nohup, service, init, rpm, ssh, cal, yum</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>另外再教大家一种方式查看命令的帮助手册</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop01 ~]# man clear</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="cd-路径"><a href="#cd-路径" class="headerlink" title="cd 路径"></a>cd 路径</h3><ul>
+<li><p>配合 <code>pwd(查看当前路径)</code> 使用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">change directory (切换目录)	常使用方式：</span><br><span class="line"><span class="built_in">cd</span> sourcedir   进入用户主目录</span><br><span class="line"><span class="built_in">cd</span> ~   进入用户主目录</span><br><span class="line"><span class="built_in">cd</span> -   返回进入此目录之前所在的目录</span><br><span class="line"><span class="built_in">cd</span> ..   返回上级目录（若当前目录为<span class="string">&quot;/&quot;</span>，则执行完后还在<span class="string">&quot;/&quot;</span>；<span class="string">&quot;..&quot;</span>为上级目录的意思）</span><br><span class="line"><span class="built_in">cd</span> ../..  返回上两级目录</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ls"><a href="#ls" class="headerlink" title="ls"></a>ls</h3><ul>
+<li><p>list：显示目录内容列表</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">使用格式：<span class="built_in">ls</span>  [选项]...  [目录或文件名]</span><br><span class="line"></span><br><span class="line">常用选项</span><br><span class="line">-l：详细信息显示</span><br><span class="line">-a：显示所有子目录和文件的信息，包括隐藏文件</span><br><span class="line">-A：类似于“-a”，但不显示“.”和“..”目录的信息</span><br><span class="line">-R：递归显示内容</span><br><span class="line">-h：以友好方式显示文件大小</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"><span class="built_in">ls</span> -l  <span class="comment">## 列出文件详细信息， 也可以写作 ll</span></span><br><span class="line"><span class="built_in">ls</span> -lah  <span class="comment">## 以友好方式显示包括隐藏文件的详细信息</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="du"><a href="#du" class="headerlink" title="du"></a>du</h3><ul>
+<li><p>查看目录和文件的磁盘占用</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">disk usage：显示每个文件和目录的磁盘使用空间	使用格式：<span class="built_in">du</span>  [选项]...  [目录或文件名]</span><br><span class="line"></span><br><span class="line">常用选项：</span><br><span class="line">-a：统计时包括所有的文件，而不仅仅只统计目录</span><br><span class="line">-h：以更易读的字节单位（K、M等）显示信息</span><br><span class="line">-s：只统计每个参数所占用空间总的大小</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"><span class="built_in">du</span> -ah  <span class="comment">##</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="df"><a href="#df" class="headerlink" title="df"></a>df</h3><ul>
+<li><p>显示磁盘相关信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">disk free：显示磁盘相关信息	常用选项：</span><br><span class="line">-h：以更易读的字节单位（K、M等）显示信息</span><br><span class="line">-T：显示分区格式</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"><span class="built_in">df</span> -h    <span class="comment">## 显示磁盘信息，以友好方式</span></span><br><span class="line"><span class="built_in">df</span> -T -h   <span class="comment">## 以友好格式显示磁盘信息，并且附加磁盘格式</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="touch"><a href="#touch" class="headerlink" title="touch"></a>touch</h3><ul>
+<li><p>创建&#x2F;修改文件信息</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">创建空文件</span><br><span class="line">或更新文件时间标记	使用格式：</span><br><span class="line"><span class="built_in">touch</span>  文件名</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="file"><a href="#file" class="headerlink" title="file"></a>file</h3><ul>
+<li><p>查看文件类型：<strong>根据文件内容</strong></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 创建文件</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">touch</span> aa</span><br><span class="line">[root@hadoop hadoop]# file aa</span><br><span class="line">aa: empty</span><br><span class="line"></span><br><span class="line"><span class="comment">## 查看目录</span></span><br><span class="line">[root@hadoop hadoop]# file apps</span><br><span class="line">apps: directory</span><br><span class="line"></span><br><span class="line"><span class="comment">## 创建脚本文件</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">touch</span> a.sh</span><br><span class="line">[root@hadoop hadoop]# file a.sh</span><br><span class="line">a.sh: empty</span><br><span class="line"></span><br><span class="line"><span class="comment">## 添加 #!/bin/bash 后</span></span><br><span class="line">[root@hadoop hadoop]# vim a.sh</span><br><span class="line">[root@hadoop hadoop]# file a.sh</span><br><span class="line">a.sh: Bourne-Again shell script, ASCII text executable</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="mkdir"><a href="#mkdir" class="headerlink" title="mkdir"></a>mkdir</h3><ul>
+<li>创建文件夹<ul>
+<li>-p 级联创建 ,父级目录不存在也创建</li>
+<li><code>mkdir -p /root/ma/niu/zhu/dagou</code> ## 上级目录不存在自动创建上一级目录，常用</li>
+</ul>
+</li>
+</ul>
+<h3 id="cp"><a href="#cp" class="headerlink" title="cp"></a>cp</h3><ul>
+<li><p>复制</p>
+<ul>
+<li><p>-i 需要覆盖文件或目录时进行提醒</p>
+</li>
+<li><p>-r 文件夹复制时要迭代</p>
+</li>
+<li><p>-p 源文件的属性不变</p>
+</li>
+<li><p><code>cp 源文件路径 目标文件路径</code></p>
+</li>
+<li><p><code>cp 源文件路径 目标文件路径/</code><strong>新的名字</strong></p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="mv"><a href="#mv" class="headerlink" title="mv"></a>mv</h3><ul>
+<li>剪切,如果与源文件位置一样，则相当于重命名<ul>
+<li>-i 覆盖时提示</li>
+<li>-f 强制覆盖,不询问</li>
+<li>-u: 新文件覆盖旧文件</li>
+</ul>
+</li>
+</ul>
+<h3 id="rmdir"><a href="#rmdir" class="headerlink" title="rmdir"></a>rmdir</h3><ul>
+<li><p>删除空目录</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">删除空文件夹	常用选项：</span><br><span class="line">-p或--parents：删除指定目录后，若该目录的上层目录已变成空目录，则将其一并删除；</span><br><span class="line"><span class="built_in">rmdir</span>  -p  /root/aa/bb/cc/dd/ee</span><br><span class="line">删除文件夹ee，如果删除ee后，<span class="built_in">dd</span>变为空，则删除<span class="built_in">dd</span>，依次类推</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="rm"><a href="#rm" class="headerlink" title="rm"></a>rm</h3><ul>
+<li><p>删除文件和文件夹</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">删除文件或目录	使用格式：<span class="built_in">rm</span>  [选项]  文件或目录</span><br><span class="line"></span><br><span class="line">常用选项：</span><br><span class="line">-f：强行删除文件或目录，不进行提醒</span><br><span class="line">-i：删除文件或目录时提醒用户确认</span><br><span class="line">-r：递归删除整个目录树</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"><span class="built_in">rm</span> -rf /root/ma/ <span class="comment">## 不提醒递归删除整个目录，慎用慎用慎用</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="cat"><a href="#cat" class="headerlink" title="cat"></a>cat</h3><ul>
+<li><p>查看文件,连接文件打印到控制台(不适合大文件,缓冲区有限)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 默认不显示行号</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">cat</span> a.sh</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -n: 设置行号 ：空行算一行</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">cat</span> -n a.sh</span><br><span class="line">     1  <span class="comment">#!/bin/bash</span></span><br><span class="line">     2  a</span><br><span class="line">     3  b</span><br><span class="line">     4</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用nl 空行不算一行</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">nl</span> a.sh</span><br><span class="line">     1  <span class="comment">#!/bin/bash</span></span><br><span class="line">     2  a</span><br><span class="line">     3  b</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用tac(cat倒置):倒置输出</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">tac</span> a.sh</span><br><span class="line"></span><br><span class="line">b</span><br><span class="line">a</span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>通过cat添加文本到文件末尾.<code>cat &lt;&lt; EOF</code></p>
+<ul>
+<li>覆盖 <code>&gt; 文件名</code></li>
+<li>追加 <code>&gt;&gt; 文件名</code></li>
+<li>最后以EOF结尾</li>
+<li>需要注意的是，不论是覆盖还是追加，在涉及到<strong>变量</strong>操作时是需要进行转义的</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 覆盖 格式一 将文件放在后面</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="built_in">cat</span> &lt;&lt; <span class="string">EOF &gt; /root/test.txt</span></span><br><span class="line"><span class="string">Hello!</span></span><br><span class="line"><span class="string">Test for cat and EOF</span>!</span><br><span class="line">EOF</span><br><span class="line"></span><br><span class="line"><span class="comment"># 格式二 将文件放在中间</span></span><br><span class="line"><span class="comment">#!/bin/bash</span></span><br><span class="line"><span class="built_in">cat</span> &gt; /root/test.txt &lt;&lt; <span class="string">EOF</span></span><br><span class="line"><span class="string">Hello!</span></span><br><span class="line"><span class="string">Test for cat and EOF</span>!</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="head"><a href="#head" class="headerlink" title="head"></a>head</h3><ul>
+<li>屏幕显示文件开头若干行<ul>
+<li>-n&lt;数字&gt;：指定显示头部内容的行数；</li>
+<li><code>head -n 5 install.log</code> ## 显示该文件前五行内容</li>
+</ul>
+</li>
+</ul>
+<h3 id="tail"><a href="#tail" class="headerlink" title="tail"></a>tail</h3><ul>
+<li><p>显示<strong>结尾</strong>若干行，查日志</p>
+<ul>
+<li><p>-n: 设置行数(默认10行)</p>
+<p><code>tail -n 2 a.sh</code>: 显示a.sh的最后二行</p>
+</li>
+<li><p>-f: 查看最新追加的内容</p>
+<p><code>tail -f a.sh</code>使用另外终端向a.sh写入后可看到追加内容\</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">例子：</span><br><span class="line"><span class="built_in">tail</span> file        <span class="comment">## 显示文件file的最后10行</span></span><br><span class="line"><span class="built_in">tail</span> +20 file    <span class="comment">## 显示文件file的内容，从第20行至文件末尾</span></span><br><span class="line"><span class="built_in">tail</span> -c 10 file    <span class="comment">## 显示文件file的最后10个字符</span></span><br><span class="line"><span class="built_in">tail</span> -f install.log  <span class="comment">## 显示最新追加的内容</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="more"><a href="#more" class="headerlink" title="more"></a>more</h3><ul>
+<li><p>翻页查看文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">显示文件内容，每次显示一屏	使用方式：</span><br><span class="line">按Space键：显示文本的下一屏内容。</span><br><span class="line">按Enter键：只显示文本的下一行内容。</span><br><span class="line">按h键：显示帮助屏，该屏上有相关的帮助信息。</span><br><span class="line">按b键：显示上一屏内容。</span><br><span class="line">按q键：退出more命令。</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="less"><a href="#less" class="headerlink" title="less"></a>less</h3><ul>
+<li>分屏滚动显示<ul>
+<li>G:跳到结尾</li>
+<li>gg:跳到开始</li>
+<li>按e键：向上滚动一行</li>
+<li>按y键：向下滚动一行</li>
+<li>q:退出</li>
+</ul>
+</li>
+</ul>
+<h3 id="echo"><a href="#echo" class="headerlink" title="echo"></a>echo</h3><ul>
+<li><p>输出指定的字符串和变量</p>
+<ul>
+<li><p>-e: 能识别特殊字符</p>
+</li>
+<li><p>-ne:输出不换行;最后是不换行的</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">输出指定的字符串或者变量	常用选项：</span><br><span class="line">-e：若字符串中出现以下字符，则特别加以处理，而不会将它当成一般文字输出：</span><br><span class="line">\a 发出警告声；</span><br><span class="line">\b 删除前一个字符；</span><br><span class="line">\c 最后不加上换行符号；</span><br><span class="line">\f 换行但光标仍旧停留在原来的位置；</span><br><span class="line">\n 换行且光标移至行首；</span><br><span class="line">\r 光标移至行首，但不换行；</span><br><span class="line">\t 插入tab；</span><br><span class="line">\v 与\f相同；</span><br><span class="line">\ 插入\字符；</span><br><span class="line">\nnn 插入nnn（八进制）所代表的ASCII字符；</span><br><span class="line"></span><br><span class="line">例子：</span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;ma&#x27;</span>        <span class="comment">## 输出ma</span></span><br><span class="line"><span class="built_in">echo</span> -e <span class="string">&#x27;ma\n&#x27;</span>    <span class="comment">## 打印ma之后换行</span></span><br><span class="line"><span class="built_in">echo</span> -ne <span class="string">&#x27;ma&#x27;</span> <span class="string">&#x27;zhonghua&#x27;</span>  <span class="comment">## 打印完不换行</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;ma&#x27;</span> &gt; ma.dat  <span class="comment">## 覆盖</span></span><br><span class="line"><span class="built_in">echo</span> <span class="string">&#x27;ma&#x27;</span> &gt;&gt; ma.dat  <span class="comment">## 追加</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$PWD</span>  <span class="comment">## 输出变量内容</span></span><br><span class="line"></span><br><span class="line">[root@hadoop hadoop]# A=12</span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">echo</span> <span class="variable">$A</span></span><br><span class="line">12</span><br><span class="line"></span><br><span class="line"><span class="comment"># 默认原样输出</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">echo</span> <span class="string">&quot;aa\nbb&quot;</span></span><br><span class="line">aa\nbb</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## -e 能识别特殊字符：换行了</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">echo</span> -e <span class="string">&quot;aa\nbb&quot;</span></span><br><span class="line">aa</span><br><span class="line">bb</span><br><span class="line">[root@hadoop hadoop]#</span><br><span class="line"></span><br><span class="line"><span class="comment">## 没有换行</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">echo</span> -ne <span class="string">&quot;aa\nbb&quot;</span></span><br><span class="line">aa</span><br><span class="line">bb[root@hadoop hadoop]#</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id><a href="#" class="headerlink" title="&gt;"></a><code>&gt;</code></h3><ul>
+<li><p>重定向 ,覆盖添加</p>
+<ul>
+<li><code>&gt;&gt;</code>追加</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop hadoop]# <span class="built_in">echo</span> <span class="string">&#x27;aaa&#x27;</span> &gt; a.txt</span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">cat</span> a.txt</span><br><span class="line">aaa</span><br><span class="line"></span><br><span class="line"><span class="comment">## 在文本后追加</span></span><br><span class="line">[root@hadoop hadoop]# cal &gt;&gt; a.txt</span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">cat</span> a.txt</span><br><span class="line">aaa</span><br><span class="line">     August 2020</span><br><span class="line">Su Mo Tu We Th Fr Sa</span><br><span class="line">                   1</span><br><span class="line"> 2  3  4  5  6  7  8</span><br><span class="line"> 9 10 11 12 13 14 15</span><br><span class="line">16 17 18 19 20 21 22</span><br><span class="line">23 24 25 26 27 28 29</span><br><span class="line">30 31</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="alias"><a href="#alias" class="headerlink" title="alias"></a>alias</h3><ul>
+<li><p>别名</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="built_in">alias</span>:查看别名</span><br><span class="line"></span><br><span class="line">&gt; <span class="built_in">alias</span> la =<span class="string">&#x27;ll -a&#x27;</span>  : 设置别名</span><br><span class="line"></span><br><span class="line">&gt; <span class="built_in">unalias</span> <span class="built_in">ls</span> :取消别名</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ln"><a href="#ln" class="headerlink" title="ln"></a>ln</h3><ul>
+<li><p>设置连接</p>
+<table>
+<thead>
+<tr>
+<th>-s</th>
+<th>创建软链接(如果不带 -s 参数，默认创建硬链接)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>-f</td>
+<td>强制创建文件或目录的链接</td>
+</tr>
+<tr>
+<td>-i</td>
+<td>覆盖前先询问</td>
+</tr>
+<tr>
+<td>-v</td>
+<td>显示创建链接的过程</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>在 Linux 系统中 ， 系统中有一个名为 superblock 的 “硬盘地图”。每个文件的权限与属性记录在 inode(“索引节点：index node “) 中，而且每个文件占用一个独立的 inode 表格，该表格的默认大小为 128 字节。</p>
+</li>
+<li><p>inode 号才是文件的唯一标识而非文件名。文件名只是为了方便人们的记忆和适用。</p>
+</li>
+<li><p>“ls -li” 结果中的第一列就是文件的 inode 号。系统是通过 inode 号寻找正确的文件数据块。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop hadoop]# <span class="built_in">ls</span> -li</span><br><span class="line">total 16</span><br><span class="line">1707903 -rw-r--r-- 1 root   root      0 Aug 13 09:59 aa</span><br><span class="line">1707725 drwxrwxr-x 4 hadoop hadoop 4096 Jul 15 20:31 apps</span><br><span class="line">1707905 -rw-r--r-- 1 root   root     17 Aug 13 10:07 a.sh</span><br><span class="line">1707904 -rw-r--r-- 1 root   root    157 Aug 13 10:20 a.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件的实际内容则保存在 block 中(大小可以是 1KB、2KB 或 4KB)，一个 inode 的默认大小为 128B (在 Ext3 文件系统中),记录一个 block 则消耗 4B 。当文件的 inode 被写满后，Linux 系统会自动分配出一个 Block 块，专门用于像 innode 那样记录其他 block 块的信息，这样能把各个 block 块的内容串到一起，就能够让用户读到完整的文件内容了。</p>
+</li>
+<li><p>硬链接: <code>ln fileName newFileName</code></p>
+</li>
+<li><p>fileName 和 newFileName 都指向同一个文件，因此，无论你编辑哪一个文件，另一个文件也会做相应的改变。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/9da1ef6b/2756713ebe4afcab4d883e8d8793d324.jpg"></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop hadoop]# <span class="built_in">ls</span> -li</span><br><span class="line">total 16</span><br><span class="line">1707903 -rw-r--r-- 1 root   root      0 Aug 13 09:59 aa</span><br><span class="line"></span><br><span class="line"><span class="comment">## 添加硬链接 硬链接是一个指针或者说是文件的引用。只占一点点空间。</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">ln</span> aa bb</span><br><span class="line"></span><br><span class="line"><span class="comment">## 可以看到该文件的 innode 连接数就会增加 1 ；</span></span><br><span class="line"><span class="comment">## 而且只有当该文件的 inode 连接数为 0 时，才算彻底被将它删除</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">ls</span> -l</span><br><span class="line">total 16</span><br><span class="line">-rw-r--r-- 2 root   root      0 Aug 13 09:59 aa</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>软链接:快捷方式<br>-s : 设置软连接</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@hadoop hadoop]# <span class="built_in">ln</span> -s a.txt b.txt</span><br><span class="line"><span class="comment"># innode没有添加</span></span><br><span class="line">[root@hadoop hadoop]# ll</span><br><span class="line">total 16</span><br><span class="line">-rw-r--r-- 1 root   root    157 Aug 13 10:20 a.txt</span><br><span class="line">lrwxrwxrwx 1 root   root      5 Aug 13 10:32 b.txt -&gt; a.txt</span><br><span class="line"><span class="comment"># 删除软链接，但不删除实际数据</span></span><br><span class="line"><span class="comment"># 删除原始文件后 ，这条记录变红</span></span><br><span class="line"><span class="comment"># 测试vim编辑快捷方式后，删除的文件会被重新创建</span></span><br><span class="line">[root@hadoop hadoop]# <span class="built_in">rm</span> a.txt</span><br><span class="line">1707906 lrwxrwxrwx 1 root   root      5 Aug 13 10:33 b.txt -&gt; a.txt</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><ul>
+<li><p>su 切换用户</p>
+</li>
+<li><p>Ctrl+ C 终止程序</p>
+</li>
+<li><p>| :管道符,表示把前面命令内容的输出当做后面命令的输入</p>
+<ul>
+<li><code>ps -aux | grep ssh</code></li>
+</ul>
+</li>
+<li><p>host :域名解析</p>
+<ul>
+<li><code>host www.bai.du.com</code></li>
+</ul>
+</li>
+<li><p>netstat :查看网络接口</p>
+<ul>
+<li><code>netstat -nltp</code></li>
+<li><code>kill -9 pid</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="用户管理"><a href="#用户管理" class="headerlink" title="用户管理"></a>用户管理</h2><ul>
+<li><p>用户:能够获取系统权限集合</p>
+</li>
+<li><p>组:权限的容器</p>
+</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="built_in">ls</span> -l</span><br><span class="line">-rw-r--r--. 1 root root    13 Sep 14 09:43 a.txt</span><br><span class="line">drwxr-xr-x. 2 root root  4096 Sep 14 10:09 Desktop</span><br><span class="line"></span><br><span class="line">-rw-r--r-- :权限  </span><br><span class="line">1: 链接数(文件链接数1 目录:子目录个数)</span><br><span class="line">root :所属用户</span><br><span class="line">root: 所属用户组</span><br><span class="line">13: 文件大小</span><br><span class="line">Sep 14 10:09:修改日期</span><br><span class="line">a.txt 文件名称</span><br></pre></td></tr></table></figure>
+
+<h3 id="用户类型"><a href="#用户类型" class="headerlink" title="用户类型"></a>用户类型</h3><ul>
+<li><p>管理员root</p>
+<ul>
+<li>具有使用所有权限的用户,uid为0</li>
+</ul>
+</li>
+<li><p>系统用户</p>
+<ul>
+<li>保障系统运行的用户,一般不提供密码登录系统uid(1-499之间)</li>
+</ul>
+</li>
+<li><p>普通用户</p>
+<ul>
+<li>一般用户,使用系统的权限受限,uid(500~60000之间)</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看用户信息"><a href="#查看用户信息" class="headerlink" title="查看用户信息"></a>查看用户信息</h3><ul>
+<li><p><code>cat /etc/passwd</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># root: 用户名称</span></span><br><span class="line"><span class="comment"># x: 密码的占位符	密码信息:/etc/gshadow</span></span><br><span class="line"><span class="comment"># 0: 用户id</span></span><br><span class="line"><span class="comment"># 0: 用户组id</span></span><br><span class="line"><span class="comment"># root: 备注信息</span></span><br><span class="line"><span class="comment"># /root 家目录</span></span><br><span class="line"><span class="comment"># /bin/bash: shell 解释器类型</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建从500开始:</span></span><br><span class="line"><span class="comment"># hdp01:x:500:500:hdp01:/home/hdp01:/bin/bash</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="添加用户"><a href="#添加用户" class="headerlink" title="添加用户"></a>添加用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">格式：格式：useradd [options] LOGIN</span><br><span class="line">    -u UID UserName：创建用户时指定用户UID；不能和现有的UID冲突</span><br><span class="line">    -g GID/GroupName UserName：创建用户时指定用户默认主组；前提必需是指定的组已存在，否则无法指定。</span><br><span class="line">    -c “注释” UserName：创建用户时指定用户信息注释</span><br><span class="line">    -d /PATH//HomeDirName UserName: 创建用户时指定目录为其家目录</span><br><span class="line">    -M UserName：创建用户时不创建家目录；文件(/etc/passwd)中只是标记家目录属性但实际并不会创建家目录文件</span><br><span class="line">    -s SHELL UserName：创建用户时指定用户的默认登录Shell类型；Shell类型可用命令(<span class="built_in">cat</span> /etc/shells)查看(如Shell类型为/sbin/nologin为用户不可登录)</span><br><span class="line">    -G GroupName UserName：创建用户时指定用户附加组；多组时组与组之间用逗号分隔，前提必需是指定的组已存在，否则无法指定。</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不加任何选项创建用户时根据系统版本默认用户起始UID为第一个或已创建用户UID之后为准以此递增</span></span><br><span class="line">[root@localhost ~]# useradd user1</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -1 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># -u UID UserName：创建用户时指定用户UID；不能和现有的UID冲突</span></span><br><span class="line">[root@localhost ~]# useradd -u 1002 user2</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># -g GID/GroupName UserName：创建用户时指定用户默认主组；</span></span><br><span class="line"><span class="comment">#前提必需是指定的组已存在，否则无法指定。</span></span><br><span class="line">[root@localhost ~]# useradd -g 1000 user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -3 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c “注释” UserName：创建用户时指定用户信息注释</span></span><br><span class="line">[root@localhost ~]# useradd -c <span class="string">&#x27;Test User&#x27;</span> user4</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -4 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># -d /PATH//HomeDirName UserName: 创建用户时指定目录为其家目录</span></span><br><span class="line">[root@localhost ~]# useradd -d /home/testhome user5</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -5 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line">user5:x:1005:1005::/home/testhome:/bin/bash</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user5 user5 62 Jul 17 16:28 testhome</span><br><span class="line">drwx------ 2 user1 user1 62 Jul 17 15:54 user1</span><br><span class="line">drwx------ 2 user2 user2 62 Jul 17 15:54 user2</span><br><span class="line">drwx------ 2 user3 user1 62 Jul 17 16:01 user3</span><br><span class="line">drwx------ 2 user4 user4 62 Jul 17 16:04 user4</span><br><span class="line"></span><br><span class="line"><span class="comment"># -M UserName：创建用户时不创建家目录；文件(/etc/passwd)中只是标记家目录属性但实际并不会创建家目录文件</span></span><br><span class="line">[root@localhost ~]# useradd -M user6</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -6 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line">user5:x:1005:1005::/home/testhome:/bin/bash</span><br><span class="line">user6:x:1006:1006::/home/user6:/bin/bash</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user5 user5 62 Jul 17 16:28 testhome</span><br><span class="line">drwx------ 2 user1 user1 62 Jul 17 15:54 user1</span><br><span class="line">drwx------ 2 user2 user2 62 Jul 17 15:54 user2</span><br><span class="line">drwx------ 2 user3 user1 62 Jul 17 16:01 user3</span><br><span class="line">drwx------ 2 user4 user4 62 Jul 17 16:04 user4</span><br><span class="line"></span><br><span class="line"><span class="comment"># -s SHELL UserName：创建用户时指定用户的默认登录Shell类型；Shell类型可用命令(cat /etc/shells)查看(如Shell类型为/sbin/nologin为用户不可登录)</span></span><br><span class="line">[root@localhost ~]# useradd -s /sbin/nologin user7</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -7 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line">user5:x:1005:1005::/home/testhome:/bin/bash</span><br><span class="line">user6:x:1006:1006::/home/user6:/bin/bash</span><br><span class="line">user7:x:1007:1007::/home/user7:/sbin/nologin</span><br><span class="line"></span><br><span class="line"><span class="comment"># -G GroupName UserName：创建用户时指定用户附加组；多组时组与组之间用逗号分隔，</span></span><br><span class="line"><span class="comment"># 前提必需是指定的组已存在，否则无法指定。</span></span><br><span class="line">[root@localhost ~]# useradd -G root user8</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -8 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line">user5:x:1005:1005::/home/testhome:/bin/bash</span><br><span class="line">user6:x:1006:1006::/home/user6:/bin/bash</span><br><span class="line">user7:x:1007:1007::/home/user7:/sbin/nologin</span><br><span class="line">user8:x:1008:1008::/home/user8:/bin/bash</span><br><span class="line">[root@localhost ~]# <span class="built_in">head</span> -1 /etc/group</span><br><span class="line">root:x:0:user8</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多参数组合实例：</span></span><br><span class="line">[root@localhost ~]# useradd -u 10010 -g 1005  -c <span class="string">&#x27;Test User2&#x27;</span> -d /home/testhome2 -s /sbin/nologin -G root user9</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -9 /etc/passwd</span><br><span class="line">user1:x:1000:1000::/home/user1:/bin/bash</span><br><span class="line">user2:x:1002:1002::/home/user2:/bin/bash</span><br><span class="line">user3:x:1003:1000::/home/user3:/bin/bash</span><br><span class="line">user4:x:1004:1004:Test User:/home/user4:/bin/bash</span><br><span class="line">user5:x:1005:1005::/home/testhome:/bin/bash</span><br><span class="line">user6:x:1006:1006::/home/user6:/bin/bash</span><br><span class="line">user7:x:1007:1007::/home/user7:/sbin/nologin</span><br><span class="line">user8:x:1008:1008::/home/user8:/bin/bash</span><br><span class="line">user9:x:10010:1005:Test User2:/home/testhome2:/sbin/nologin</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user5 user5 62 Jul 17 16:28 testhome</span><br><span class="line">drwx------ 2 user9 user5 62 Jul 17 16:44 testhome2</span><br><span class="line">drwx------ 2 user1 user1 62 Jul 17 15:54 user1</span><br><span class="line">drwx------ 2 user2 user2 62 Jul 17 15:54 user2</span><br><span class="line">drwx------ 2 user3 user1 62 Jul 17 16:01 user3</span><br><span class="line">drwx------ 2 user4 user4 62 Jul 17 16:04 user4</span><br><span class="line">drwx------ 2 user7 user7 62 Jul 17 16:33 user7</span><br><span class="line">drwx------ 2 user8 user8 62 Jul 17 16:36 user8</span><br><span class="line">[root@localhost ~]# <span class="built_in">head</span> -1 /etc/group</span><br><span class="line">root:x:0:user8,user9</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改用户"><a href="#修改用户" class="headerlink" title="修改用户"></a>修改用户</h3><ul>
+<li><p><code>usermod</code> [选项] 用户名</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line">-g：      修改用户所属群组。</span><br><span class="line">-G：      修改用户所属的附加群组；在改变用户<span class="built_in">sudo</span>权限时就可以使用这个选项。</span><br><span class="line">-a:   	  仅和-G一块使用，将用户添加到附属组群。</span><br><span class="line">-c	      修改信息</span><br><span class="line"></span><br><span class="line"><span class="comment"># -u UID UserName：修改用户UID；不能和现有的UID冲突</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -u user3</span><br><span class="line">1011</span><br><span class="line">[root@localhost ~]# usermod -u 1012 user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -u user3</span><br><span class="line">1012</span><br><span class="line"></span><br><span class="line"><span class="comment"># -g GID/GroupName UserName：修改用户默认主组；前提必需是指定的组已存在，否则无法指定</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -g user3</span><br><span class="line">1011</span><br><span class="line">[root@localhost ~]# usermod -g 1012 user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -g user3</span><br><span class="line">1012</span><br><span class="line"></span><br><span class="line"><span class="comment"># -c “注释” UserName：修改用户信息注释（备注）</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -1 /etc/passwd</span><br><span class="line">user3:x:1012:1012:testuser:/home/user3:/bin/bash</span><br><span class="line">[root@localhost ~]# usermod -c <span class="string">&quot;testuser2&quot;</span> user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -1 /etc/passwd</span><br><span class="line">user3:x:1012:1012:testuser2:/home/user3:/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="comment"># -d /HomeDirName UserName: 修改用户新家目录；</span></span><br><span class="line"><span class="comment"># 默认新家目录不会被创建，老家目录不会迁移至新家目录。</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2:/bin/bash</span><br><span class="line">[root@localhost ~]# usermod -d /home/user2home1 user2</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2home1:/bin/bash</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user2 user2 83 Jul 17 20:59 user2</span><br><span class="line"></span><br><span class="line"><span class="comment"># -md /HomeDirName UserName: 修改用户新家目录</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2:/bin/bash</span><br><span class="line">[root@localhost ~]# usermod -md /home/user2home2 user2</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user2 user2 83 Jul 17 20:59 user2home2</span><br><span class="line"></span><br><span class="line"><span class="comment"># -s SHELL UserName：修改用户的默认登录Shell类型；</span></span><br><span class="line"><span class="comment"># Shell类型可用命令(cat /etc/shells)查看</span></span><br><span class="line"><span class="comment"># (如Shell类型为/sbin/nologin为用户不可登录)</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2home2:/bin/bash</span><br><span class="line">[root@localhost ~]# usermod -s /sbin/nologin user2</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2home2:/sbin/nologin</span><br><span class="line"></span><br><span class="line"><span class="comment"># -G GroupName UserName：修改(覆盖)用户附加组；</span></span><br><span class="line"><span class="comment"># 多组时组与组之间用逗号分隔，前提必需是指定的组已存在，否则无法指定。</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> user3</span><br><span class="line">uid=1012(user3) gid=1012(user4) <span class="built_in">groups</span>=1012(user4),1013(testgp1)</span><br><span class="line">[root@localhost ~]# usermod -G testgp2 user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> user3</span><br><span class="line">uid=1012(user3) gid=1012(user4) <span class="built_in">groups</span>=1012(user4),1014(testgp2)</span><br><span class="line"></span><br><span class="line"><span class="comment">#aG GroupName UserName：修改(追加)用户附加组；</span></span><br><span class="line"><span class="comment"># 多组时组与组之间用逗号分隔，前提必需是指定的组已存在，否则无法指定。</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> user3</span><br><span class="line">uid=1012(user3) gid=1012(user4) <span class="built_in">groups</span>=1012(user4),1014(testgp2)</span><br><span class="line">[root@localhost ~]# usermod -aG testgp1 user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> user3</span><br><span class="line">uid=1012(user3) gid=1012(user4) <span class="built_in">groups</span>=1012(user4),1013(testgp1),1014(testgp2)</span><br><span class="line"></span><br><span class="line"><span class="comment">#-l NewUserName OldUserName：修改新登录用户名；</span></span><br><span class="line"><span class="comment"># 默认用户家目录属性不变更沿用老用户名的家目录</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user2:x:1001:1002::/home/user2home2:/sbin/nologin</span><br><span class="line">[root@localhost ~]# usermod -l user3 user2</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/passwd</span><br><span class="line">chrony:x:998:996::/var/lib/chrony:/sbin/nologin</span><br><span class="line">user3:x:1001:1002::/home/user2home2:/sbin/nologin</span><br><span class="line"></span><br><span class="line"><span class="comment"># -L UserName：锁定指定用户；</span></span><br><span class="line"><span class="comment"># 实际就是在文件(/etc/shadow)密码位首位添加个叹号(!)</span></span><br><span class="line">[root@localhost ~]# usermod -L user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/shadow</span><br><span class="line">chrony:!!:17911::::::</span><br><span class="line">user3:!$6$i730d3Eq<span class="variable">$6EQFStDoK2wj3sfbJJ3MFcA6eO9YAxWbkP81</span>.hOE4lnRLejdm5rsPNiTyeqRZy36gsTFPXB/cOYeLBTKVL9JD0:18094:0:99999:7:::</span><br><span class="line"></span><br><span class="line"><span class="comment"># -U UserName：解锁指定用户；</span></span><br><span class="line"><span class="comment"># 实际就是在文件(/etc/shadow)密码位首位删除个叹号(!)</span></span><br><span class="line">[root@localhost ~]# usermod -U user3</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/shadow</span><br><span class="line">chrony:!!:17911::::::</span><br><span class="line">user3:$6$i730d3Eq<span class="variable">$6EQFStDoK2wj3sfbJJ3MFcA6eO9YAxWbkP81</span>.hOE4lnRLejdm5rsPNiTyeqRZy36gsTFPXB/cOYeLBTKVL9JD0:18094:0:99999:7:::</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="删除用户"><a href="#删除用户" class="headerlink" title="删除用户"></a>删除用户</h3><p>格式：<code>userdel [options] LOGIN</code></p>
+<ul>
+<li>-r：删除用户时同时删除用户家目录和邮件目录</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不加任何选项删除用户时只删除用户本身，</span></span><br><span class="line"><span class="comment"># 其家目录(/home/UserName)和邮箱目录(/var/spool/mail/UserName)不被删除。</span></span><br><span class="line">[root@localhost ~]# userdel user1</span><br><span class="line">[root@localhost ~]#</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 1000 1000 83 Jul 16 01:02 user1</span><br><span class="line">[root@localhost ~]# ll /var/spool/mail/</span><br><span class="line">total 0</span><br><span class="line">-rw-rw---- 1 1000 mail 0 Jul 14 18:28 user1</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-r：删除用户时同时删除用户家目录和邮件目录</span><br><span class="line">[root@localhost ~]# userdel -r user1</span><br><span class="line">[root@localhost ~]# ll /home/</span><br><span class="line">total 0</span><br><span class="line">drwx------ 2 user2 user2 62 Jul 17 20:10 user2</span><br><span class="line">drwx------ 2 user3 user3 62 Jul 17 20:10 user3</span><br><span class="line">[root@localhost ~]# ll /var/spool/mail/</span><br><span class="line">total 0</span><br><span class="line">-rw-rw---- 1 user2 mail 0 Jul 17 20:10 user2</span><br><span class="line">-rw-rw---- 1 user3 mail 0 Jul 17 20:10 user3</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改密码"><a href="#修改密码" class="headerlink" title="修改密码"></a>修改密码</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">格式：passwd [options] [username]</span><br><span class="line">    -S UserName：查询用户密码的密码状态；仅root用户可</span><br><span class="line">    -l UserName：锁定指定用户(其实就是在用户密码前添加两叹号!!)；仅root用户可用</span><br><span class="line">    -u UserNmae：解锁指定用户(其实就是删除用户密码前添加的两叹号!!)</span><br><span class="line">    -n N UserName：N为数字；指定密码最小使用天数(密码使用最小多少天才可更改密码)；如为0则表示无限制(禁用此功能)</span><br><span class="line">    -x N UserName：N为数字；指定密码最大使用天数(密码使用最大多少天需要更改密码)；默认为99999永不过期</span><br><span class="line">    -w N UserName：N为数字；指定密码过期前警告天数(密码过期前多少天警告用户更改密码)；默认过期前7天警告</span><br><span class="line">    -i N UserName：N为数字；指定密码过期天数(密码过期后多少天用户被锁定)；在此时间段内用户依然可以登录系统并更改密码</span><br><span class="line">    –stdin：非交互式修改密码(快速配置密码)    <span class="comment">#适合于CentOS系列</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#不指定用户名为设置(修改)当前登录用户密码</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">whoami</span></span><br><span class="line">root</span><br><span class="line">[root@localhost ~]# passwd</span><br><span class="line">Changing password <span class="keyword">for</span> user root.</span><br><span class="line">New password:</span><br><span class="line">BAD PASSWORD: The password fails the dictionary check - it is too simplistic/systematic</span><br><span class="line">Retype new password:</span><br><span class="line">passwd: all authentication tokens updated successfully.</span><br><span class="line"></span><br><span class="line"><span class="comment"># 指定设置(修改)用户密码</span></span><br><span class="line">[root@localhost ~]# passwd user1</span><br><span class="line">Changing password <span class="keyword">for</span> user user1.</span><br><span class="line">New password:</span><br><span class="line">Retype new password:</span><br><span class="line">passwd: all authentication tokens updated successfully.</span><br><span class="line"></span><br><span class="line"><span class="comment">#-S UserName：查询用户密码的密码状态；仅root用户可用</span></span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 0 99999 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line">user1 PS 2017-03-04 0 99999 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line">格式：共八列，列与列之间用空格字符分隔</span><br><span class="line">    第一列：用户名</span><br><span class="line">    第二列：账户状态；PS为正常、LK为锁定</span><br><span class="line">    第三列：系统当前时间</span><br><span class="line">    第四列：密码最小使用天数(密码使用最小多少天才可更改密码)；默认为0则表示无限制(禁用此功能)</span><br><span class="line">    第五列：密码最大使用天数(密码使用最大多少天需要更改密码)；默认为99999永不过期</span><br><span class="line">    第六列：密码过期前警告天数(密码过期前多少天警告用户更改密码)；默认过期前7天警告</span><br><span class="line">    第七列：密码过期天数(密码过期后多少天用户被锁定)；在此时间段内用户依然可以登录系统并更改密码</span><br><span class="line">    第八列：密码配置状态及密码加密算法；Password locked表示密码已被锁定(账户密码未设置或账户已被锁定)，Password <span class="built_in">set</span>表示密码已设置，SHA512 crypt表示使用SHA512算法</span><br><span class="line"></span><br><span class="line"><span class="comment">#-l UserName：锁定指定用户(其实就是在用户密码前添加两叹号!!)；仅root用户可</span></span><br><span class="line">[root@localhost ~]# passwd -l user1</span><br><span class="line">Locking password <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 LK 2017-03-04 0 99999 7 -1 (Password locked.)</span><br><span class="line">[root@localhost ~]# grep user1 /etc/shadow</span><br><span class="line">user1:!!$6$jxOh9OqV<span class="variable">$57OBYLRy6</span>/hfPtx1USHScB1L4ydHrsWmyt3elMcRfgb0s7FuxQgvYCIFPDecbjj6BmGb.7CkfB2cpDjtlrkdv/:18094:0:99999:7:::</span><br><span class="line"></span><br><span class="line"><span class="comment">#-u UserNmae：解锁指定用户(其实就是删除用户密码前添加的两叹号!!)</span></span><br><span class="line">[root@localhost ~]# passwd -u user1</span><br><span class="line">Unlocking password <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 0 99999 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line">[root@localhost ~]# grep user1 /etc/shadow</span><br><span class="line">user1:$6$jxOh9OqV<span class="variable">$57OBYLRy6</span>/hfPtx1USHScB1L4ydHrsWmyt3elMcRfgb0s7FuxQgvYCIFPDecbjj6BmGb.7CkfB2cpDjtlrkdv/:18094:0:99999:7:::</span><br><span class="line"></span><br><span class="line"><span class="comment">#-n N UserName：N为数字；指定密码最小使用天数(密码使用最小多少天才可更改密码)；如为0则表示无限制(禁用此功能)</span></span><br><span class="line">[root@localhost ~]# passwd -n 10 user1</span><br><span class="line">Adjusting aging data <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 10 99999 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line"></span><br><span class="line"><span class="comment">#-x N UserName：N为数字；指定密码最大使用天数(密码使用最大多少天需要更改密码)；默认为99999永不过期</span></span><br><span class="line">[root@localhost ~]# passwd -x 1000 user1</span><br><span class="line">Adjusting aging data <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 10 1000 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line"></span><br><span class="line"><span class="comment">#-w N UserName：N为数字；指定密码过期前警告天数(密码过期前多少天警告用户更改密码)；默认过期前7天警告</span></span><br><span class="line">[root@localhost ~]# passwd -w 15 user1</span><br><span class="line">Adjusting aging data <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 10 1000 15 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line"></span><br><span class="line"><span class="comment"># -i N UserName：N为数字；指定密码过期天数(密码过期后多少天用户被锁定)；在此时间段内用户依然可以登录系统并更改密码</span></span><br><span class="line">[root@localhost ~]# passwd -i 30 user1</span><br><span class="line">Adjusting aging data <span class="keyword">for</span> user user1.</span><br><span class="line">passwd: Success</span><br><span class="line">[root@localhost ~]# passwd -S user1</span><br><span class="line">user1 PS 2017-03-04 10 1000 15 30 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br><span class="line"></span><br><span class="line"><span class="comment"># –stdin：非交互式修改密码(快速配置密码)    #适合于CentOS系列</span></span><br><span class="line">[root@localhost ~]# passwd -S user2</span><br><span class="line">user2 LK 2017-03-04 0 99999 7 -1 (Password locked.)</span><br><span class="line">[root@localhost ~]# <span class="built_in">echo</span> <span class="string">&quot;123456&quot;</span>|passwd --stdin user2</span><br><span class="line">Changing password <span class="keyword">for</span> user user2.</span><br><span class="line">passwd: all authentication tokens updated successfully.</span><br><span class="line">[root@localhost ~]# passwd -S user2</span><br><span class="line">user2 PS 2017-03-04 0 99999 7 -1 (Password <span class="built_in">set</span>, SHA512 crypt.)</span><br></pre></td></tr></table></figure>
+
+<h2 id="用户组管理"><a href="#用户组管理" class="headerlink" title="用户组管理"></a>用户组管理</h2><ul>
+<li><p>系统组</p>
+<ul>
+<li>一般加入一些系统用户</li>
+</ul>
+</li>
+<li><p>普通用户组</p>
+<ul>
+<li>可以加入多个用户</li>
+</ul>
+</li>
+<li><p>私有组&#x2F;基本组</p>
+<ul>
+<li>创建用户的时候,没有指明所属的组,就为该用户设一个与用户名同名的私有组,该私有组添加了用户会变成普通组</li>
+</ul>
+</li>
+</ul>
+<h3 id="查看用户组"><a href="#查看用户组" class="headerlink" title="查看用户组"></a>查看用户组</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">格式：<span class="built_in">id</span> [OPTION]… [USER]‘</span><br><span class="line">-u：查看用户UID</span><br><span class="line">-g：查看用户GID</span><br><span class="line">-G：查看用户所有组(主组、附加组)的GID</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不加任何选项和指定用户为查看当前登录用户的ID信息</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">whoami</span></span><br><span class="line">root</span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span></span><br><span class="line">uid=0(root) gid=0(root) <span class="built_in">groups</span>=0(root),1003(user3)</span><br><span class="line">格式：共三列，列与列之间用空格字符分隔。</span><br><span class="line">  第一列：用户UID(用户名)</span><br><span class="line">  第二列：用户主组GID(主组名)</span><br><span class="line">  第三列：用户所有组集合</span><br><span class="line">    用户主组GID(主组名)  <span class="comment">#主组只有一个</span></span><br><span class="line">    用户附加组GID(附加组名)  <span class="comment">#附加组可以有多个</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># -u：查看用户GID</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -u user2</span><br><span class="line">1001</span><br><span class="line"></span><br><span class="line"><span class="comment"># -g：查看用户主组GID</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -g user2</span><br><span class="line">1002</span><br><span class="line"></span><br><span class="line"><span class="comment"># -G：查看用户所有组(主组、附加组)的GID</span></span><br><span class="line">[root@localhost ~]# <span class="built_in">id</span> -G user2</span><br><span class="line">1002 1003</span><br></pre></td></tr></table></figure>
+
+<h3 id="修改用户组"><a href="#修改用户组" class="headerlink" title="修改用户组"></a>修改用户组</h3><p>格式：<code>groupadd [options] group</code></p>
+<p><code>-g GID GroupName</code>：创建用户组时指定用户组GID；不能和现有的GID冲突</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]# groupadd user6</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -4 /etc/group</span><br><span class="line">user2:x:1002:</span><br><span class="line">user3:x:1003:</span><br><span class="line">user5:x:1005:</span><br><span class="line">user6:x:1006:</span><br><span class="line"></span><br><span class="line">[root@localhost ~]# groupadd -g 1008 user8</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -5 /etc/group</span><br><span class="line">user2:x:1002:</span><br><span class="line">user3:x:1003:</span><br><span class="line">user5:x:1005:</span><br><span class="line">user6:x:1006:</span><br><span class="line">user8:x:1008:</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除用户组"><a href="#删除用户组" class="headerlink" title="删除用户组"></a>删除用户组</h3><p>格式：<code>groupdel [options] GROUP</code><br>说明：附加组可以直接删除；主组必须先把所属用户移除才可删除</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 附加组可以直接删除；主组必须先把所属用户移除才可删除</span></span><br><span class="line">[root@localhost ~]#<span class="built_in">tail</span> -2 /etc/group</span><br><span class="line">user6:x:1006:</span><br><span class="line">user8:x:1008:</span><br><span class="line">[root@localhost ~]# groupdel user8</span><br><span class="line">[root@localhost ~]# <span class="built_in">tail</span> -2 /etc/group</span><br><span class="line">user5:x:1005:</span><br><span class="line">user6:x:1006:</span><br><span class="line">[root@localhost ~]# groupdel user5</span><br><span class="line">groupdel: cannot remove the primary group of user <span class="string">&#x27;user5&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="切换用户su"><a href="#切换用户su" class="headerlink" title="切换用户su"></a>切换用户su</h2><p><code>su [options…] [-] [user [args…]]</code></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不加任何选项为非登录式切换，即不会读取目标用户的配置文件(环境变量)；</span></span><br><span class="line"><span class="comment"># 生产环境此模式会有位置的问题，故此不推荐此方式。</span></span><br><span class="line">root@localhost ~]# su user3</span><br><span class="line">[user3@localhost root]</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># – UserName：切换用户身份(环境变量同时切换)；不加用户名默认切换至root用户</span></span><br><span class="line">[root@localhost ~]# su - user3</span><br><span class="line">Last login: Wed Jul 17 21:15:53 CST 2017 on pts/0</span><br><span class="line">[user3@localhost ~]$ <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[user3@localhost ~]$ su -</span><br><span class="line">Password:</span><br><span class="line">Last login: Wed Jul 17 21:19:23 CST 2017 on pts/0</span><br><span class="line">[root@localhost ~]# <span class="built_in">whoami</span></span><br><span class="line">root</span><br></pre></td></tr></table></figure>
+
+<h2 id="文件权限"><a href="#文件权限" class="headerlink" title="文件权限"></a>文件权限</h2><ul>
+<li><p>d rwx r-x r-x （也可以用二进制表示 111 101 101 –&gt; 755）</p>
+<ul>
+<li><p>数字 4 、2 和 1表示读、写、执行权限</p>
+</li>
+<li><p>d：标识节点类型（d：文件夹   -：文件  l：链接）</p>
+</li>
+<li><p>r：可读   w：可写    x：可执行</p>
+</li>
+</ul>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>文件</strong></th>
+<th><strong>文件夹</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>r</strong></td>
+<td><strong>可读取内容</strong></td>
+<td><strong>可以ls</strong></td>
+</tr>
+<tr>
+<td><strong>w</strong></td>
+<td><strong>可修改文件的内容</strong></td>
+<td><strong>可以在其中创建或者删除子节点</strong></td>
+</tr>
+<tr>
+<td><strong>x</strong></td>
+<td><strong>能否运行这个文件</strong></td>
+<td><strong>能否cd进入这个目录</strong></td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>u第一组rwx：表示这个文件的拥有者对它的权限：可读可写可执行</p>
+</li>
+<li><p>g第二组r-x： 表示这个文件的所属组用户对它的权限：可读，不可写，可执行</p>
+</li>
+<li><p>o第三组r-x： 表示这个文件的其他用户（相对于上面两类用户）对它的权限：可读，不可写，可执行</p>
+</li>
+</ul>
+<h3 id="文件夹的执行权限"><a href="#文件夹的执行权限" class="headerlink" title="文件夹的执行权限"></a>文件夹的执行权限</h3><ol>
+<li>如果对文件夹有rw的权限:<strong>ls的时候,仅仅能知道目录下有文件,看不到详细信息</strong></li>
+<li>没有x权限:<strong>不能进入文件夹</strong></li>
+<li>有rwx权限的文件夹可以删除目录下的所有文件(没有对文件的权限也可以)</li>
+</ol>
+<h3 id="修改文件的权限"><a href="#修改文件的权限" class="headerlink" title="修改文件的权限"></a>修改文件的权限</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> g-rw haha.dat		<span class="comment">## 表示将haha.dat对所属组的rw权限取消</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chmod</span> o-rw haha.dat		<span class="comment">## 表示将haha.dat对其他人的rw权限取消</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chmod</span> u+x haha.dat		<span class="comment">## 表示将haha.dat对所属用户的权限增加x</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chmod</span> a-x haha.dat      <span class="comment">## 表示将haha.dat对所用户取消x权限</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>命令</th>
+<th>组类型</th>
+<th>操作符</th>
+<th>权限</th>
+<th>组对应的用户</th>
+</tr>
+</thead>
+<tbody><tr>
+<td></td>
+<td>u</td>
+<td>+(加入)</td>
+<td>r&#x2F;w&#x2F;x</td>
+<td>文件的拥有者</td>
+</tr>
+<tr>
+<td>chmod</td>
+<td>g</td>
+<td>-(除去)</td>
+<td>r&#x2F;w&#x2F;x</td>
+<td>所属组用户</td>
+</tr>
+<tr>
+<td></td>
+<td>o</td>
+<td>&#x3D;(设定)</td>
+<td>r&#x2F;w&#x2F;x</td>
+<td>其他用户</td>
+</tr>
+<tr>
+<td></td>
+<td>a</td>
+<td></td>
+<td></td>
+<td>所用户</td>
+</tr>
+</tbody></table>
+<h3 id="修改文件所有权"><a href="#修改文件所有权" class="headerlink" title="修改文件所有权"></a>修改文件所有权</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chown</span> angela  mydata		<span class="comment">## 改变所属用户</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chown</span> :angela  mydata			<span class="comment">## 改变所属组</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">chown</span> angela:angela mydata/	<span class="comment">## 同时修改所属用户和所属组</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="压缩和打包"><a href="#压缩和打包" class="headerlink" title="压缩和打包"></a>压缩和打包</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">z：gzip，通过gzip格式压缩或者解压缩</span><br><span class="line"></span><br><span class="line">c：create，创建压缩文件</span><br><span class="line"></span><br><span class="line">x：extract，解压缩文件，或者叫还原文件</span><br><span class="line"></span><br><span class="line">v：verbose，显示过程</span><br><span class="line"></span><br><span class="line">f：file，指定文件</span><br><span class="line"></span><br><span class="line">t：list，列出文件</span><br><span class="line"></span><br><span class="line">j：支持bzip2压缩和解压缩</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="gzip"><a href="#gzip" class="headerlink" title="gzip"></a>gzip</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># gzip压缩 test.txt---&gt; test.txt.gz,不会多出文件</span></span><br><span class="line">gzip test.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># gzip解压缩</span></span><br><span class="line">gzip -d test.txt.gz</span><br></pre></td></tr></table></figure>
+
+<h3 id="bzip2"><a href="#bzip2" class="headerlink" title="bzip2"></a>bzip2</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># bzip2压缩: 压缩test.txt --&gt; test.txt.bz2,不会多出文件</span></span><br><span class="line">bzip2 test.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># bzip2解压缩</span></span><br><span class="line">bzip2 -d test.txt.bz2</span><br><span class="line">bunzip2 test.txt.bz2`</span><br></pre></td></tr></table></figure>
+
+<h3 id="tar"><a href="#tar" class="headerlink" title="tar"></a>tar</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 将test.txt 打包为test.txt.tar ,会多出一个test.txt.tar文件</span></span><br><span class="line">tar -cvf test.txt.tar test.txt</span><br><span class="line"></span><br><span class="line"><span class="comment"># 追加打包: 表示将test2.txt文件追加到 test.txt.tar当中</span></span><br><span class="line">tar -rvf test.txt.tar test2.txt`</span><br><span class="line"><span class="comment"># 打包并压缩 </span></span><br><span class="line">tar -zcvf ma.tar.gz /root/test</span><br><span class="line"></span><br><span class="line"><span class="comment"># 解包</span></span><br><span class="line">tar -xvf test.txt.tar</span><br><span class="line"><span class="comment"># 解包并解压缩</span></span><br><span class="line">tar -zxvf ma.tar.gz</span><br><span class="line"><span class="comment"># 解包解压缩到指定的路径 </span></span><br><span class="line">tar -zxvf  ma.tar.gz -C /test</span><br><span class="line"></span><br><span class="line"><span class="comment"># 查看压缩包的内容 </span></span><br><span class="line">tar -ztvf  ma.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打包并压缩为bz2 </span></span><br><span class="line">tar -jcvf test.tar.bz2</span><br><span class="line"><span class="comment"># 解压tar.bz2:</span></span><br><span class="line">tar -jxvf test.bar.bz2</span><br></pre></td></tr></table></figure>
+
+<h3 id="unzip"><a href="#unzip" class="headerlink" title="unzip"></a>unzip</h3><ul>
+<li><p>把文件解压到当前目录下</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果要把文件解压到指定的目录下，需要用到-d参数。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -d /temp test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>解压的时候，有时候不想覆盖已经存在的文件，那么可以加上-n参数</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">unzip -n test.zip</span><br><span class="line">unzip -n -d /temp test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>只看一下zip压缩包中包含哪些文件，不进行解压缩</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -l test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>查看显示的文件列表还包含压缩比率</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -v test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查zip文件是否损坏</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -t test.zip</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>将压缩文件test.zip在指定目录tmp下解压缩，如果已有相同的文件存在，要求unzip命令覆盖原先的文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">unzip -o test.zip -d /tmp/</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="进程"><a href="#进程" class="headerlink" title="进程"></a>进程</h2><ul>
+<li><p>进程是程序的执行过程，相对于程序，进程是动态的，在linux系统中，它与用户权限相关，程序与进程并没有一一对应，一个程序可能对应多个进程。</p>
+</li>
+<li><p>子进程与父进程：一个进程产生另外一个进程，产生的进程称为子进程，生成另外一个进程的进程称为父进程</p>
+</li>
+</ul>
+<h3 id="进程状态"><a href="#进程状态" class="headerlink" title="进程状态"></a>进程状态</h3><ul>
+<li>总体来看主要包括三种，分别是就绪状态、运行状态、等待状态<ul>
+<li>就绪状态指的是进程除了CPU资源，其他运行资源都已获得，当就就绪状态的进程得到CPU资源时，则进入进程进入运行状态，</li>
+<li>运行状态的进程在时间片用完后会重新转换成就绪状态，</li>
+<li>如果在运行时进程遇到IO等阻塞操作，则进程会进入等待状态，等待状态的进程当阻塞操作完成后，进程将进入就绪状态。</li>
+</ul>
+</li>
+</ul>
+<h3 id="进程管理"><a href="#进程管理" class="headerlink" title="进程管理"></a>进程管理</h3><ul>
+<li><p>ps命令:用于报告当前系统的进程状态。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">ps 命令常用选项包括：</span><br><span class="line">1、a显示所有用户的进程</span><br><span class="line">2、u显示用户名和启动时间</span><br><span class="line">3、x显示所有进程，包括没有控制终端的进程</span><br><span class="line">4、e显示所有进程，包括没有控制终端的进程，较x选项，信息更为简略</span><br><span class="line">5、l显示进程详细信息，按长格式显示</span><br><span class="line"></span><br><span class="line">ps -au 显示所有用户进程，并给出用户名和启动时间等详细信息</span><br><span class="line">ps -aux 显示所有用户进程，包括没有控制终端的进程，并给出用户和和启动埋单等详细信息</span><br><span class="line">ps -el 按长格式显示进程详细信息</span><br><span class="line"></span><br><span class="line">USER: 进程所有者</span><br><span class="line">PID: 进程号</span><br><span class="line">PPID: 进程的父进程ID</span><br><span class="line">%CPU:  CPU占用率</span><br><span class="line">C: 进程的CPU占用率</span><br><span class="line">%MEM: 内存占用率</span><br><span class="line">VSZ: 表示如果一个程序完全驻留在内存的话需要占用多少内存空间;</span><br><span class="line">RSS: 指明了当前实际占用了多少内存;</span><br><span class="line">TTY: 终端的次要装置号码 (minor device number of <span class="built_in">tty</span>)</span><br><span class="line">F：进程的标志</span><br><span class="line">S：进程的状态</span><br><span class="line">STAT: 该进程程的状态，有以下值</span><br><span class="line">D: 不可中断的静止</span><br><span class="line">R: 正在执行中</span><br><span class="line">S: 静止状态</span><br><span class="line">T: 暂停执行</span><br><span class="line">Z: 不存在但暂时无法消除</span><br><span class="line">W: 没有足够的记忆体分页可分配</span><br><span class="line">&lt;: 高优先序的进程</span><br><span class="line">N: 低优先序的进程</span><br><span class="line">L: 有记忆体分页分配并锁在记忆体内</span><br><span class="line">PRI：进程的优先权</span><br><span class="line">NI：进程的Nice值</span><br><span class="line">ADDR：进程的地址空间</span><br><span class="line">SZ：进程占用内存的大小</span><br><span class="line">WCHAN：进程当前是否在运行</span><br><span class="line">TTY：进程所属终端</span><br><span class="line">START: 进程开始时间</span><br><span class="line">TIME: 执行的运行时间</span><br><span class="line">COMMAND：所执行的指令</span><br><span class="line">CMD：进程的命令</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>PID</p>
+</li>
+<li><p>%CPU:  CPU占用率</p>
+</li>
+<li><p>C: 进程的CPU占用率</p>
+</li>
+<li><p>COMMAND：所执行的指令</p>
+</li>
+</ul>
+<h3 id="kill-pidof-pkill命令"><a href="#kill-pidof-pkill命令" class="headerlink" title="kill&#x2F;pidof&#x2F;pkill命令"></a>kill&#x2F;pidof&#x2F;pkill命令</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1、kill pid  直接杀死进程，但不能保证一定能杀死</span><br><span class="line">2、kill -9 pid  强制杀死进程</span><br><span class="line"></span><br><span class="line">3、pidof命令用于查看某个进程的进程号（例如：pidof mysqld）</span><br><span class="line"></span><br><span class="line">4、pkill命令可以按照进程名杀死进程。pkill和killall应用方法差不多，也是直接杀死运行中的程序；如果您想杀掉单个进程，请用kill来杀掉</span><br></pre></td></tr></table></figure>
+
+<h3 id="进程切换"><a href="#进程切换" class="headerlink" title="进程切换"></a>进程切换</h3><ul>
+<li><p>前台进程指的是进程在执行时会将<strong>命令行阻塞</strong>，直到进程执行完毕；</p>
+</li>
+<li><p>后台进程指的是进程在执行时不会阻塞当前命令行，而是在系统后台执行</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1、ctrl + c 终止进程</span><br><span class="line">2、ctrl + z 挂起进程</span><br><span class="line">3、fg命令将进程转换到前台执行</span><br><span class="line">4、bg命令将进程转换到后台执行</span><br><span class="line">5、jobs命令查看任务</span><br></pre></td></tr></table></figure>
+
+<h3 id="top命令"><a href="#top命令" class="headerlink" title="top命令"></a>top命令</h3><ul>
+<li><p>Top 命令可以定期显示所有正在运行和实际运行并且更新到列表中，</p>
+</li>
+<li><p>它显示出 CPU 的使用、内存的使用、交换内存、缓存大小、缓冲区大小、过程控制、用户和更多命令。</p>
+</li>
+<li><p>它也会显示内存和 CPU 使用率过高的正在运行的进程。</p>
+</li>
+<li><p>按q键退出查看</p>
+</li>
+</ul>
+<h3 id="pstree命令"><a href="#pstree命令" class="headerlink" title="pstree命令"></a>pstree命令</h3><ul>
+<li><p>将进程间的关系以树结构的形式展示，能清楚看各进程之间的父子关系</p>
+<p><code>pstree</code> ：以树状形式显示进程</p>
+</li>
+<li><p><code>pstree -p</code> ： 以树状形式显示进程，并且显示进程号</p>
+</li>
+</ul>
+<h3 id="JPS命令"><a href="#JPS命令" class="headerlink" title="JPS命令"></a>JPS命令</h3><ul>
+<li><p>JPS命令是JDK提供的一个检查系统是否启动了JVM进程的一个进程。</p>
+<p><strong>不是linux系统自带的</strong>。主要任务就是用来检查java进程的。</p>
+</li>
+</ul>
+<h2 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h2><p>Linux命令参考：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.ityww.cn/linux/linux-command">https://www.ityww.cn/linux/linux-command</a></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/9da1ef6b">https://fulsun.github.io/p/9da1ef6b</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Linux%E5%91%BD%E4%BB%A4/">Linux命令</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/002.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/f68a568" title="Linux 命令(二)"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Linux 命令(二)</div></div></a></div><div class="next-post pull-right"><a href="/p/a11a1bfa" title="配置Centos7"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">配置Centos7</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/f68a568" title="Linux 命令(二)"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2018-09-26</div><div class="title">Linux 命令(二)</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#yum-%E5%AE%89%E8%A3%85%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6"><span class="toc-text">yum 安装常用软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PS1%E5%8F%98%E9%87%8F"><span class="toc-text">PS1变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-text">常用命令</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%91%BD%E4%BB%A4%E7%9A%84%E6%A0%BC%E5%BC%8F"><span class="toc-text">命令的格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BD%92%E7%BA%B3%E5%88%86%E7%B1%BB"><span class="toc-text">归纳分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cd-%E8%B7%AF%E5%BE%84"><span class="toc-text">cd 路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ls"><span class="toc-text">ls</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#du"><span class="toc-text">du</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#df"><span class="toc-text">df</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#touch"><span class="toc-text">touch</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#file"><span class="toc-text">file</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mkdir"><span class="toc-text">mkdir</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cp"><span class="toc-text">cp</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mv"><span class="toc-text">mv</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rmdir"><span class="toc-text">rmdir</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#rm"><span class="toc-text">rm</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cat"><span class="toc-text">cat</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#head"><span class="toc-text">head</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tail"><span class="toc-text">tail</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#more"><span class="toc-text">more</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#less"><span class="toc-text">less</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#echo"><span class="toc-text">echo</span></a></li><li class="toc-item toc-level-3"><a class="toc-link"><span class="toc-text">&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#alias"><span class="toc-text">alias</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ln"><span class="toc-text">ln</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96"><span class="toc-text">其他</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%AE%A1%E7%90%86"><span class="toc-text">用户管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%B1%BB%E5%9E%8B"><span class="toc-text">用户类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF"><span class="toc-text">查看用户信息</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%94%A8%E6%88%B7"><span class="toc-text">添加用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7"><span class="toc-text">修改用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7"><span class="toc-text">删除用户</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E5%AF%86%E7%A0%81"><span class="toc-text">修改密码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E7%BB%84%E7%AE%A1%E7%90%86"><span class="toc-text">用户组管理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">查看用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">修改用户组</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7%E7%BB%84"><span class="toc-text">删除用户组</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%87%E6%8D%A2%E7%94%A8%E6%88%B7su"><span class="toc-text">切换用户su</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E6%9D%83%E9%99%90"><span class="toc-text">文件权限</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%87%E4%BB%B6%E5%A4%B9%E7%9A%84%E6%89%A7%E8%A1%8C%E6%9D%83%E9%99%90"><span class="toc-text">文件夹的执行权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E7%9A%84%E6%9D%83%E9%99%90"><span class="toc-text">修改文件的权限</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%96%87%E4%BB%B6%E6%89%80%E6%9C%89%E6%9D%83"><span class="toc-text">修改文件所有权</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9%E5%92%8C%E6%89%93%E5%8C%85"><span class="toc-text">压缩和打包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#gzip"><span class="toc-text">gzip</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#bzip2"><span class="toc-text">bzip2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#tar"><span class="toc-text">tar</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#unzip"><span class="toc-text">unzip</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B"><span class="toc-text">进程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%8A%B6%E6%80%81"><span class="toc-text">进程状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E7%AE%A1%E7%90%86"><span class="toc-text">进程管理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kill-pidof-pkill%E5%91%BD%E4%BB%A4"><span class="toc-text">kill&#x2F;pidof&#x2F;pkill命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E7%A8%8B%E5%88%87%E6%8D%A2"><span class="toc-text">进程切换</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#top%E5%91%BD%E4%BB%A4"><span class="toc-text">top命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pstree%E5%91%BD%E4%BB%A4"><span class="toc-text">pstree命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JPS%E5%91%BD%E4%BB%A4"><span class="toc-text">JPS命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%90%8E"><span class="toc-text">最后</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

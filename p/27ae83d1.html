@@ -1,0 +1,428 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Mysql数据库设计 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="需求设计  概要设计： 抽取实体：业务模型 -&gt; 实体模型（java 类 c++类）内存 class Book{ name, bookNo,author }   数据库设计: 业务模型&#x2F;实体模型 - &gt; 数据模型 (硬盘) 数据库表设计     详细设计类详细，属性和方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mysql数据库设计">
+<meta property="og:url" content="https://fulsun.github.io/p/27ae83d1">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="需求设计  概要设计： 抽取实体：业务模型 -&gt; 实体模型（java 类 c++类）内存 class Book{ name, bookNo,author }   数据库设计: 业务模型&#x2F;实体模型 - &gt; 数据模型 (硬盘) 数据库表设计     详细设计类详细，属性和方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/008.webp">
+<meta property="article:published_time" content="2018-08-13T09:37:06.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:06.926Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="三大范式">
+<meta property="article:tag" content="多表查询">
+<meta property="article:tag" content="表约束">
+<meta property="article:tag" content="表连接">
+<meta property="article:tag" content="触发器">
+<meta property="article:tag" content="存储过程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/008.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/27ae83d1"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Mysql数据库设计',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:06'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/008.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Mysql数据库设计</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2018-08-13T09:37:06.000Z" title="发表于 2018-08-13 09:37:06">2018-08-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:06.926Z" title="更新于 2024-11-08 13:02:06">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Java/">Java</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Mysql数据库设计"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>需求设计</p>
+<ol>
+<li>概要设计：<ul>
+<li>抽取实体：业务模型 -&gt; 实体模型（java 类 c++类）内存<ul>
+<li>class Book{ name, bookNo,author }</li>
+</ul>
+</li>
+<li>数据库设计:<ul>
+<li>业务模型&#x2F;实体模型 - &gt; 数据模型 (硬盘)</li>
+<li>数据库表设计</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>详细设计<br>类详细，属性和方法</li>
+</ol>
+<span id="more"></span>
+
+<h1 id="三大范式"><a href="#三大范式" class="headerlink" title="三大范式"></a>三大范式</h1><blockquote>
+<p>设计原则： 建议设计的表尽量遵守三大范式。</p>
+</blockquote>
+<h2 id="第一范式：-要求表的每个字段必须是不可分割的独立单元"><a href="#第一范式：-要求表的每个字段必须是不可分割的独立单元" class="headerlink" title="第一范式： 要求表的每个字段必须是不可分割的独立单元"></a>第一范式： 要求表的每个字段必须是不可分割的独立单元</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">student     :   name              -- (大名小名在一起)违反第一范式</span><br><span class="line">			  张小名|狗娃</span><br><span class="line">sutdent    ： name    old_name    --符合第一范式</span><br><span class="line">			张小名    狗娃</span><br></pre></td></tr></table></figure>
+
+<h2 id="第二范式：-在第一范式的基础上，要求每张表只表达一个意思。表的每个字段都和表的主键有依赖。"><a href="#第二范式：-在第一范式的基础上，要求每张表只表达一个意思。表的每个字段都和表的主键有依赖。" class="headerlink" title="第二范式： 在第一范式的基础上，要求每张表只表达一个意思。表的每个字段都和表的主键有依赖。"></a>第二范式： 在第一范式的基础上，要求每张表只表达一个意思。表的每个字段都和表的主键有依赖。</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">employee（员工）: 员工编号  员工姓名 部门名称   订单名称  --违反第二范式(订单和编号没有依赖关系)</span><br><span class="line"></span><br><span class="line">员工表：员工编号  员工姓名 部门名称</span><br><span class="line"></span><br><span class="line">订单表：  订单编号  订单名称             -- 符合第二范式</span><br></pre></td></tr></table></figure>
+
+<h2 id="第三范式：-在第二范式基础，要求每张表的主键之外的其他字段都只能和主键有直接决定依赖关系。"><a href="#第三范式：-在第二范式基础，要求每张表的主键之外的其他字段都只能和主键有直接决定依赖关系。" class="headerlink" title="第三范式： 在第二范式基础，要求每张表的主键之外的其他字段都只能和主键有直接决定依赖关系。"></a>第三范式： 在第二范式基础，要求每张表的主键之外的其他字段都只能和主键有直接决定依赖关系。</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">员工表： 员工编号（主键） 员工姓名  部门编号  部门名 --符合第二范式，违反第三范式																	（数据冗余高）</span><br><span class="line"></span><br><span class="line">员工表：员工编号（主键） 员工姓名  部门编号    --符合第三范式（降低数据冗余）</span><br><span class="line">部门表：部门编号  部门名</span><br></pre></td></tr></table></figure>
+
+<h1 id="MySQL常用数据类型"><a href="#MySQL常用数据类型" class="headerlink" title="MySQL常用数据类型"></a>MySQL常用数据类型</h1><table>
+<thead>
+<tr>
+<th align="center">分类</th>
+<th align="left">数据类型</th>
+<th align="right">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">数值类型</td>
+<td align="left">BIT(M) bit bit(8)</td>
+<td align="right">位类型。M指定位数，默认值1，范围1-64</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">TINYINT [UNSIGNED] [ZEROFILL] byte</td>
+<td align="right">带符号的范围是-128到127。无符号0到255。</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">BOOL，BOOLEAN boolean</td>
+<td align="right">使用0或1表示真或假</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">SMALLINT [UNSIGNED] [ZEROFILL] short</td>
+<td align="right">2的16次方</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">INT [UNSIGNED] [ZEROFILL] int</td>
+<td align="right">2的32次方</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">BIGINT [UNSIGNED] [ZEROFILL] long</td>
+<td align="right">2的64次方</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">FLOAT[(M,D)] [UNSIGNED] [ZEROFILL] float</td>
+<td align="right">M指定显示长度，d指定小数位数</td>
+</tr>
+<tr>
+<td align="center">数值类型</td>
+<td align="left">DOUBLE[(M,D)] [UNSIGNED] [ZEROFILL] double</td>
+<td align="right">表示比float精度更大的小数</td>
+</tr>
+<tr>
+<td align="center">文本、二进制类型</td>
+<td align="left">CHAR(size) char(20) max—255 abc</td>
+<td align="right">固定长度字符串</td>
+</tr>
+<tr>
+<td align="center">文本、二进制类型</td>
+<td align="left">VARCHAR(size) varchar(20) 65535 abcde String</td>
+<td align="right">可变长度字符串</td>
+</tr>
+<tr>
+<td align="center">文本、二进制类型</td>
+<td align="left">BLOB LONGBLOB 大的二进制数据</td>
+<td align="right">二进制文本数据</td>
+</tr>
+<tr>
+<td align="center">文本、二进制类型</td>
+<td align="left">TEXT(clob) LONGTEXT(longclob) 大文本数据</td>
+<td align="right">大文本</td>
+</tr>
+<tr>
+<td align="center">时间日期</td>
+<td align="left">DATE&#x2F;DATETIME&#x2F;TimeStamp</td>
+<td align="right">日期类型(YYYY-MM-DD) (YYYY-MM-DD HH:MM:SS)，TimeStamp表示时间戳，它可用于自动记录insert、update操作的时间</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>**VARCHAR、BLOB和TEXT类是变长类型。每个类型的存储需求取决于列值的实际长度。<br>**</p>
+</blockquote>
+<h1 id="mysql中文乱码"><a href="#mysql中文乱码" class="headerlink" title="mysql中文乱码"></a>mysql中文乱码</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">mysql有六处使用了字符集，分别为：client 、connection、database、results、server 、system。</span><br><span class="line">client是客户端使用的字符集。</span><br><span class="line">connection是连接数据库的字符集设置类型，如果程序没有指明连接数据库使用的字符集类型就按照服务器端默认的字符集设置。</span><br><span class="line">database是数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装时指定的字符集设置。</span><br><span class="line">results是数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。</span><br><span class="line">server是服务器安装时指定的默认字符集设定。</span><br><span class="line">system是数据库系统使用的字符集设定。</span><br><span class="line"></span><br><span class="line">查看和修改数据库字符集</span><br><span class="line">show variables like &#x27;character%&#x27;;</span><br><span class="line">set character_set_results=gbk;</span><br><span class="line">set character_set_client=gbk;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="多表查询-关联查询"><a href="#多表查询-关联查询" class="headerlink" title="多表查询(关联查询)"></a>多表查询(关联查询)</h1><h2 id="交叉连接查询"><a href="#交叉连接查询" class="headerlink" title="交叉连接查询"></a>交叉连接查询</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">-- 需求：查询员工及其所在部门(显示员工姓名，部门名称)</span><br><span class="line">-- 2.1 交叉连接查询（不推荐。产生笛卡尔乘积现象：4 * 4=16，有些是重复记录）</span><br><span class="line">SELECT empName,deptName FROM employee,dept;</span><br></pre></td></tr></table></figure>
+
+<h2 id="内连接查询"><a href="#内连接查询" class="headerlink" title="内连接查询"></a>内连接查询</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-- 内连接的另一种语法</span><br><span class="line">select 内容</span><br><span class="line">from 表</span><br><span class="line">inner join 表</span><br><span class="line">on 二表之间的联系</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-- 需求：查询员工及其所在部门(显示员工姓名，部门名称)</span><br><span class="line">-- 多表查询规则：</span><br><span class="line">	1）确定查询哪些表</span><br><span class="line">	2）确定哪些哪些字段</span><br><span class="line">	3）表与表之间连接条件 (规律：连接条件数量是表数量-1)</span><br><span class="line">-- 2.2 内连接查询：只有满足条件的结果才会显示(使用最频繁)</span><br><span class="line"></span><br><span class="line">SELECT empName,deptName       -- 2）确定哪些哪些字段</span><br><span class="line">	FROM employee,dept    -- 1）确定查询哪些表</span><br><span class="line">	WHERE employee.deptId=dept.id  -- 3）表与表之间连接条件</span><br><span class="line"></span><br><span class="line">-- 内连接的另一种语法</span><br><span class="line">SELECT empName,deptName</span><br><span class="line">	FROM employee</span><br><span class="line">	INNER JOIN dept</span><br><span class="line">	ON employee.deptId=dept.id;</span><br><span class="line"></span><br><span class="line">-- 使用表的别名</span><br><span class="line">SELECT e.empName,d.deptName</span><br><span class="line">	FROM employee e</span><br><span class="line">	INNER JOIN dept d</span><br><span class="line">	ON e.deptId=d.id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="外连接"><a href="#外连接" class="headerlink" title="外连接"></a>外连接</h2><h3 id="左-外-连接查询："><a href="#左-外-连接查询：" class="headerlink" title="左[外]连接查询："></a>左[外]连接查询：</h3><blockquote>
+<p>使用左边表的数据去匹配右边表的数据，如果符合连接条件的结果则显示，如果不符合连接条件则显示null</p>
+</blockquote>
+<ul>
+<li><p>(注意： 左外连接：左表的数据一定会完成显示！）</p>
+<p>– 需求： 查询每个部门的员工<br>– 预期结果：<br>– 软件开发部 张三<br>– 软件开发部 李四<br>– 应用维护部 王五<br>– 秘书部 陈六<br>– 总经办 null</p>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SELECT d.deptName,e.empName</span><br><span class="line"></span><br><span class="line">	FROM dept d</span><br><span class="line"></span><br><span class="line">	LEFT OUTER JOIN employee e</span><br><span class="line"></span><br><span class="line">	ON d.id=e.deptId;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="右-外-连接查询"><a href="#右-外-连接查询" class="headerlink" title="右[外]连接查询:"></a>右[外]连接查询:</h3><blockquote>
+<p>使用右边表的数据去匹配左边表的数据，如果符合连接条件的结果则显示，如果不符合连接条件则显示null</p>
+</blockquote>
+<ul>
+<li>（注意： 右外连接：右表的数据一定会完成显示！）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">SELECT d.deptName,e.empName</span><br><span class="line">	FROM employee e</span><br><span class="line">	RIGHT OUTER JOIN dept d</span><br><span class="line">	ON d.id=e.deptId;</span><br></pre></td></tr></table></figure>
+
+<h2 id="自连接查询"><a href="#自连接查询" class="headerlink" title="自连接查询"></a>自连接查询</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-- 需求：查询员工及其上司</span><br><span class="line">-- 预期结果：</span><br><span class="line">	-- 张三    null</span><br><span class="line">	-- 李四    张三</span><br><span class="line">	-- 王五    李四</span><br><span class="line">	-- 陈六    王五</span><br><span class="line">SELECT e.empName,b.empName</span><br><span class="line">	FROM employee e</span><br><span class="line">	LEFT OUTER JOIN employee b</span><br><span class="line">	ON e.bossId=b.id;</span><br></pre></td></tr></table></figure>
+
+<h1 id="存储过程"><a href="#存储过程" class="headerlink" title="存储过程"></a>存储过程</h1><blockquote>
+<p>存储过程是<strong>带有逻辑的sql语句</strong><br>之前的sql语句没有条件判断,也没有循环<br>存储过程带上流程控制语句(if,while)</p>
+</blockquote>
+<h2 id="特点"><a href="#特点" class="headerlink" title="特点:"></a>特点:</h2><ol>
+<li>执行速度非常快!存储过程是在数据库的服务器端执行的</li>
+<li>移植性很差,不同数据库的存储过程是不能移植的</li>
+</ol>
+<h2 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h2><h3 id="创建存储过程"><a href="#创建存储过程" class="headerlink" title="创建存储过程"></a>创建存储过程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">delimiter $ --声明存储过程的结束符</span><br><span class="line">create procedure pro_test()	--存储过程名称(参数列表)</span><br><span class="line">begin	-- 开始</span><br><span class="line">	/////////////////////////////</span><br><span class="line">	////  SQL 语句 + 流程控制语句//</span><br><span class="line">	/////////////////////////////</span><br><span class="line">end $</span><br></pre></td></tr></table></figure>
+
+<h3 id="执行存储过程"><a href="#执行存储过程" class="headerlink" title="执行存储过程"></a>执行存储过程</h3><blockquote>
+<p><code>call pro_test</code> –call 存储过程名称(参数)</p>
+</blockquote>
+<h3 id="存储过程的参数"><a href="#存储过程的参数" class="headerlink" title="存储过程的参数"></a>存储过程的参数</h3><ol>
+<li>in :表示输入参数,可以携带数据到存储过程中</li>
+<li>out: 表示输出参数,可以从存储过程中返回结果</li>
+<li>inout : 表示输入输出参数,既可以输入功能, 也可以输出功能</li>
+</ol>
+<h2 id="带有输入参数的存储过程"><a href="#带有输入参数的存储过程" class="headerlink" title="带有输入参数的存储过程"></a>带有输入参数的存储过程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">需求: 传入一个员工的id,查询员工信息</span><br><span class="line">delimiter $</span><br><span class="line">create procedure pro_findById(in eid int)   -- in : 输入参数</span><br><span class="line">begin</span><br><span class="line">	select * from employee where id = eid;</span><br><span class="line">	End $</span><br><span class="line"></span><br><span class="line">// 调用  ////////</span><br><span class="line">call pro_findById(4);</span><br></pre></td></tr></table></figure>
+
+<h2 id="带有输出参数的存储过程"><a href="#带有输出参数的存储过程" class="headerlink" title="带有输出参数的存储过程"></a>带有输出参数的存储过程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">delimiter $</span><br><span class="line">create procedure pro_testOut(Out str varchar(20)) --out: 输出参数</span><br><span class="line">begin</span><br><span class="line">	-- 给参数赋值</span><br><span class="line">	set str = &quot;hello java&quot;;</span><br><span class="line">End $</span><br><span class="line"></span><br><span class="line">使用:</span><br><span class="line">call pro_testOut(@name);</span><br><span class="line">selec @name</span><br></pre></td></tr></table></figure>
+
+<h3 id="接收返回参数的值"><a href="#接收返回参数的值" class="headerlink" title="接收返回参数的值"></a>接收返回参数的值</h3><h4 id="mysql的变量"><a href="#mysql的变量" class="headerlink" title="mysql的变量"></a>mysql的变量</h4><ol>
+<li>全局变量</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">全局变量（内置变量）：mysql数据库内置的变量 （所有连接都起作用）</span><br><span class="line">-- 查看所有全局变量： show variables</span><br><span class="line">-- 查看某个全局变量： select @@变量名</span><br><span class="line">-- 修改全局变量： set 变量名=新值</span><br><span class="line">-- character_set_client: mysql服务器的接收数据的编码</span><br><span class="line">-- character_set_results：mysql服务器输出数据的编码</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>会话变量</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">会话变量： 只存在于当前客户端与数据库服务器端的一次连接当中。如果连接断开，那么会话变量全部丢失！</span><br><span class="line">-- 定义会话变量: set @变量=值</span><br><span class="line">-- 查看会话变量： select @变量</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>局部变量<blockquote>
+<p>局部变量： 在存储过程中使用的变量就叫局部变量。只要存储过程执行完毕，局部变量就丢失！！</p>
+</blockquote>
+</li>
+</ol>
+<h2 id="带有输入输出参数的存储过程"><a href="#带有输入输出参数的存储过程" class="headerlink" title="带有输入输出参数的存储过程"></a>带有输入输出参数的存储过程</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">```mysql</span><br><span class="line">DELIMITER $</span><br><span class="line"></span><br><span class="line">CREATE PROCEDURE pro_testInOut(INOUT n INT)</span><br><span class="line"></span><br><span class="line">BEGIN</span><br><span class="line"></span><br><span class="line">	SELECT n;</span><br><span class="line"></span><br><span class="line">	SET n=50;</span><br><span class="line"></span><br><span class="line">END $</span><br><span class="line"></span><br><span class="line">//使用</span><br><span class="line"></span><br><span class="line">SET @n=10;</span><br><span class="line"></span><br><span class="line">CALL pro_testInOut(@n);	-- n 10</span><br><span class="line"></span><br><span class="line">SELECT @n;	-- n 50</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="带有条件判断的存储过程"><a href="#带有条件判断的存储过程" class="headerlink" title="带有条件判断的存储过程"></a>带有条件判断的存储过程</h2><ol>
+<li>If – then – elseif – then –else –end if</li>
+<li>this ,end if 后面有分号;</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">-- 需求：输入一个整数，</span><br><span class="line">	如果1，则返回“星期一”,</span><br><span class="line">	如果2，返回“星期二”,</span><br><span class="line">	如果3，返回“星期三”。</span><br><span class="line">	其他数字，返回“错误输入”;</span><br><span class="line"></span><br><span class="line">DELIMITER $</span><br><span class="line">CREATE PROCEDURE pro_testIf(IN n INT,OUT str VARCHAR(20))</span><br><span class="line">BEGIN</span><br><span class="line">	IF n=1 THEN</span><br><span class="line">		SET str = &#x27;星期一&#x27;;</span><br><span class="line">	ELSEIF n=2 THEN</span><br><span class="line">	SET str=&#x27;星期二&#x27;;</span><br><span class="line">	ELSEIF n=3 THEN</span><br><span class="line">	SET str = &#x27;星期四&#x27;;</span><br><span class="line">	ELSE</span><br><span class="line">	SET str=&#x27;输入错误&#x27;;</span><br><span class="line">	END IF;</span><br><span class="line">END $</span><br><span class="line"></span><br><span class="line">//使用</span><br><span class="line">CALL  pro_testIf(1,@str)</span><br><span class="line">SELECT @str	-- str 星期一</span><br></pre></td></tr></table></figure>
+
+<h2 id="带有循环功能的存储过程"><a href="#带有循环功能的存储过程" class="headerlink" title="带有循环功能的存储过程"></a>带有循环功能的存储过程</h2><ol>
+<li>需要声明会话变量</li>
+<li>while – do – end while;</li>
+<li>do 后面的都要分号</li>
+<li>end while 要分号</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-- 需求： 输入一个整数，求和。例如，输入100，统计1-100的和</span><br><span class="line">BEGIN</span><br><span class="line">	DECLARE i  INT DEFAULT 1;</span><br><span class="line">	DECLARE vsum INT default 0;</span><br><span class="line">	WHILE i&lt;=num DO</span><br><span class="line">	SET vsum = vsum+i;</span><br><span class="line">	SET i=i+1;</span><br><span class="line">	END WHILE;</span><br><span class="line">	SET result = vsum;</span><br><span class="line">END $</span><br><span class="line"></span><br><span class="line">//使用</span><br><span class="line">CALL  pro_testWhile(100,@result);</span><br><span class="line">SELECT @result;		-- 5050</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用查询的结果赋值给变量-into"><a href="#使用查询的结果赋值给变量-into" class="headerlink" title="使用查询的结果赋值给变量 into"></a>使用查询的结果赋值给变量 into</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">DELIMITER $</span><br><span class="line">CREATE PROCEDURE pro_finById2(IN eid INT,OUT vname VARCHAR(20))</span><br><span class="line">BEGIN</span><br><span class="line">	SELECT empName INTO vname FROM employee  WHERE id =eid;</span><br><span class="line">END $</span><br><span class="line"></span><br><span class="line">//使用</span><br><span class="line"></span><br><span class="line">CALL pro_finById2(1,@name)</span><br><span class="line">SELECT @name</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除存储过程"><a href="#删除存储过程" class="headerlink" title="删除存储过程"></a>删除存储过程</h2><p>DROP PROCEDURE pro_testOut;</p>
+<h1 id="触发器"><a href="#触发器" class="headerlink" title="触发器"></a>触发器</h1><blockquote>
+<p>当操作了某张表时,希望同时触发一些动作&#x2F;行为 可以使用触发器<br>当向员工表插入一条记录时，希望同时往日志表插入数据</p>
+</blockquote>
+<p>动作:</p>
+<ol>
+<li>添加</li>
+<li>修改</li>
+<li>删除</li>
+</ol>
+<h2 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">需求： 当向员工表插入一条记录时，希望mysql自动同时往日志表插入数据</span><br><span class="line">-- 创建触发器(添加)</span><br><span class="line"></span><br><span class="line">CREATE TABLE test_log(</span><br><span class="line">	id INT(4) ZEROFILL PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">	content VARCHAR(20)</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">CREATE TRIGGER tri_update AFTER UPDATE ON employee FOR EACH ROW</span><br><span class="line">	INSERT INTO test_log(content) VALUES (&#x27;员工表修改了一条记录&#x27;)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">UPDATE employee SET empName =&#x27;123&#x27; WHERE id =5</span><br><span class="line"></span><br><span class="line">SELECT * FROM test_log;		0001 员工表修改了一条记录</span><br><span class="line"></span><br><span class="line">//测试</span><br><span class="line">CREATE TRIGGER tri_empUpd AFTER UPDATE ON employee FOR EACH ROW    -- 当往员工表修改一条记录时</span><br><span class="line">     INSERT INTO test_log(content) VALUES(&#x27;员工表修改了一条记录&#x27;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">CREATE TRIGGER tri_empAdd AFTER INSERT ON employee FOR EACH ROW    -- 当往员工表插入一条记录时</span><br><span class="line">     INSERT INTO test_log(content) VALUES(&#x27;员工表插入了一条记录&#x27;);</span><br><span class="line"></span><br><span class="line">INSERT INTO employee(id,empName,deptId) VALUES(5,&#x27;扎古斯&#x27;,1);</span><br></pre></td></tr></table></figure>
+
+<h2 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CREATE TRIGGER tri_empDel AFTER DELETE ON employee FOR EACH ROW    -- 当往员工表删除一条记录时</span><br><span class="line">     INSERT INTO test_log(content) VALUES(&#x27;员工表删除了一条记录&#x27;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="mysql权限问题"><a href="#mysql权限问题" class="headerlink" title="mysql权限问题"></a>mysql权限问题</h1><ol>
+<li>root :拥有所有权限(可以干任何事情);</li>
+<li>权限账户: 只拥有部分权限(CRUD) :例如:只能操作某个数据库的某张表</li>
+<li>修改mysql 的密码<ol>
+<li>数据库的密码采用MD5加密(单向加密)</li>
+</ol>
+</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/27ae83d1">https://fulsun.github.io/p/27ae83d1</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E4%B8%89%E5%A4%A7%E8%8C%83%E5%BC%8F/">三大范式</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2/">多表查询</a><a class="post-meta__tags" href="/tags/%E8%A1%A8%E7%BA%A6%E6%9D%9F/">表约束</a><a class="post-meta__tags" href="/tags/%E8%A1%A8%E8%BF%9E%E6%8E%A5/">表连接</a><a class="post-meta__tags" href="/tags/%E8%A7%A6%E5%8F%91%E5%99%A8/">触发器</a><a class="post-meta__tags" href="/tags/%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B/">存储过程</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/008.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/471ae07a" title="Java泛型,比较器和枚举"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Java泛型,比较器和枚举</div></div></a></div><div class="next-post pull-right"><a href="/p/a293d98e" title="Lambda表达式，方法引用和异常"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/012.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Lambda表达式，方法引用和异常</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%B8%89%E5%A4%A7%E8%8C%83%E5%BC%8F"><span class="toc-text">三大范式</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E8%8C%83%E5%BC%8F%EF%BC%9A-%E8%A6%81%E6%B1%82%E8%A1%A8%E7%9A%84%E6%AF%8F%E4%B8%AA%E5%AD%97%E6%AE%B5%E5%BF%85%E9%A1%BB%E6%98%AF%E4%B8%8D%E5%8F%AF%E5%88%86%E5%89%B2%E7%9A%84%E7%8B%AC%E7%AB%8B%E5%8D%95%E5%85%83"><span class="toc-text">第一范式： 要求表的每个字段必须是不可分割的独立单元</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E8%8C%83%E5%BC%8F%EF%BC%9A-%E5%9C%A8%E7%AC%AC%E4%B8%80%E8%8C%83%E5%BC%8F%E7%9A%84%E5%9F%BA%E7%A1%80%E4%B8%8A%EF%BC%8C%E8%A6%81%E6%B1%82%E6%AF%8F%E5%BC%A0%E8%A1%A8%E5%8F%AA%E8%A1%A8%E8%BE%BE%E4%B8%80%E4%B8%AA%E6%84%8F%E6%80%9D%E3%80%82%E8%A1%A8%E7%9A%84%E6%AF%8F%E4%B8%AA%E5%AD%97%E6%AE%B5%E9%83%BD%E5%92%8C%E8%A1%A8%E7%9A%84%E4%B8%BB%E9%94%AE%E6%9C%89%E4%BE%9D%E8%B5%96%E3%80%82"><span class="toc-text">第二范式： 在第一范式的基础上，要求每张表只表达一个意思。表的每个字段都和表的主键有依赖。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E8%8C%83%E5%BC%8F%EF%BC%9A-%E5%9C%A8%E7%AC%AC%E4%BA%8C%E8%8C%83%E5%BC%8F%E5%9F%BA%E7%A1%80%EF%BC%8C%E8%A6%81%E6%B1%82%E6%AF%8F%E5%BC%A0%E8%A1%A8%E7%9A%84%E4%B8%BB%E9%94%AE%E4%B9%8B%E5%A4%96%E7%9A%84%E5%85%B6%E4%BB%96%E5%AD%97%E6%AE%B5%E9%83%BD%E5%8F%AA%E8%83%BD%E5%92%8C%E4%B8%BB%E9%94%AE%E6%9C%89%E7%9B%B4%E6%8E%A5%E5%86%B3%E5%AE%9A%E4%BE%9D%E8%B5%96%E5%85%B3%E7%B3%BB%E3%80%82"><span class="toc-text">第三范式： 在第二范式基础，要求每张表的主键之外的其他字段都只能和主键有直接决定依赖关系。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#MySQL%E5%B8%B8%E7%94%A8%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-text">MySQL常用数据类型</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mysql%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81"><span class="toc-text">mysql中文乱码</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2-%E5%85%B3%E8%81%94%E6%9F%A5%E8%AF%A2"><span class="toc-text">多表查询(关联查询)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%A4%E5%8F%89%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-text">交叉连接查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-text">内连接查询</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%96%E8%BF%9E%E6%8E%A5"><span class="toc-text">外连接</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A6-%E5%A4%96-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2%EF%BC%9A"><span class="toc-text">左[外]连接查询：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%B3-%E5%A4%96-%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-text">右[外]连接查询:</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%87%AA%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2"><span class="toc-text">自连接查询</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%89%B9%E7%82%B9"><span class="toc-text">特点:</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-text">语法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">创建存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">执行存储过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B%E7%9A%84%E5%8F%82%E6%95%B0"><span class="toc-text">存储过程的参数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E8%BE%93%E5%85%A5%E5%8F%82%E6%95%B0%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">带有输入参数的存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E8%BE%93%E5%87%BA%E5%8F%82%E6%95%B0%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">带有输出参数的存储过程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8E%A5%E6%94%B6%E8%BF%94%E5%9B%9E%E5%8F%82%E6%95%B0%E7%9A%84%E5%80%BC"><span class="toc-text">接收返回参数的值</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#mysql%E7%9A%84%E5%8F%98%E9%87%8F"><span class="toc-text">mysql的变量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%8F%82%E6%95%B0%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">带有输入输出参数的存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">带有条件判断的存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%A6%E6%9C%89%E5%BE%AA%E7%8E%AF%E5%8A%9F%E8%83%BD%E7%9A%84%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">带有循环功能的存储过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E6%9F%A5%E8%AF%A2%E7%9A%84%E7%BB%93%E6%9E%9C%E8%B5%8B%E5%80%BC%E7%BB%99%E5%8F%98%E9%87%8F-into"><span class="toc-text">使用查询的结果赋值给变量 into</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E5%AD%98%E5%82%A8%E8%BF%87%E7%A8%8B"><span class="toc-text">删除存储过程</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E5%99%A8"><span class="toc-text">触发器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9"><span class="toc-text">修改</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0"><span class="toc-text">添加</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#mysql%E6%9D%83%E9%99%90%E9%97%AE%E9%A2%98"><span class="toc-text">mysql权限问题</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

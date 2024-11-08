@@ -1,0 +1,451 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringMVC之RESTful简介 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC之RESTful简介">
+<meta property="og:url" content="https://fulsun.github.io/p/e075e581">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/005.webp">
+<meta property="article:published_time" content="2024-07-16T22:14:36.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.026Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/005.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/e075e581"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringMVC之RESTful简介',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/005.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringMVC之RESTful简介</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-16T22:14:36.000Z" title="发表于 2024-07-16 22:14:36">2024-07-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.026Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringMVC/">SpringMVC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">3.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>16分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringMVC之RESTful简介"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="RESTful-简介"><a href="#RESTful-简介" class="headerlink" title="RESTful 简介"></a>RESTful 简介</h2><p><code>REST</code>：<code>Representational State Transfer</code>，表现层资源状态转移</p>
+<ul>
+<li><strong>表现层&#x2F;表示层</strong>：前端的视图页面到后端的控制层即为“表现层”</li>
+<li><strong>资源</strong>：Web 工程部署到服务器上后，当前 Web 工程中的内容在服务器上都叫“资源”（万物皆资源）</li>
+<li><strong>状态</strong>：资源的表现形式，例如，HTML&#x2F;JSP 页面、CSS&#x2F;JS 文件、图片&#x2F;音频&#x2F;视频等皆为资源的“状态”</li>
+<li><strong>转移</strong>：浏览器发送请求到服务器，服务端就将请求的资源“转移”到客户端</li>
+</ul>
+<p><code>RESTful</code>：基于<code>REST</code>构建的 API 就是<code>RESTful</code>风格</p>
+<h3 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h3><ul>
+<li>资源是一种看待服务器的方式，即将服务器看作是由很多离散的资源组成。每个资源是服务器上一个可命名的抽象概念</li>
+<li>因为资源是一个抽象的概念，所以它不仅仅能代表服务器文件系统中的一个文件、数据库中的一张表等等具体的东西，也可以将资源设计的要多抽象有多抽象，只要想象力允许而且客户端应用开发者能够理解</li>
+<li>与面向对象设计类似，资源是以<em>名词</em>为核心来组织的，首先关注的是“名词”。一个资源可以由一个或多个<code>URI</code>来标识。<code>URI</code>既是资源的名称，也是资源在 Web 上的地址。对某个资源感兴趣的客户端应用，可以通过资源的<code>URI</code>与其进行交互</li>
+</ul>
+<blockquote>
+<p><code>URI</code>（<code>Uniform Resource Identifier</code>）：统一资源标志符</p>
+</blockquote>
+<blockquote>
+<p><code>URL</code>（<code>Uniform Resource Locator</code>）：统一资源定位符</p>
+</blockquote>
+<blockquote>
+<p><code>URI</code>是一个抽象的、高层次的概念，而<code>URL</code>是具体的方式。简单来说，<code>URL</code>是一种<code>URI</code></p>
+</blockquote>
+<h3 id="资源的表述"><a href="#资源的表述" class="headerlink" title="资源的表述"></a>资源的表述</h3><ul>
+<li>资源的表述是一段对于资源在某个特定时刻的状态的描述。可以在客户端-服务器端之间转移（交换）</li>
+<li>资源的表述可以有多种格式，例如<code>HTML/XML/JSON/纯文本/图片/视频/音频</code>等等</li>
+<li>资源的表述格式可以通过协商机制来确定。请求-响应方向的表述通常使用不同的格式</li>
+</ul>
+<h3 id="状态转移"><a href="#状态转移" class="headerlink" title="状态转移"></a>状态转移</h3><ul>
+<li>状态转移说的是：在客户端和服务器端之间转移（<code>transfer</code>）代表资源状态的表述</li>
+<li>通过转移和操作资源的表述，来间接实现操作资源的目的</li>
+</ul>
+<h2 id="RESTful-实现"><a href="#RESTful-实现" class="headerlink" title="RESTful 实现"></a>RESTful 实现</h2><p><code>RESTful</code>的实现，具体说就是：HTTP 协议里面，四个表示操作方式的动词<code>GET</code>、<code>POST</code>、<code>PUT</code>、<code>DELETE</code></p>
+<p>它们分别对应四种基本操作：</p>
+<ul>
+<li><code>GET</code>用来获取资源</li>
+<li><code>POST</code>用来新建资源</li>
+<li><code>PUT</code>用来更新资源</li>
+<li><code>DELETE</code>用来删除资源</li>
+</ul>
+<p><code>REST</code>风格<code>URL</code>地址不使用<em>问号键值对方式</em>携带请求参数，而是：</p>
+<p>提倡使用统一的风格设计，从前到后各个单词使用斜杠分开，将要发送给服务器的数据作为<code>URL</code>地址的一部分，以保证整体风格的一致性</p>
+<blockquote>
+<p>以往，我们访问资源的方式五花八问。例如，</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>获取用户信息通过<code>getUserById</code>&#x2F;<code>selectUserById</code>&#x2F;<code>findUserById</code>&#x2F;等</li>
+<li>删除用户信息通过<code>deleteUserById</code>&#x2F;<code>removeUserById</code>等</li>
+<li>更新用户信息通过<code>updateUser</code>&#x2F;<code>modifyUser</code>&#x2F;<code>saveUser</code>等</li>
+<li>新增用户信息通过<code>addUser</code>&#x2F;<code>createUser</code>&#x2F;<code>insertUser</code>等</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>上述操作的资源都是用户信息。按照<code>RESTful</code>思想，既然操作的资源一样，那么请求路径就应该一样</p>
+</blockquote>
+<p>用一张表格来对比传统方式和<code>REST</code>风格对资源操作的区别</p>
+<table>
+<thead>
+<tr>
+<th align="left">操作</th>
+<th align="left">传统方式</th>
+<th align="left">REST 风格</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">查询</td>
+<td align="left"><code>getUserById?id=1</code></td>
+<td align="left"><code>user/1</code>–&gt;<code>get</code>请求</td>
+</tr>
+<tr>
+<td align="left">保存</td>
+<td align="left"><code>saveUser</code></td>
+<td align="left"><code>user</code>–&gt;<code>post</code>请求</td>
+</tr>
+<tr>
+<td align="left">删除</td>
+<td align="left"><code>deleteUserById?id=1</code></td>
+<td align="left"><code>user/1</code>–&gt;<code>delete</code>请求</td>
+</tr>
+<tr>
+<td align="left">更新</td>
+<td align="left"><code>updateUser</code></td>
+<td align="left"><code>user</code>–&gt;<code>put</code>请求</td>
+</tr>
+</tbody></table>
+<h2 id="使用-RESTful-模拟操作用户资源"><a href="#使用-RESTful-模拟操作用户资源" class="headerlink" title="使用 RESTful 模拟操作用户资源"></a>使用 RESTful 模拟操作用户资源</h2><p>需求分析：使用 RESTful 模拟用户资源的增删改查，通过路径中的占位符传递请求参数，通过不同的请求方式对应资源的不同操作</p>
+<table>
+<thead>
+<tr>
+<th>RESTful 路径</th>
+<th>请求方式</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/user</code></td>
+<td><code>GET</code></td>
+<td>查询所有用户信息</td>
+</tr>
+<tr>
+<td><code>/user/1</code></td>
+<td><code>GET</code></td>
+<td>根据用户ID查询用户信息</td>
+</tr>
+<tr>
+<td><code>/user</code></td>
+<td><code>POST</code></td>
+<td>添加用户信息</td>
+</tr>
+<tr>
+<td><code>/user/1</code></td>
+<td><code>DELETE</code></td>
+<td>根据用户ID删除用户信息</td>
+</tr>
+<tr>
+<td><code>/user</code></td>
+<td><code>PUT</code></td>
+<td>修改用户信息</td>
+</tr>
+</tbody></table>
+<h3 id="添加"><a href="#添加" class="headerlink" title="添加"></a>添加</h3><p><strong>后台代码实现</strong></p>
+<p><code>RESTfulController.java</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Controller</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;restfulcontroller&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RESTfulController</span> &#123;</span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getAllUser</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;查询所有用户信息&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user/&#123;id&#125;&quot;, method = RequestMethod.GET)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUserById</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> String id)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;根据用户ID查询用户信息：&quot;</span> + id);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@RequestMapping(value = &quot;/user&quot;, method = RequestMethod.POST)</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">insertUser</span><span class="params">(User user)</span> &#123; <span class="comment">// User 沿用之前的对象</span></span><br><span class="line">        System.out.println(<span class="string">&quot;添加用户信息：&quot;</span> + user);</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/** 注：由于 PUT、DELETE 请求比较特殊，后面再做补充 */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>前台测试代码</strong></p>
+<p><code>restful.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/restfulcontroller/user&#125;&quot;</span>&gt;</span>查询所有用户信息<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/restfulcontroller/user/1&#125;&quot;</span>&gt;</span>根据用户ID查询用户信息<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/restfulcontroller/user&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  密码：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  性别：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;male&quot;</span> /&gt;</span>男<span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">value</span>=<span class="string">&quot;female&quot;</span></span></span><br><span class="line"><span class="tag">  /&gt;</span>女<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  年龄：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  邮箱：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;添加用户&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>为了能够访问到<code>restful.html</code>前台页面资源，可以通过在控制器中定义一个控制器方法来返回其视图，也可以通过在<em>04-SpringMVC 视图</em>中提到的<code>view-controller</code>视图控制器代替。因为这里只是为了实现页面跳转，没有其他请求过程的处理，所以可以通过在 SpringMVC 配置文件中使用<code>&lt;view-controller&gt;</code>标签进行设置</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">mvc:view-controller</span> <span class="attr">path</span>=<span class="string">&quot;/restful&quot;</span> <span class="attr">view-name</span>=<span class="string">&quot;restful&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">mvc:view-controller</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>测试结果</strong></p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/e075e581/80d0341fd7471c6ce2b66f3b2a38eb99.gif"></p>
+<p><strong>后台日志信息</strong></p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">查询所有用户信息</span><br><span class="line">根据用户ID查询用户信息：1</span><br><span class="line">添加用户信息：User&#123;username=&#x27;admin&#x27;, password=&#x27;11111&#x27;, gender=&#x27;male&#x27;, age=&#x27;18&#x27;, email=&#x27;123@qq.com&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除"><a href="#删除" class="headerlink" title="删除"></a>删除</h3><blockquote>
+<p>在@RequestMapping注解 _中，我们提到过<code>form</code>表单默认只支持<code>GET</code>和<code>POST</code>请求，如果直接通过<code>method</code>属性指定为<code>PUT</code>和<code>DELETE</code>，会默认以<code>GET</code>请求方式处理</p>
+</blockquote>
+<blockquote>
+<p>而想要实现<code>PUT</code>和<code>DELETE</code>请求，需要在<code>web.xml</code>中配置 SpringMVC 提供的<code>HiddenHttpMethodFilter</code>过滤器，并在前台页面使用隐藏域来设置<code>PUT</code>和<code>DELETE</code>类型的请求方式</p>
+</blockquote>
+<blockquote>
+<p>当然，也可以使用<code>AJAX</code>发送<code>PUT</code>和<code>DELETE</code>请求，但是需要注意<code>PUT</code>和<code>DELETE</code>仅部分浏览器支持</p>
+</blockquote>
+<p>为了更清楚地了解<code>HiddenHttpMethodFilter</code>过滤器到底干了什么，这里对其源码进行剖析</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HiddenHttpMethodFilter</span> <span class="keyword">extends</span> <span class="title class_">OncePerRequestFilter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> List&lt;String&gt; ALLOWED_METHODS = Collections.unmodifiableList(Arrays.asList(HttpMethod.PUT.name(),HttpMethod.DELETE.name(),HttpMethod.PATCH.name()));</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">DEFAULT_METHOD_PARAM</span> <span class="operator">=</span> <span class="string">&quot;_method&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">String</span> <span class="variable">methodParam</span> <span class="operator">=</span> DEFAULT_METHOD_PARAM;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doFilterInternal</span><span class="params">(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)</span></span><br><span class="line">        <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">HttpServletRequest</span> <span class="variable">requestToUse</span> <span class="operator">=</span> request;</span><br><span class="line">        <span class="comment">// 要求原请求方式为 POST 请求</span></span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&quot;POST&quot;</span>.equals(request.getMethod()) &amp;&amp; request.getAttribute(WebUtils.ERROR_EXCEPTION_ATTRIBUTE) == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="comment">// methodParam值：_method</span></span><br><span class="line">            <span class="comment">// paramValue值：_method属性值</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">paramValue</span> <span class="operator">=</span> request.getParameter(<span class="built_in">this</span>.methodParam);</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.hasLength(paramValue)) &#123;</span><br><span class="line">                <span class="comment">// _method属性值转为全大写形式，put==&gt;PUT，delete==&gt;DELETE</span></span><br><span class="line">                <span class="type">String</span> <span class="variable">method</span> <span class="operator">=</span> paramValue.toUpperCase(Locale.ENGLISH);</span><br><span class="line">                <span class="comment">// 判断_method属性值是否为&#123;&quot;PUT&quot;,&quot;DELETE&quot;,&quot;PATCH&quot;&#125;中的一个</span></span><br><span class="line">                <span class="keyword">if</span> (ALLOWED_METHODS.contains(method)) &#123;</span><br><span class="line">                    <span class="comment">// “偷梁换柱”，包装为一个新的请求对象</span></span><br><span class="line">                    requestToUse = <span class="keyword">new</span> <span class="title class_">HttpMethodRequestWrapper</span>(request, method);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        filterChain.doFilter(requestToUse, response);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">HttpMethodRequestWrapper</span> <span class="keyword">extends</span> <span class="title class_">HttpServletRequestWrapper</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> <span class="keyword">final</span> String method;</span><br><span class="line">        <span class="keyword">public</span> <span class="title function_">HttpMethodRequestWrapper</span><span class="params">(HttpServletRequest request, String method)</span> &#123;</span><br><span class="line">            <span class="built_in">super</span>(request);</span><br><span class="line">            <span class="built_in">this</span>.method = method;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="keyword">public</span> String <span class="title function_">getMethod</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.method;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>“源码在手，天下我有”。接下来，将理论付诸实践</p>
+<p><strong>配置文件</strong></p>
+<p><code>web.xml</code>配置<code>HiddenHttpMethodFilter</code>过滤器</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>后台代码实现</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(value = &quot;/user&quot;, method = RequestMethod.PUT)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">updateUser</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;修改用户信息：&quot;</span> + user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 这里的写法格式没有问题，但业务逻辑其实大有问题，下面再详细说</span></span><br><span class="line"><span class="meta">@RequestMapping(value = &quot;/user&quot;, method = RequestMethod.DELETE)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">deleteUser</span><span class="params">(User user)</span> &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;删除用户信息：&quot;</span> + user);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;success&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>前台测试代码</strong></p>
+<p>在添加用户的表单基础上，添加隐藏域<code>&lt;input type=&quot;hidden&quot; name=&quot;_method&quot; value=&quot;put&quot;&gt;</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/restfulcontroller/user&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;put&quot;</span> /&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  密码：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  性别：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;male&quot;</span> /&gt;</span>男<span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">value</span>=<span class="string">&quot;female&quot;</span></span></span><br><span class="line"><span class="tag">  /&gt;</span>女<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  年龄：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  邮箱：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;修改用户&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">hr</span> /&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 这里的写法格式没有问题，但业务逻辑其实大有问题，下面再详细说 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">th:action</span>=<span class="string">&quot;@&#123;/restfulcontroller/user&#125;&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;_method&quot;</span> <span class="attr">value</span>=<span class="string">&quot;delete&quot;</span> /&gt;</span></span><br><span class="line">  用户名：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;username&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  密码：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;password&quot;</span> <span class="attr">name</span>=<span class="string">&quot;password&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  性别：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span> <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span> <span class="attr">value</span>=<span class="string">&quot;male&quot;</span> /&gt;</span>男<span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">    <span class="attr">type</span>=<span class="string">&quot;radio&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">name</span>=<span class="string">&quot;gender&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">value</span>=<span class="string">&quot;female&quot;</span></span></span><br><span class="line"><span class="tag">  /&gt;</span>女<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  年龄：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;number&quot;</span> <span class="attr">name</span>=<span class="string">&quot;age&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  邮箱：<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">name</span>=<span class="string">&quot;email&quot;</span> /&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;删除用户&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>测试结果</strong></p>
+<p>修改用户</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/e075e581/df7be7e7d47b0c657bd0ed5dd1830a46.gif"></p>
+<p>删除用户</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/e075e581/20012ba5049f15b21079decb398eaa78.gif"></p>
+<p><strong>后台日志信息</strong></p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">修改用户信息：User&#123;username=&#x27;user&#x27;, password=&#x27;11111&#x27;, gender=&#x27;female&#x27;, age=&#x27;1&#x27;, email=&#x27;111@qq.com&#x27;&#125;</span><br><span class="line">删除用户信息：User&#123;username=&#x27;user&#x27;, password=&#x27;11111&#x27;, gender=&#x27;female&#x27;, age=&#x27;1&#x27;, email=&#x27;111@qq.com&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>到这里，应该需要指明的是我们在设计<code>RESTful</code>实现时，对删除用户信息的要求下面这样的</p>
+<table>
+<thead>
+<tr>
+<th>RESTful 路径</th>
+<th>请求方式</th>
+<th>操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/user/1</code></td>
+<td><code>DELETE</code></td>
+<td>根据用户ID删除用户信息</td>
+</tr>
+</tbody></table>
+<p>换句话说，这里应该通过超链接而非表单形式，即通过用户ID来对用户信息进行删除操作。而一般情况下，我们是通过行编辑删除某一行数据，或是通过选中表单的数据来进行批量删除，这些功能在详细案例时会详细介绍</p>
+<h2 id="CharacterEncodingFilter-和-HiddenHttpMethodFilter-的配置顺序"><a href="#CharacterEncodingFilter-和-HiddenHttpMethodFilter-的配置顺序" class="headerlink" title="CharacterEncodingFilter 和 HiddenHttpMethodFilter 的配置顺序"></a>CharacterEncodingFilter 和 HiddenHttpMethodFilter 的配置顺序</h2><p>目前，我们在<code>web.xml</code>配置文件中对<code>CharacterEncodingFilter</code>和<code>HiddenHttpMethodFilter</code>的配置顺序如下</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--处理编码--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>forceResponseEncoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 略 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!--配置 org.springframework.web.filter.HiddenHttpMethodFilter: 可以把 POST 请求转为 DELETE 或 POST 请求 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>如果，将两者顺序颠倒互换，即</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--配置 org.springframework.web.filter.HiddenHttpMethodFilter: 可以把 POST 请求转为 DELETE 或 POST 请求 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>HiddenHttpMethodFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 略 --&gt;</span></span><br><span class="line"><span class="comment">&lt;!--处理编码--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-class</span>&gt;</span>org.springframework.web.filter.CharacterEncodingFilter<span class="tag">&lt;/<span class="name">filter-class</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>encoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>UTF-8<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">init-param</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-name</span>&gt;</span>forceResponseEncoding<span class="tag">&lt;/<span class="name">param-name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">param-value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">param-value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">init-param</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">filter-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">filter-name</span>&gt;</span>characterEncodingFilter<span class="tag">&lt;/<span class="name">filter-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/*<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">filter-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>看看顺序改变之后，对请求的编码会有什么影响</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/e075e581/4ce6e35d48e0080ad6afa046d47e4120.gif"></p>
+<p>后台日志信息</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修改用户信息：User&#123;username=&#x27;å¼ ä¸&#x27;, password=&#x27;123456&#x27;, gender=&#x27;male&#x27;, age=&#x27;18&#x27;, email=&#x27;123@qq.com&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，中文的“张三”乱码了，这是为什么呢？</p>
+<blockquote>
+<p>在<em>02-SpringMVC 获取请求参数</em>一节中的<em>7、处理乱码问题</em>中，我们尝试在获取请求参数之前，通过<code>request.setCharacterEncoding(&quot;UTF-8&quot;);</code>来设置请求编码格式，但是没有生效。分析的原因是“请求参数获取在前，设置编码格式在后”导致的。</p>
+</blockquote>
+<blockquote>
+<p>我们也提出了 2 种解决方案：</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>1、获取请求参数之后，手动解码编码。但是这种显然不合理，所以直接 pass</li>
+<li>2、获取请求参数之前“做手脚”。这种方式就是 SpringMVC 中提供的<code>CharacterEncodingFilter</code>过滤器，来对请求编码做统一处理</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>现在的问题就是：在<code>CharacterEncodingFilter</code>之前配置了<code>HiddenHttpMethodFilter</code>导致了失效</p>
+</blockquote>
+<blockquote>
+<p>所以我们需要搞清楚，为什么<code>CharacterEncodingFilter</code>的配置顺序会影响到编码的效果？或者说为什么<code>HiddenHttpMethodFilter</code>会使之失效？</p>
+</blockquote>
+<p>通过上面对<code>HiddenHttpMethodFilter</code>源码的剖析，它会获得<code>_method</code>这个请求参数，这就导致执行到<code>CharacterEncodingFilter</code>过滤器时，已经是获取请求参数之后了，所以会导致上述中文乱码问题</p>
+<p>因此，我们必须要将<code>CharacterEncodingFilter</code>过滤器尽量配置在其他过滤器之前。这样就能保证在任何过滤器获取请求之前，获得的失已经处理过编码格式的请求参数了</p>
+<p>我们再将<code>CharacterEncodingFilter</code>和<code>HiddenHttpMethodFilter</code>的配置顺序还原至之前的状态，即<code>CharacterEncodingFilter</code>在前而<code>HiddenHttpMethodFilter</code>在后的情况，进行测试再查看后台日志信息</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">修改用户信息：User&#123;username=&#x27;张三&#x27;, password=&#x27;&#x27;, gender=&#x27;male&#x27;, age=&#x27;18&#x27;, email=&#x27;123@qq.com&#x27;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这时，当请求参数中包含中文时，就不会出现乱码的情况了</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本节重点掌握内容</p>
+<ul>
+<li><p>明确<code>REST</code>和<code>RESTful</code>的关系，明确表现层、资源、状态、转移这几个概念的含义</p>
+<ul>
+<li><code>REST</code>，表现层资源状态转移</li>
+<li><code>RESTful</code>，基于<code>REST</code>构建的 API 就是<code>RESTful</code>风格</li>
+</ul>
+</li>
+<li><p>明确<code>RESTful</code>的实现，是通过不同的请求方式来对应资源的不同操作，通过路径中的占位符传递请求参数</p>
+</li>
+<li><p>熟练掌握如何通过<code>RESTful</code>进行资源的增删改查操作，以及如何处理<code>PUT</code>和<code>DELETE</code>这两种特殊的请求方式</p>
+</li>
+<li><p>明确<code>CharacterEncodingFilter</code>和<code>HiddenHttpMethodFilter</code>的配置顺序，明白两个过滤器的源码处理逻辑</p>
+</li>
+</ul>
+<p>附上导图，仅供参考</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/e075e581/916bcd2e9ad1659db41fe3784c9eabea.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/e075e581">https://fulsun.github.io/p/e075e581</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringMVC/">SpringMVC</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/005.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/11ba7d5f" title="SpringMVC下RESTful案例"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringMVC下RESTful案例</div></div></a></div><div class="next-post pull-right"><a href="/p/93f9b498" title="SpringMVC域对象共享数据"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringMVC域对象共享数据</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/c981d7b3" title="SpringMVC 简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 简介</div></div></a></div><div><a href="/p/777f3582" title="SpringMVC的执行流程"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC的执行流程</div></div></a></div><div><a href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC基于cors的跨域解决方案</div></div></a></div><div><a href="/p/78b93ee9" title="RequestMapping注解"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">RequestMapping注解</div></div></a></div><div><a href="/p/3b6d56d0" title="SpringMVC 获取请求参数"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 获取请求参数</div></div></a></div><div><a href="/p/93f9b498" title="SpringMVC域对象共享数据"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC域对象共享数据</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-%E7%AE%80%E4%BB%8B"><span class="toc-text">RESTful 简介</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90"><span class="toc-text">资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B5%84%E6%BA%90%E7%9A%84%E8%A1%A8%E8%BF%B0"><span class="toc-text">资源的表述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%8A%B6%E6%80%81%E8%BD%AC%E7%A7%BB"><span class="toc-text">状态转移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RESTful-%E5%AE%9E%E7%8E%B0"><span class="toc-text">RESTful 实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-RESTful-%E6%A8%A1%E6%8B%9F%E6%93%8D%E4%BD%9C%E7%94%A8%E6%88%B7%E8%B5%84%E6%BA%90"><span class="toc-text">使用 RESTful 模拟操作用户资源</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0"><span class="toc-text">添加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4"><span class="toc-text">删除</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CharacterEncodingFilter-%E5%92%8C-HiddenHttpMethodFilter-%E7%9A%84%E9%85%8D%E7%BD%AE%E9%A1%BA%E5%BA%8F"><span class="toc-text">CharacterEncodingFilter 和 HiddenHttpMethodFilter 的配置顺序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Gradle入门 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Gradle极速入门">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle入门">
+<meta property="og:url" content="https://fulsun.github.io/p/fd049abe">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="Gradle极速入门">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/001.webp">
+<meta property="article:published_time" content="2024-01-05T14:03:38.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.278Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Gradle">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/001.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/fd049abe"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Gradle入门',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/001.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Gradle入门</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-01-05T14:03:38.000Z" title="发表于 2024-01-05 14:03:38">2024-01-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.278Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Gradle/">Gradle</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.5k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>11分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Gradle入门"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="基础环境"><a href="#基础环境" class="headerlink" title="基础环境"></a>基础环境</h2><h3 id="下载gradle"><a href="#下载gradle" class="headerlink" title="下载gradle"></a>下载gradle</h3><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://gradle.org/releases/">https://gradle.org/releases/</a></p>
+<blockquote>
+<p><strong>解压到磁盘</strong></p>
+</blockquote>
+<h3 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><ol>
+<li><code>GRADLE_HOME(MAVEN_HOME)</code> D:\dev\gradle-7.4</li>
+<li><code>PATH</code> %GRADLE_HOME%\bin</li>
+<li><code>GRADLE_USER_HOME(maven本地仓库位置)</code> D:\dev\gradle-7.4\gradle_repository 相当于是配置Gradle 本地仓库位置和 Gradle Wrapper 缓存目录。</li>
+</ol>
+<h3 id="配置下载加速"><a href="#配置下载加速" class="headerlink" title="配置下载加速"></a>配置下载加速</h3><p>Gradle还是从maven仓库下载的,给gradle安装目录下init.d文件夹，放一个init.gradle文件，即可进行加速下载。内容如下：</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line">gradle.projectsLoaded &#123;</span><br><span class="line">    rootProject.<span class="keyword">allprojects</span> &#123;</span><br><span class="line">        <span class="keyword">buildscript</span> &#123;</span><br><span class="line">            <span class="keyword">repositories</span> &#123;</span><br><span class="line">                <span class="keyword">def</span> JCENTER_URL = <span class="string">&#x27;https://maven.aliyun.com/repository/jcenter&#x27;</span></span><br><span class="line">                <span class="keyword">def</span> GOOGLE_URL = <span class="string">&#x27;https://maven.aliyun.com/repository/google&#x27;</span></span><br><span class="line">                <span class="keyword">def</span> NEXUS_URL = <span class="string">&#x27;http://maven.aliyun.com/nexus/content/repositories/jcenter&#x27;</span></span><br><span class="line">                all &#123; ArtifactRepository repo -&gt;</span><br><span class="line">                    <span class="keyword">if</span> (repo <span class="keyword">instanceof</span> MavenArtifactRepository) &#123;</span><br><span class="line">                        <span class="keyword">def</span> url = repo.url.toString()</span><br><span class="line">                        <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://jcenter.bintray.com/&#x27;</span>)) &#123;</span><br><span class="line">                            <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $JCENTER_URL.&quot;</span></span><br><span class="line">                            <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by $JCENTER_URL.&quot;</span>)</span><br><span class="line">                            remove repo</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span> <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://dl.google.com/dl/android/maven2/&#x27;</span>)) &#123;</span><br><span class="line">                            <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $GOOGLE_URL.&quot;</span></span><br><span class="line">                            <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by  $GOOGLE_URL.&quot;</span>)</span><br><span class="line">                            remove repo</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="keyword">else</span> <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://repo1.maven.org/maven2&#x27;</span>)) &#123;</span><br><span class="line">                            <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $REPOSITORY_URL.&quot;</span></span><br><span class="line">                            <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by $REPOSITORY_URL.&quot;</span>)</span><br><span class="line">                            remove repo</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                jcenter &#123;</span><br><span class="line">                    url JCENTER_URL</span><br><span class="line">                &#125;</span><br><span class="line">                google &#123;</span><br><span class="line">                    url GOOGLE_URL</span><br><span class="line">                &#125;</span><br><span class="line">                maven &#123;</span><br><span class="line">                    url NEXUS_URL</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">repositories</span> &#123;</span><br><span class="line">            <span class="keyword">def</span> JCENTER_URL = <span class="string">&#x27;https://maven.aliyun.com/repository/jcenter&#x27;</span></span><br><span class="line">            <span class="keyword">def</span> GOOGLE_URL = <span class="string">&#x27;https://maven.aliyun.com/repository/google&#x27;</span></span><br><span class="line">            <span class="keyword">def</span> NEXUS_URL = <span class="string">&#x27;http://maven.aliyun.com/nexus/content/repositories/jcenter&#x27;</span></span><br><span class="line">            all &#123; ArtifactRepository repo -&gt;</span><br><span class="line">                <span class="keyword">if</span> (repo <span class="keyword">instanceof</span> MavenArtifactRepository) &#123;</span><br><span class="line">                    <span class="keyword">def</span> url = repo.url.toString()</span><br><span class="line">                    <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://jcenter.bintray.com/&#x27;</span>)) &#123;</span><br><span class="line">                        <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $JCENTER_URL.&quot;</span></span><br><span class="line">                        <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by $JCENTER_URL.&quot;</span>)</span><br><span class="line">                        remove repo</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://dl.google.com/dl/android/maven2/&#x27;</span>)) &#123;</span><br><span class="line">                        <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $GOOGLE_URL.&quot;</span></span><br><span class="line">                        <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by $GOOGLE_URL.&quot;</span>)</span><br><span class="line">                        remove repo</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="keyword">else</span> <span class="keyword">if</span> (url.startsWith(<span class="string">&#x27;https://repo1.maven.org/maven2&#x27;</span>)) &#123;</span><br><span class="line">                        <span class="keyword">project</span>.logger.lifecycle <span class="string">&quot;Repository $&#123;repo.url&#125; replaced by $REPOSITORY_URL.&quot;</span></span><br><span class="line">                        <span class="keyword">println</span>(<span class="string">&quot;buildscript $&#123;repo.url&#125; replaced by $REPOSITORY_URL.&quot;</span>)</span><br><span class="line">                        remove repo</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            jcenter &#123;</span><br><span class="line">                url JCENTER_URL</span><br><span class="line">            &#125;</span><br><span class="line">            google &#123;</span><br><span class="line">                url GOOGLE_URL</span><br><span class="line">            &#125;</span><br><span class="line">            maven &#123;</span><br><span class="line">                url NEXUS_URL</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Gradle项目说明"><a href="#Gradle项目说明" class="headerlink" title="Gradle项目说明"></a>Gradle项目说明</h2><h3 id="项目结构"><a href="#项目结构" class="headerlink" title="项目结构"></a>项目结构</h3><ul>
+<li><p><code>src/main/java</code> - 文件夹包含所有java源文件。</p>
+</li>
+<li><p><code>src/test/java</code> - 文件夹包含所有java测试用例。</p>
+</li>
+<li><p><strong>build.gradle</strong> ：管理依赖包的配置文件（相当于Maven的pom.xml）。</p>
+</li>
+<li><p><strong>settings.gradle</strong> ：可以视为多模块项目的总目录， Gradle 通过它来构建各个模块，并组织模块间的关系。</p>
+</li>
+<li><p><strong>gradlew</strong> ：Gradle 命令的包装，当机器上没有安装 Gradle 时，可以直接用 gradlew 命令来构建项目。</p>
+</li>
+<li><p><strong>gradle&#x2F;wrapper包</strong> ：Gradle 的一层包装，能够让机器在不安装 Gradle 的情况下运行程序，便于在团队开发过程中统一 Gradle 构建的版本， <strong><a target="_blank" rel="noopener external nofollow noreferrer" href="https://m.elecfans.com/v/">推荐</a>使用</strong> 。</p>
+</li>
+<li><p><strong>gradle.properties</strong> ：需手动创建，配置gradle环境变量，或配置自定义变量供 build.gradle 使用。</p>
+</li>
+</ul>
+<h3 id="导包方式"><a href="#导包方式" class="headerlink" title="导包方式"></a>导包方式</h3><p><strong>①、implementation</strong></p>
+<ul>
+<li>导入依赖，不传递给子模块，依赖项将被编译和打包到项目中</li>
+</ul>
+<p><strong>②、api</strong></p>
+<ul>
+<li>导入依赖，传递给子模块，依赖项将被编译和打包到项目中</li>
+</ul>
+<p><strong>③、implementation和api的区别</strong></p>
+<ul>
+<li>关于implementation、api的传递依赖具体问题可以见博问（感谢大佬：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.cnblogs.com/basic60/">@basic60</a>）<br><a target="_blank" rel="noopener external nofollow noreferrer" href="https://q.cnblogs.com/q/143866/">https://q.cnblogs.com/q/143866/</a></li>
+<li>关于所有的导包方式的区别也可以见管网：<br><a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.gradle.org/current/userguide/java_library_plugin.html">https://docs.gradle.org/current/userguide/java_library_plugin.html</a></li>
+</ul>
+<p><strong>④、compileOnly</strong></p>
+<ul>
+<li>导入依赖，不传递给子模块，依赖项将被编译到项目中，不打包到项目</li>
+</ul>
+<p><strong>⑤、compileOnlyApi</strong></p>
+<ul>
+<li>导入依赖，传递给子模块，依赖项将被编译到项目中，不打包到项目</li>
+</ul>
+<h3 id="build-gradle配置文件"><a href="#build-gradle配置文件" class="headerlink" title="build.gradle配置文件"></a>build.gradle配置文件</h3><ul>
+<li>相当于Maven的pom文件，主要是配置模块，导入依赖的作用</li>
+</ul>
+<p><strong>①、allprojects</strong></p>
+<ul>
+<li>里面的配置，所有模块生效</li>
+<li>一般配置包的信息、编码、仓库地址</li>
+</ul>
+<figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">allprojects</span> &#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>②、subprojects</strong></p>
+<ul>
+<li>里面的配置，只有自己和子模块生效</li>
+<li>一般配置插件、统一包的版本管理、打包方式等等</li>
+</ul>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">subprojects </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>③、dependencies</strong></p>
+<ul>
+<li>导入依赖，相当于Maven的<code>&lt;dependency&gt;&lt;/dependency&gt; </code>导包</li>
+<li>引入依赖演示</li>
+</ul>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">// api可以传递依赖、implementation不能传递依赖</span></span><br><span class="line">    <span class="comment">// hutool工具类</span></span><br><span class="line">    api <span class="string">&#x27;cn.hutool:hutool-all&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>引入模块演示</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">//依赖公共模块</span></span><br><span class="line">    api <span class="title function_">project</span><span class="params">(<span class="string">&quot;:模块地址&quot;</span>)</span></span><br><span class="line">    implementation <span class="title function_">project</span><span class="params">(<span class="string">&quot;:GradleParent:GradleUtil&quot;</span>)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="settings-gradle配置文件"><a href="#settings-gradle配置文件" class="headerlink" title="settings.gradle配置文件"></a>settings.gradle配置文件</h3><ul>
+<li>配置模块间的信息，见后面具体实现</li>
+</ul>
+<h2 id="实战"><a href="#实战" class="headerlink" title="实战"></a>实战</h2><h3 id="项目结构-1"><a href="#项目结构-1" class="headerlink" title="项目结构"></a>项目结构</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-GradleMultiModule</span><br><span class="line"> -GradleParent          包装common、util的父模块（实际中可以不要，这里演示导包、传递依赖等）</span><br><span class="line">  -GradleCommon         公共模块，用于装entity或者mapper等</span><br><span class="line">  -GradleUtil           工具类模块</span><br><span class="line"> -GradleServer          业务模块的父模块，用于给子模块统一导入springboot的包</span><br><span class="line">  -GradleOne            业务模块1 - 依赖GradleCommon、GradleUtil</span><br><span class="line">  -GradleTwo            业务模块2 - 依赖</span><br><span class="line">  -GradleStart          启动模块 - 导入GradleOne、GradleTwo依赖，启动项目</span><br></pre></td></tr></table></figure>
+
+<h3 id="新建模块"><a href="#新建模块" class="headerlink" title="新建模块"></a>新建模块</h3><ul>
+<li><p>就是用idea创建springboot的gradle项目</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/fd049abe/f082ad7bb72aa0597be50d03c186679b.png"></p>
+</li>
+</ul>
+<h3 id="各个模块的配置及类"><a href="#各个模块的配置及类" class="headerlink" title="各个模块的配置及类"></a>各个模块的配置及类</h3><h4 id="GradleMultiModule模块"><a href="#GradleMultiModule模块" class="headerlink" title="GradleMultiModule模块"></a>GradleMultiModule模块</h4><ul>
+<li><p>顶级父模块</p>
+</li>
+<li><p>统一配置 build.gradle (还可以配置gradle的版本)</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//插件</span></span><br><span class="line">plugins &#123;</span><br><span class="line">    id <span class="string">&#x27;java&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;idea&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;java-library&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;org.springframework.boot&#x27;</span> version <span class="string">&#x27;2.7.15&#x27;</span></span><br><span class="line">    id <span class="string">&#x27;io.spring.dependency-management&#x27;</span> version <span class="string">&#x27;1.0.15.RELEASE&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//allprojects：所有模块生效</span></span><br><span class="line">allprojects &#123;</span><br><span class="line">    <span class="comment">// 配置项目信息</span></span><br><span class="line">    group = <span class="string">&#x27;com.cc&#x27;</span></span><br><span class="line">    version = <span class="string">&#x27;0.0.1-SNAPSHOT&#x27;</span></span><br><span class="line">    <span class="comment">// 配置字符编码</span></span><br><span class="line">    tasks.withType(JavaCompile).configureEach &#123;</span><br><span class="line">        options.encoding = <span class="string">&#x27;UTF-8&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    java &#123;</span><br><span class="line">        sourceCompatibility = <span class="string">&#x27;8&#x27;</span></span><br><span class="line">        targetCompatibility = <span class="string">&#x27;8&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//仓库配置</span></span><br><span class="line">    repositories &#123;</span><br><span class="line">        <span class="comment">//本地</span></span><br><span class="line">        mavenLocal()</span><br><span class="line">        <span class="comment">//阿里仓库</span></span><br><span class="line">        maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/public/&#x27;</span> &#125;</span><br><span class="line">        <span class="comment">//公司仓库。必须用：https。Gradle默认情况下不允许使用不安全的协议，以提高安全性。</span></span><br><span class="line">        maven &#123; url <span class="string">&#x27;https://******:****/repository/maven-public/&#x27;</span> &#125;</span><br><span class="line">        <span class="comment">//中央仓库</span></span><br><span class="line">        mavenCentral()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//subprojects：所有子模块生效——springboot配置、导包版本管理、打包管理</span></span><br><span class="line">subprojects &#123;</span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&#x27;java&#x27;</span></span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&#x27;java-library&#x27;</span></span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&#x27;idea&#x27;</span></span><br><span class="line">    <span class="comment">//所有子模块都是springboot项目，如不是，不能打包。</span></span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&#x27;org.springframework.boot&#x27;</span></span><br><span class="line">    apply <span class="attr">plugin:</span> <span class="string">&#x27;io.spring.dependency-management&#x27;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//所有子模块的-依赖版本管理</span></span><br><span class="line">    dependencyManagement &#123;</span><br><span class="line">        dependencies &#123;</span><br><span class="line">            dependency <span class="string">&#x27;cn.hutool:hutool-all:5.0.7&#x27;</span></span><br><span class="line">            dependency <span class="string">&quot;org.apache.commons:commons-lang3:3.5&quot;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//使用 gradle打包工具</span></span><br><span class="line">    jar &#123;</span><br><span class="line">        manifest.attributes <span class="attr">provider:</span> <span class="string">&#x27;gradle&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    tasks.named(<span class="string">&#x27;test&#x27;</span>) &#123;</span><br><span class="line">        useJUnitPlatform()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 配置gradle的版本</span></span><br><span class="line">wrapper &#123;</span><br><span class="line">    <span class="comment">//gradle的版本</span></span><br><span class="line">    gradleVersion = <span class="string">&#x27;7.4&#x27;</span></span><br><span class="line">    <span class="comment">//版本类型：BIN、ALL（完全版，可以看gradle的代码）</span></span><br><span class="line">    distributionType = <span class="string">&#x27;ALL&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置所有模块的关系 settings.gradle</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">rootProject.name = <span class="string">&#x27;GradleMultiModule&#x27;</span></span><br><span class="line"></span><br><span class="line">//公共模块总模块</span><br><span class="line">include <span class="string">&#x27;GradleParent&#x27;</span></span><br><span class="line">include <span class="string">&#x27;:GradleParent:GradleCommon&#x27;</span></span><br><span class="line">include <span class="string">&#x27;:GradleParent:GradleUtil&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:GradleParent:GradleCommon&#x27;</span>)?.name = <span class="string">&#x27;GradleCommon&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:GradleParent:GradleUtil&#x27;</span>)?.name = <span class="string">&#x27;GradleUtil&#x27;</span></span><br><span class="line"></span><br><span class="line">//业务模块总模块</span><br><span class="line">include <span class="string">&#x27;GradleServer&#x27;</span></span><br><span class="line">include <span class="string">&#x27;:GradleServer:GradleStart&#x27;</span></span><br><span class="line">include <span class="string">&#x27;:GradleServer:GradleOne&#x27;</span></span><br><span class="line">include <span class="string">&#x27;:GradleServer:GradleTwo&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:GradleServer:GradleStart&#x27;</span>)?.name = <span class="string">&#x27;GradleStart&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:GradleServer:GradleOne&#x27;</span>)?.name = <span class="string">&#x27;GradleOne&#x27;</span></span><br><span class="line">project(<span class="string">&#x27;:GradleServer:GradleTwo&#x27;</span>)?.name = <span class="string">&#x27;GradleTwo&#x27;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleParent模块（公共）"><a href="#GradleParent模块（公共）" class="headerlink" title="GradleParent模块（公共）"></a>GradleParent模块（公共）</h4><ul>
+<li><p>统一公共模块依赖</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置所有子模块</span></span><br><span class="line">subprojects &#123;</span><br><span class="line">    <span class="comment">//这里可以导入公共的依赖</span></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">// compileOnly：这样做可以确保Lombok在编译时可用，但不会包含在最终的构建产物中，从而减小构建产物的大小。</span></span><br><span class="line">        <span class="comment">// api：依赖可以传递给子模块</span></span><br><span class="line">        <span class="comment">// compileOnlyApi：仅编译时可用，不包含在构建产物中，并且可以传递给子模块</span></span><br><span class="line">        compileOnlyApi <span class="string">&#x27;org.projectlombok:lombok&#x27;</span></span><br><span class="line">        <span class="comment">// 表示将Lombok库作为注解处理器导入。</span></span><br><span class="line">        annotationProcessor <span class="string">&#x27;org.projectlombok:lombok&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleCommon模块（公共）"><a href="#GradleCommon模块（公共）" class="headerlink" title="GradleCommon模块（公共）"></a>GradleCommon模块（公共）</h4><ul>
+<li><p>公共模块，存放Entity</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    // api可以传递依赖、implementation不能传递依赖</span><br><span class="line">    // hutool工具类</span><br><span class="line">    api <span class="string">&#x27;cn.hutool:hutool-all&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleUtil模块（公共）"><a href="#GradleUtil模块（公共）" class="headerlink" title="GradleUtil模块（公共）"></a>GradleUtil模块（公共）</h4><ul>
+<li><p>存放所有工具类</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">// api可以传递依赖、implementation不能传递依赖</span></span><br><span class="line">    api <span class="string">&#x27;org.apache.commons:commons-lang3&#x27;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleServer模块（业务）"><a href="#GradleServer模块（业务）" class="headerlink" title="GradleServer模块（业务）"></a>GradleServer模块（业务）</h4><ul>
+<li><p>业务模块的父模块，用于统一导入springboot的包</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 子模块生效</span></span><br><span class="line">subprojects &#123;</span><br><span class="line">    <span class="comment">//配置子模块依赖</span></span><br><span class="line">    dependencies &#123;</span><br><span class="line">        <span class="comment">//导入业务模块的公共包 - SpringBoot的包</span></span><br><span class="line">        <span class="comment">//不用api，不用传递</span></span><br><span class="line">        implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter&#x27;</span></span><br><span class="line">        implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-web&#x27;</span></span><br><span class="line">        testImplementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleOne模块（业务）"><a href="#GradleOne模块（业务）" class="headerlink" title="GradleOne模块（业务）"></a>GradleOne模块（业务）</h4><ul>
+<li><p>引入：GradleCommon、GradleUtil模块</p>
+</li>
+<li><p>测试是否能使用引入模块的类、引入模块的依赖</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    //依赖公共模块</span><br><span class="line">    //api传递给子模块</span><br><span class="line">    api project(<span class="string">&quot;:GradleParent:GradleCommon&quot;</span>)</span><br><span class="line">    api project(<span class="string">&quot;:GradleParent:GradleUtil&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleTwo模块（业务）"><a href="#GradleTwo模块（业务）" class="headerlink" title="GradleTwo模块（业务）"></a>GradleTwo模块（业务）</h4><ul>
+<li><p>引入：GradleCommon、GradleUtil模块</p>
+</li>
+<li><p>测试是否能使用引入模块的类、引入模块的依赖</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">//依赖公共模块：implementation不传递依赖；api传递依赖</span></span><br><span class="line">    <span class="comment">//这里不传递依赖，因为会造成GradleStart有多个重复依赖</span></span><br><span class="line">    implementation project(<span class="string">&quot;:GradleParent:GradleCommon&quot;</span>)</span><br><span class="line">    implementation project(<span class="string">&quot;:GradleParent:GradleUtil&quot;</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h4 id="GradleStart启动模块（业务）"><a href="#GradleStart启动模块（业务）" class="headerlink" title="GradleStart启动模块（业务）"></a>GradleStart启动模块（业务）</h4><ul>
+<li><p>启动springboot项目</p>
+</li>
+<li><p>引入所有业务模块</p>
+</li>
+<li><p>配置SpringMVc</p>
+</li>
+<li><p>此模块不写任何的业务</p>
+</li>
+<li><p>build.gradle</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">dependencies &#123;</span><br><span class="line">    <span class="comment">// 依赖GradleOne、GradleTwo，将该模块纳入启动中（加入springboot项目中）</span></span><br><span class="line">    api project(<span class="string">&#x27;:GradleServer:GradleOne&#x27;</span>)</span><br><span class="line">    api project(<span class="string">&#x27;:GradleServer:GradleTwo&#x27;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 其他依赖项...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="简单SpringBoot"><a href="#简单SpringBoot" class="headerlink" title="简单SpringBoot"></a>简单SpringBoot</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;</span><br><span class="line">    <span class="built_in">id</span> <span class="string">&#x27;java&#x27;</span></span><br><span class="line">    <span class="built_in">id</span> <span class="string">&#x27;idea&#x27;</span></span><br><span class="line">    //所有子模块都是springboot项目，如不是，不能打包。</span><br><span class="line">    <span class="built_in">id</span> <span class="string">&#x27;org.springframework.boot&#x27;</span> version(<span class="string">&#x27;2.2.2.RELEASE&#x27;</span>)</span><br><span class="line">    <span class="built_in">id</span> <span class="string">&#x27;io.spring.dependency-management&#x27;</span> version(<span class="string">&#x27;1.0.15.RELEASE&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">group = <span class="string">&#x27;pers.fulsun&#x27;</span></span><br><span class="line">version = <span class="string">&#x27;1.0-SNAPSHOT&#x27;</span></span><br><span class="line"></span><br><span class="line">dependencies &#123;</span><br><span class="line">    //导入业务模块的公共包 - SpringBoot的包</span><br><span class="line">    //不用api，不用传递</span><br><span class="line">    implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter&#x27;</span></span><br><span class="line">    implementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-web&#x27;</span></span><br><span class="line">    testImplementation <span class="string">&#x27;org.springframework.boot:spring-boot-starter-test&#x27;</span></span><br><span class="line">    // compileOnlyApi：仅编译时可用，不包含在构建产物中，并且可以传递给子模块</span><br><span class="line">    compileOnly(<span class="string">&#x27;org.projectlombok:lombok&#x27;</span>)</span><br><span class="line">    annotationProcessor <span class="string">&#x27;org.projectlombok:lombok&#x27;</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//allprojects：所有模块生效</span><br><span class="line">allprojects &#123;</span><br><span class="line">    // 配置项目信息</span><br><span class="line">    group = <span class="string">&#x27;com.cc&#x27;</span></span><br><span class="line">    version = <span class="string">&#x27;0.0.1-SNAPSHOT&#x27;</span></span><br><span class="line">    // 配置字符编码</span><br><span class="line">    tasks.withType(JavaCompile).configureEach &#123;</span><br><span class="line">        options.encoding = <span class="string">&#x27;UTF-8&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    java &#123;</span><br><span class="line">        sourceCompatibility = <span class="string">&#x27;8&#x27;</span></span><br><span class="line">        targetCompatibility = <span class="string">&#x27;8&#x27;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    //仓库配置</span><br><span class="line">    repositories &#123;</span><br><span class="line">        //本地</span><br><span class="line">        mavenLocal()</span><br><span class="line">        //阿里仓库</span><br><span class="line">        maven &#123; url <span class="string">&#x27;https://maven.aliyun.com/repository/public/&#x27;</span> &#125;</span><br><span class="line">        //公司仓库。必须用：https。Gradle默认情况下不允许使用不安全的协议，以提高安全性。</span><br><span class="line">        maven &#123; url <span class="string">&#x27;https://******:****/repository/maven-public/&#x27;</span> &#125;</span><br><span class="line">        //中央仓库</span><br><span class="line">        mavenCentral()</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/fd049abe">https://fulsun.github.io/p/fd049abe</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Gradle/">Gradle</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/001.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/654e767c" title="Class文件结构"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Class文件结构</div></div></a></div><div class="next-post pull-right"><a href="/p/2738c923" title="SpringBoot&amp;Cloud的版本关系"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringBoot&amp;Cloud的版本关系</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%8E%AF%E5%A2%83"><span class="toc-text">基础环境</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8B%E8%BD%BDgradle"><span class="toc-text">下载gradle</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-text">配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%8B%E8%BD%BD%E5%8A%A0%E9%80%9F"><span class="toc-text">配置下载加速</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gradle%E9%A1%B9%E7%9B%AE%E8%AF%B4%E6%98%8E"><span class="toc-text">Gradle项目说明</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84"><span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%8C%85%E6%96%B9%E5%BC%8F"><span class="toc-text">导包方式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#build-gradle%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">build.gradle配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#settings-gradle%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-text">settings.gradle配置文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98"><span class="toc-text">实战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A1%B9%E7%9B%AE%E7%BB%93%E6%9E%84-1"><span class="toc-text">项目结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B0%E5%BB%BA%E6%A8%A1%E5%9D%97"><span class="toc-text">新建模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%84%E4%B8%AA%E6%A8%A1%E5%9D%97%E7%9A%84%E9%85%8D%E7%BD%AE%E5%8F%8A%E7%B1%BB"><span class="toc-text">各个模块的配置及类</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleMultiModule%E6%A8%A1%E5%9D%97"><span class="toc-text">GradleMultiModule模块</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleParent%E6%A8%A1%E5%9D%97%EF%BC%88%E5%85%AC%E5%85%B1%EF%BC%89"><span class="toc-text">GradleParent模块（公共）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleCommon%E6%A8%A1%E5%9D%97%EF%BC%88%E5%85%AC%E5%85%B1%EF%BC%89"><span class="toc-text">GradleCommon模块（公共）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleUtil%E6%A8%A1%E5%9D%97%EF%BC%88%E5%85%AC%E5%85%B1%EF%BC%89"><span class="toc-text">GradleUtil模块（公共）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleServer%E6%A8%A1%E5%9D%97%EF%BC%88%E4%B8%9A%E5%8A%A1%EF%BC%89"><span class="toc-text">GradleServer模块（业务）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleOne%E6%A8%A1%E5%9D%97%EF%BC%88%E4%B8%9A%E5%8A%A1%EF%BC%89"><span class="toc-text">GradleOne模块（业务）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleTwo%E6%A8%A1%E5%9D%97%EF%BC%88%E4%B8%9A%E5%8A%A1%EF%BC%89"><span class="toc-text">GradleTwo模块（业务）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#GradleStart%E5%90%AF%E5%8A%A8%E6%A8%A1%E5%9D%97%EF%BC%88%E4%B8%9A%E5%8A%A1%EF%BC%89"><span class="toc-text">GradleStart启动模块（业务）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95SpringBoot"><span class="toc-text">简单SpringBoot</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

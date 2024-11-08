@@ -1,0 +1,312 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Scoop包管理器 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="通过scoop来安装工具，工具都会自动添加到环境变量中，非常方便。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scoop包管理器">
+<meta property="og:url" content="https://fulsun.github.io/p/de9f934c">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="通过scoop来安装工具，工具都会自动添加到环境变量中，非常方便。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/013.webp">
+<meta property="article:published_time" content="2021-01-02T17:04:09.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.274Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="scoop">
+<meta property="article:tag" content="软件下载">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/013.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/de9f934c"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Scoop包管理器',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/013.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">Scoop包管理器</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-01-02T17:04:09.000Z" title="发表于 2021-01-02 17:04:09">2021-01-02</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.274Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Windows/">Windows</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>7分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="Scoop包管理器"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="前提条件"><a href="#前提条件" class="headerlink" title="前提条件"></a>前提条件</h2><blockquote>
+<p>Scoop是Windows的命令行安装程序,帮助我们管理开发环境。通过scoop来安装工具，工具都会自动添加到环境变量中，非常方便。</p>
+</blockquote>
+<p>Windows 7 SP1 + &#x2F; Windows Server 2008+</p>
+<p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://learn.microsoft.com/zh-cn/powershell/">PowerShell</a> 版本在 5.1 或以上，如果没有 PowerShell 大于 5.1 版本，可以下载安装 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/PowerShell/PowerShell">PowerShell Core</a>。运行以下命令查看：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$psversiontable</span>.psversion.major <span class="comment"># should be &gt;= 5.1</span></span><br></pre></td></tr></table></figure>
+
+<p>其次，允许本地运行 PowerShell 脚本，以管理员打开 PowerShell，运行以下命令，回答 Y：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 先在终端改变其策略</span></span><br><span class="line">Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</span><br></pre></td></tr></table></figure>
+
+<p>Windows Defender快速添加信任名单：Powershell管理员权限执行</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Add-MpPreference -ExclusionPath <span class="string">&quot;<span class="subst">$($env:programdata)</span>\scoop&quot;</span>, <span class="string">&quot;<span class="subst">$($env:scoop)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>要撤销此操作：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Remove-MpPreference -ExclusionPath <span class="string">&quot;<span class="subst">$($env:programdata)</span>\scoop&quot;</span>, <span class="string">&quot;<span class="subst">$($env:scoop)</span>&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="SCOOP安装"><a href="#SCOOP安装" class="headerlink" title="SCOOP安装"></a>SCOOP安装</h2><p>从PowerShell中运行以下命令，其默认位置（C:\Users&lt;user&gt;\scoop）,所有用户安装的程序和Scoop本身都位于其中C:\Users&lt;user&gt;\scoop。全局安装的程序（–global）位于中<code>C:\ProgramData\scoop</code>。</p>
+<p>可以通过环境变量更改这些设置 _不推荐了_。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$env</span>:SCOOP=<span class="string">&#x27;D:\scoop&#x27;</span></span><br><span class="line">[environment]::setEnvironmentVariable(<span class="string">&#x27;SCOOP&#x27;</span>,<span class="variable">$env</span>:SCOOP,<span class="string">&#x27;User&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 配置环境变量并添加到path中</span></span><br><span class="line"><span class="variable">$env</span>:SCOOP_GLOBAL=<span class="string">&#x27;D:\scoop\Global&#x27;</span></span><br><span class="line">[Environment]::SetEnvironmentVariable(<span class="string">&#x27;SCOOP_GLOBAL&#x27;</span>, <span class="variable">$env</span>:SCOOP_GLOBAL, <span class="string">&#x27;Machine&#x27;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>打开 PowerShell，输入以下命令下载安装 Scoop：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># run the installer</span></span><br><span class="line">Invoke-Expression (New-Object System.Net.WebClient).DownloadString(<span class="string">&#x27;https://get.scoop.sh&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># or shorter</span></span><br><span class="line">iwr -useb get.scoop.sh | iex</span><br></pre></td></tr></table></figure>
+
+<h2 id="安装问题"><a href="#安装问题" class="headerlink" title="安装问题"></a>安装问题</h2><blockquote>
+<p>在中国访问却可能在每个环节都会遇到无法下载的问题。依次会遇到的是：</p>
+</blockquote>
+<ol>
+<li>首先从 GitHub Raw 下载 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://raw.githubusercontent.com/duzyn/wood/master/install.ps1">Scoop 安装脚本</a>，此时下载会失败。</li>
+<li>如果第一步成功后，会下载 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ScoopInstaller/Scoop/archive/master.zip">Scoop 仓库存档</a> 和 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ScoopInstaller/Main/archive/master.zip">Main 应用仓库存档</a>，此时下载又会失败。</li>
+<li>如果第二步成功后，会先下载 7-Zip 和 Git 来做后面的事，因为 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.7-zip.org/">7-Zip 的官网</a> 也是会偶尔无法访问，Git 下载地址在 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/git-for-windows/git/releases">GitHub Release</a>，此时下载又会失败</li>
+<li>如果第三步成功后，会从官方 Main 应用仓库检出代码，地址在 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ScoopInstaller/Main">GitHub 仓库</a>，此时下载又会失败</li>
+<li>如果第四步成功后，更新 Scoop 时会从官方 Scoop 仓库检出代码，地址在 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ScoopInstaller/Scoop/">GitHub 仓库</a>，此时下载又会失败</li>
+<li>后续添加、检出 extra 等应用仓库都会失败</li>
+</ol>
+<p>如果你使用 Scoop 没有遇到这些问题，恭喜你，后面的内容不用看了。</p>
+<h2 id="官方安装"><a href="#官方安装" class="headerlink" title="官方安装"></a>官方安装</h2><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</span><br><span class="line">irm get.scoop.sh -outfile <span class="string">&#x27;install.ps1&#x27;</span></span><br><span class="line">.\install.ps1 -RunAsAdmin -ScoopDir <span class="string">&#x27;D:\Applications\Scoop&#x27;</span> -ScoopGlobalDir <span class="string">&#x27;F:\GlobalScoopApps&#x27;</span> -NoProxy</span><br></pre></td></tr></table></figure>
+
+<h2 id="国内源安装"><a href="#国内源安装" class="headerlink" title="国内源安装"></a>国内源安装</h2><p>github加速工具:<a target="_blank" rel="noopener external nofollow noreferrer" href="https://ghproxy.com/">https://ghproxy.com/</a></p>
+<p>一键安装脚本</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">irm https://ghproxy.com/raw.githubusercontent.com/duzyn/scoop-cn/master/install.ps1 | iex</span><br><span class="line"></span><br><span class="line"><span class="comment"># 管理员下执行</span></span><br><span class="line">iex <span class="string">&quot;&amp; &#123;<span class="subst">$(irm https://ghproxy.com/raw.githubusercontent.com/duzyn/scoop-cn/master/install.ps1)</span>&#125; -RunAsAdmin&quot;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>或者使用gitee的地址：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">irm  https://scoop.201704.xyz -outfile <span class="string">&#x27;install.ps1&#x27;</span></span><br><span class="line">.\install.ps1 -ScoopDir <span class="string">&#x27;D:\scoop&#x27;</span> -ScoopGlobalDir <span class="string">&#x27;D:\scoop\GlobalApps&#x27;</span> -NoProxy -RunAsAdmin</span><br><span class="line"><span class="comment"># 把原来的 Scoop 仓库的地址换为代理后的地址。</span></span><br><span class="line">scoop config SCOOP_REPO https://mirror.ghproxy.com/https://github.com/ScoopInstaller/Scoop.git</span><br><span class="line">scoop update</span><br></pre></td></tr></table></figure>
+
+<h3 id="最先安装的app"><a href="#最先安装的app" class="headerlink" title="最先安装的app"></a>最先安装的app</h3><p>要下载 app，需要先下载几个 app。这几个 app 用官方应用库下载很慢，所以也使用代理后的地址下载。7-Zip 用来解压下载的压缩包，Git 用来检出应用库，Aria2 用来加速下载（可选）。</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scoop install https://ghproxy.com/raw.githubusercontent.com/duzyn/scoop-cn/master/bucket/7zip.json</span><br><span class="line">scoop install https://ghproxy.com/raw.githubusercontent.com/duzyn/scoop-cn/master/bucket/git.json</span><br><span class="line">scoop install https://ghproxy.com/raw.githubusercontent.com/duzyn/scoop-cn/master/bucket/aria2.json</span><br></pre></td></tr></table></figure>
+
+<p>或者使用 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.jsdelivr.com/">jsdelivr</a> CDN 的地址：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scoop install https://cdn.jsdelivr.net/gh/duzyn/scoop-cn/bucket/7zip.json</span><br><span class="line">scoop install https://cdn.jsdelivr.net/gh/duzyn/scoop-cn/bucket/git.json</span><br><span class="line">scoop install https://cdn.jsdelivr.net/gh/duzyn/scoop-cn/bucket/aria2.json</span><br></pre></td></tr></table></figure>
+
+<h3 id="替换-Main-库"><a href="#替换-Main-库" class="headerlink" title="替换 Main 库"></a>替换 Main 库</h3><p>先删除原来的 Main 库，再添加新的代理后的 Main 库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scoop bucket rm main</span><br><span class="line">scoop bucket add main https://ghproxy.com/github.com/ScoopInstaller/Main</span><br></pre></td></tr></table></figure>
+
+<h3 id="添加应用库"><a href="#添加应用库" class="headerlink" title="添加应用库"></a>添加应用库</h3><p>官方</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scoop bucket <span class="built_in">rm</span> extras</span><br><span class="line">scoop bucket add extras <span class="string">&#x27;https://ghproxy.com/https://github.com/ScoopInstaller/Extras&#x27;</span></span><br><span class="line"></span><br><span class="line">scoop bucket <span class="built_in">rm</span> versions</span><br><span class="line">scoop bucket add versions <span class="string">&#x27;https://ghproxy.com/https://github.com/ScoopInstaller/Versions&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>第三方库推荐</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scoop bucket add scoop-cn https://ghproxy.com/github.com/duzyn/scoop-cn</span><br><span class="line"></span><br><span class="line">scoop bucket add apps https://ghproxy.com/https://github.com/kkzzhizhou/scoop-apps</span><br></pre></td></tr></table></figure>
+
+<h2 id="应用安装"><a href="#应用安装" class="headerlink" title="应用安装"></a>应用安装</h2><p>安装命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop install &lt;bucket&gt;/APPNAME</span><br></pre></td></tr></table></figure>
+
+<h3 id="aria2下载"><a href="#aria2下载" class="headerlink" title="aria2下载"></a>aria2下载</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">scoop install aria2</span><br><span class="line"><span class="comment"># aria2-enabled (default: true)</span></span><br><span class="line"><span class="comment"># aria2-retry-wait (default: 2)</span></span><br><span class="line"><span class="comment"># aria2-split (default: 5)</span></span><br><span class="line"><span class="comment"># aria2-max-connection-per-server (default: 5)</span></span><br><span class="line"><span class="comment"># aria2-min-split-size (default: 5M)</span></span><br><span class="line">scoop config aria2-enabled <span class="literal">false</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#设置代理并多线程下载,因为桶配置都是放在github中</span></span><br><span class="line">scoop config proxy 127.0.0.1:8118</span><br></pre></td></tr></table></figure>
+
+<p>aria2下载命令</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">aria2c http://down.sandai.net/thunderx/XunLeiWebSetup10.1.16.466dl.exe</span><br></pre></td></tr></table></figure>
+
+<h3 id="scoop-命令补充"><a href="#scoop-命令补充" class="headerlink" title="scoop 命令补充"></a>scoop 命令补充</h3><p>安装</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop install mybucket/scoop-completion  mybucket/scoop-search</span><br></pre></td></tr></table></figure>
+
+<p>创建配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(Test-Path -Path <span class="variable">$PROFILE</span> )) &#123; New-Item -Type File -Path <span class="variable">$PROFILE</span> -Force &#125;</span><br><span class="line">code <span class="variable">$PROFILE</span></span><br></pre></td></tr></table></figure>
+
+<p>添加配置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">chcp 65001</span><br><span class="line"><span class="comment"># 使用搜索增强</span></span><br><span class="line">Invoke-Expression (&amp;scoop-search --hook)</span><br></pre></td></tr></table></figure>
+
+<h3 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#包管理</span></span><br><span class="line">scoop install mybucket/maven mybucket/mvndaemon</span><br><span class="line">scoop install mybucket/oraclejdk8</span><br><span class="line">scoop install redis;</span><br><span class="line">scoop install mybucket/mysql57</span><br><span class="line">scoop install mybucket/NavicatPremium</span><br><span class="line">scoop install mybucket/idea-portable</span><br><span class="line">scoop install mybucket/vscode</span><br><span class="line"><span class="comment">#远程终端</span></span><br><span class="line">scoop install MobaXterm;</span><br><span class="line">scoop install mybucket/vmware-workstation-pro</span><br><span class="line">scoop install nvm yarn</span><br><span class="line"><span class="comment"># nvm node_mirror https://npmmirror.com/mirrors/node/</span></span><br><span class="line"><span class="comment"># nvm npm_mirror https://npmmirror.com/mirrors/npm/</span></span><br><span class="line"><span class="comment"># yarn config set registry https://registry.npmmirror.com --global</span></span><br><span class="line"><span class="comment"># yarn config set registry https://registry.yarnpkg.com --global</span></span><br><span class="line"></span><br><span class="line">scoop install busybox</span><br><span class="line">scoop install python311</span><br><span class="line"></span><br><span class="line">scoop install sourcetree</span><br><span class="line"><span class="comment"># 修改内嵌git为本地版本</span></span><br><span class="line">cmd /c mklink /J %userprofile%\AppData\Local\Atlassian\SourceTree\git_local %scoop%\apps\git\current</span><br></pre></td></tr></table></figure>
+
+<p>mvndaemon配置使用原先已存在的 maven 的仓库, 修改 <code>mvnd 解压目录</code>下 <code>conf</code> 里的 <code>mvnd.properties</code> 文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 放开 maven.setting 注释，把值改成自己的maven仓库地址</span></span><br><span class="line">maven.settings=D://dev//scoop//apps//maven//conf//settings.xml</span><br></pre></td></tr></table></figure>
+
+<p>sourceTree 安装，scoop安装的git,导致sourceTree 的 git.exe 路径不正确</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 修改内嵌git为本地版本</span></span><br><span class="line">mklink /J %userprofile%\AppData\Local\Atlassian\SourceTree\git_local %scoop%\apps\git\current</span><br></pre></td></tr></table></figure>
+
+<h3 id="其他应用"><a href="#其他应用" class="headerlink" title="其他应用"></a>其他应用</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">scoop install <span class="built_in">sudo</span></span><br><span class="line"><span class="comment">#解压</span></span><br><span class="line">scoop install bandizip;</span><br><span class="line"><span class="comment">#浏览器</span></span><br><span class="line">scoop install chrome;</span><br><span class="line"><span class="comment">#文件检索,</span></span><br><span class="line">scoop install everything;</span><br><span class="line"><span class="comment">#播放器</span></span><br><span class="line">scoop install potplayer;</span><br><span class="line"><span class="comment">#桌面控制</span></span><br><span class="line">scoop install todesk;</span><br><span class="line"><span class="comment">#markdown编写</span></span><br><span class="line">scoop install mybucket/typora;</span><br><span class="line">scoop install snipaste</span><br><span class="line">scoop install vcredist2022</span><br><span class="line">scoop install mybucket/listary</span><br></pre></td></tr></table></figure>
+
+<h3 id="powershll美化"><a href="#powershll美化" class="headerlink" title="powershll美化"></a>powershll美化</h3><p>字体与插件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scoop uninstall Meslo-NF oh-my-posh psreadline posh-git</span><br><span class="line"><span class="comment"># scoop install mybucket/Meslo-NF</span></span><br><span class="line">scoop install mybucket/oh-my-posh</span><br><span class="line">scoop install mybucket/psreadline</span><br><span class="line">scoop install mybucket/posh-git</span><br></pre></td></tr></table></figure>
+
+<p>创建配置文件</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!(Test-Path -Path <span class="variable">$PROFILE</span> )) &#123; New-Item -Type File -Path <span class="variable">$PROFILE</span> -Force &#125;</span><br><span class="line">code <span class="variable">$PROFILE</span></span><br></pre></td></tr></table></figure>
+
+<p>添加配置</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># auto suggestions</span></span><br><span class="line">Import-Module PSReadLine</span><br><span class="line">Set-PSReadLineOption -PredictionSource History</span><br><span class="line"><span class="comment"># Autocompletion for arrow keys</span></span><br><span class="line">Set-PSReadlineKeyHandler -Key UpArrow -Function HistorySearchBackward</span><br><span class="line">Set-PSReadlineKeyHandler -Key DownArrow -Function HistorySearchForward</span><br><span class="line"><span class="comment"># Shows navigable menu of all options when hitting Tab</span></span><br><span class="line">Set-PSReadlineKeyHandler -Key Tab -Function MenuComplete</span><br><span class="line"></span><br><span class="line"><span class="comment"># 导入需要的模块</span></span><br><span class="line">Import-Module posh-git</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置主题</span></span><br><span class="line">oh-my-posh init pwsh --config <span class="string">&quot;<span class="subst">$(scoop prefix oh-my-posh)</span>\themes\aliens.omp.json&quot;</span> | Invoke-Expression</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看帮助"><a href="#查看帮助" class="headerlink" title="查看帮助"></a>查看帮助</h2><p>要了解 Scoop 的更多用法，请查看 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://scoop.sh/">Scoop 官网</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">scoop help</span><br></pre></td></tr></table></figure>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/de9f934c">https://fulsun.github.io/p/de9f934c</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/scoop/">scoop</a><a class="post-meta__tags" href="/tags/%E8%BD%AF%E4%BB%B6%E4%B8%8B%E8%BD%BD/">软件下载</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/013.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/f5d280da" title="美化PowerShell"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">美化PowerShell</div></div></a></div><div class="next-post pull-right"><a href="/p/35390aee" title="Windows常用软件"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">Windows常用软件</div></div></a></div></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E6%8F%90%E6%9D%A1%E4%BB%B6"><span class="toc-text">前提条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SCOOP%E5%AE%89%E8%A3%85"><span class="toc-text">SCOOP安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85%E9%97%AE%E9%A2%98"><span class="toc-text">安装问题</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%98%E6%96%B9%E5%AE%89%E8%A3%85"><span class="toc-text">官方安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BD%E5%86%85%E6%BA%90%E5%AE%89%E8%A3%85"><span class="toc-text">国内源安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%85%88%E5%AE%89%E8%A3%85%E7%9A%84app"><span class="toc-text">最先安装的app</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9B%BF%E6%8D%A2-Main-%E5%BA%93"><span class="toc-text">替换 Main 库</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BA%94%E7%94%A8%E5%BA%93"><span class="toc-text">添加应用库</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%AE%89%E8%A3%85"><span class="toc-text">应用安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#aria2%E4%B8%8B%E8%BD%BD"><span class="toc-text">aria2下载</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#scoop-%E5%91%BD%E4%BB%A4%E8%A1%A5%E5%85%85"><span class="toc-text">scoop 命令补充</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7"><span class="toc-text">开发工具</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E5%BA%94%E7%94%A8"><span class="toc-text">其他应用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#powershll%E7%BE%8E%E5%8C%96"><span class="toc-text">powershll美化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%B8%AE%E5%8A%A9"><span class="toc-text">查看帮助</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

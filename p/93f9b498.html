@@ -1,0 +1,348 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>SpringMVC域对象共享数据 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringMVC域对象共享数据">
+<meta property="og:url" content="https://fulsun.github.io/p/93f9b498">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="SpringMVC 是 Spring 为表述层开发提供的一整套完备的解决方案。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/009.webp">
+<meta property="article:published_time" content="2024-07-16T21:14:36.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.014Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="SpringMVC">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/009.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/93f9b498"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'SpringMVC域对象共享数据',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/009.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">SpringMVC域对象共享数据</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-16T21:14:36.000Z" title="发表于 2024-07-16 21:14:36">2024-07-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.014Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/SpringMVC/">SpringMVC</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">1.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>5分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="SpringMVC域对象共享数据"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="三种域对象"><a href="#三种域对象" class="headerlink" title="三种域对象"></a>三种域对象</h2><ul>
+<li><code>Request</code>：一次请求</li>
+<li><code>Session</code>：一次会话。从浏览器开启到浏览器关闭（只跟浏览器是否关闭有关，与服务器是否关闭无关）<ul>
+<li><strong>钝化</strong>：浏览器未关闭而服务器关闭，<code>Session</code>数据序列化到磁盘上</li>
+<li><strong>活化</strong>：浏览器仍然关闭而服务器开启，将钝化内容读取到<code>Session</code>中</li>
+</ul>
+</li>
+<li><code>Application</code>&#x2F;<code>Servlet Context</code>：上下文对象，整个应用范围。服务器开启时创建，服务器关闭时销毁，从头到尾只创建一次（只跟服务器是否关闭有关，与浏览器是否关闭无关）</li>
+</ul>
+<p>选择域对象时，应该选择能实现功能、范围最小的域对象</p>
+<h2 id="向-request-域对象共享数据"><a href="#向-request-域对象共享数据" class="headerlink" title="向 request 域对象共享数据"></a>向 request 域对象共享数据</h2><h3 id="通过-Servlet-API"><a href="#通过-Servlet-API" class="headerlink" title="通过 Servlet API"></a>通过 Servlet API</h3><p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRequestByServletAPI&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRequestByServletAPI</span><span class="params">(HttpServletRequest request)</span> &#123;</span><br><span class="line">    request.setAttribute(<span class="string">&quot;testRequestScope&quot;</span>, <span class="string">&quot;hello, Servlet API!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successrequest&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<p><code>index.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testRequestByServletAPI&#125;&quot;</span>&gt;</span>通过Servlet API<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>successrequest.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;testRequestScope&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/842981c6a56a3e869439aa33b2bc604b.gif"></p>
+<p>可以发现，转发的页面中成功获取到了在后台通过<code>Request</code>对象向<code>request</code>域中设置的属性值并正确展示</p>
+<h3 id="通过-ModelAndView"><a href="#通过-ModelAndView" class="headerlink" title="通过 ModelAndView"></a>通过 ModelAndView</h3><blockquote>
+<p><strong>食用方式</strong>：在 SpringMVC 中，不管用的何种方式，本质上最后都会封装到<code>ModelAndView</code>。同时要注意使用<code>ModelAndView</code>向 request 域对象共享数据时，需要返回<code>ModelAndView</code>自身</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRequestByModelAndView&quot;)</span></span><br><span class="line"><span class="keyword">public</span> ModelAndView <span class="title function_">testRequestByModelAndView</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * ModelAndView有Model和View两个功能</span></span><br><span class="line"><span class="comment">     * Model用于向请求域共享数据</span></span><br><span class="line"><span class="comment">     * View用于设置视图，实现页面跳转</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="type">ModelAndView</span> <span class="variable">mv</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ModelAndView</span>();</span><br><span class="line">    <span class="comment">//向请求域共享数据</span></span><br><span class="line">    mv.addObject(<span class="string">&quot;testRequestScope&quot;</span>, <span class="string">&quot;hello, ModelAndView!&quot;</span>);</span><br><span class="line">    <span class="comment">//设置视图，实现页面跳转</span></span><br><span class="line">    mv.setViewName(<span class="string">&quot;successrequest&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> mv;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testRequestByModelAndView&#125;&quot;</span>&gt;</span>通过 ModelAndView&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/70681fa5601a8558f3c2d7866416577a.gif"></p>
+<h3 id="通过-Model"><a href="#通过-Model" class="headerlink" title="通过 Model"></a>通过 Model</h3><blockquote>
+<p><strong>食用方式</strong>：形式与<code>HttpServletRequest</code>类似</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRequestByModel&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRequestByModel</span><span class="params">(Model model)</span> &#123;</span><br><span class="line">    <span class="comment">//向请求域共享数据</span></span><br><span class="line">    model.addAttribute(<span class="string">&quot;testRequestScope&quot;</span>, <span class="string">&quot;hello, ModelAndView!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successrequest&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testRequestByModel&#125;&quot;</span>&gt;</span>通过 Model<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/d57d0e5de6f959acac30e62cfb8ac76f.gif"></p>
+<h3 id="通过-Map"><a href="#通过-Map" class="headerlink" title="通过 Map"></a>通过 Map</h3><blockquote>
+<p><strong>食用方式</strong>：形式与<code>Model</code>方式类似</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRequestByMap&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRequestByMap</span><span class="params">(Map&lt;String, Object&gt; map)</span> &#123;</span><br><span class="line">    <span class="comment">//向请求域共享数据</span></span><br><span class="line">    map.put(<span class="string">&quot;testRequestScope&quot;</span>, <span class="string">&quot;hello, Map!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successrequest&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testRequestByMap&#125;&quot;</span>&gt;</span>通过 Map<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/e9b6f3757d0dfc262d50a91b154b9f95.gif"></p>
+<h3 id="通过-ModelMap"><a href="#通过-ModelMap" class="headerlink" title="通过 ModelMap"></a>通过 ModelMap</h3><blockquote>
+<p><strong>食用方式</strong>：形式与<code>Model</code>方式类似</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testRequestByModelMap&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testRequestByModelMap</span><span class="params">(ModelMap modelMap)</span> &#123;</span><br><span class="line">    <span class="comment">//向请求域共享数据</span></span><br><span class="line">    modelMap.addAttribute(<span class="string">&quot;testRequestScope&quot;</span>, <span class="string">&quot;hello, ModelMap!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successrequest&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testRequestByModelMap&#125;&quot;</span>&gt;</span>通过 ModelMap<span class="tag">&lt;/<span class="name">a</span>&gt;</span><span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/e39009fbea7f310b398849376ce064d4.gif"></p>
+<h3 id="ModelMap-和-Map"><a href="#ModelMap-和-Map" class="headerlink" title="ModelMap 和 Map"></a>ModelMap 和 Map</h3><p>分别在上述对应的控制器方法中，添加打印 Model、ModelMap 和 Map 三个对象及其对应类名的逻辑</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">System.out.println(model + <span class="string">&quot;======&quot;</span> + model.getClass().getName());</span><br><span class="line">System.out.println(map + <span class="string">&quot;======&quot;</span> + map.getClass().getName());</span><br><span class="line">System.out.println(modelMap + <span class="string">&quot;======&quot;</span> + modelMap.getClass().getName());</span><br></pre></td></tr></table></figure>
+
+<p>通过分别点击前台超链接，并查看后台日志信息</p>
+<figure class="highlight console"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;testRequestScope=hello, Model!&#125;======org.springframework.validation.support.BindingAwareModelMap</span><br><span class="line">&#123;testRequestScope=hello, Map!&#125;======org.springframework.validation.support.BindingAwareModelMap</span><br><span class="line">&#123;testRequestScope=hello, ModelMap!&#125;======org.springframework.validation.support.BindingAwareModelMap</span><br></pre></td></tr></table></figure>
+
+<p>可以发现</p>
+<ul>
+<li>Model、ModelMap 和 Map 三个对象输入格式是一致的，都为键值对形式</li>
+<li>通过反射方法获取到的类都是同一个，即<code>BindingAwareModelMap</code></li>
+</ul>
+<p>查看<code>BindingAwareModelMap</code>的继承关系</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/871ed3cc2dca69cf414b0a445e0f8250.png"></p>
+<p>阅读源码，梳理出<code>Model</code>、<code>Map</code>、<code>ModelMap</code>三者的核心继承关系</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">BindingAwareModelMap</span> <span class="keyword">extends</span> <span class="title class_">ExtendedModelMap</span> &#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ExtendedModelMap</span> <span class="keyword">extends</span> <span class="title class_">ModelMap</span> <span class="keyword">implements</span> <span class="title class_">Model</span> &#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ModelMap</span> <span class="keyword">extends</span> <span class="title class_">LinkedHashMap</span>&lt;String, Object&gt; &#123;&#125;</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Model</span> &#123;&#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现</p>
+<ul>
+<li><code>BindingAwareModelMap</code>继承<code>ModelMap</code>并实现<code>Model</code>接口</li>
+<li><code>ModelMap</code>继承<code>LinkedHashMap</code>，而毫无疑问<code>LinkedHashMap</code>实现了<code>Map</code>接口</li>
+</ul>
+<p><code>Model</code>、<code>Map</code>和<code>ModelMap</code>三者的关系到此就一目了然了，其 UML 类图如下：</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/cb2f7eeabcd9b4cdb40f62d77883192d.png"></p>
+<blockquote>
+<p><strong>结论</strong>：<code>Model</code>、<code>Map</code>、<code>ModelMap</code>类型的形参本质上都是<code>BindingAwareModelMap</code></p>
+</blockquote>
+<h2 id="向-session-域共享数据"><a href="#向-session-域共享数据" class="headerlink" title="向 session 域共享数据"></a>向 session 域共享数据</h2><blockquote>
+<p><strong>食用方式</strong>：形式与<code>HttpServletRequest</code>方式类似，形参为<code>HttpSession</code>。需要注意的是 SpringMVC 虽然提供了一个<code>@SessionAttribute</code>注解，但并不好用，因此反而建议直接使用原生 Servlet 中的<code>HttpSession</code>对象</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testSession&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testSession</span><span class="params">(HttpSession session)</span> &#123;</span><br><span class="line">    <span class="comment">//向session域共享数据</span></span><br><span class="line">    session.setAttribute(<span class="string">&quot;testSessionScope&quot;</span>, <span class="string">&quot;hello, HttpSession!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successsession&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<p><code>index.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testSession&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>通过 Servlet API 向 Session 域对象共享数据&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>successsession.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;session.testSessionScope&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/d9b0fe481475f6a7e22c549ec14995f6.gif"></p>
+<h2 id="向-application-域共享数据"><a href="#向-application-域共享数据" class="headerlink" title="向 application 域共享数据"></a>向 application 域共享数据</h2><blockquote>
+<p><strong>食用方式</strong>：形式与<code>HttpSession</code>方式类似，只不过需要先从<code>session</code>对象中获取<code>ServletContext</code>上下文对象，即<code>application</code>域对象，再做操作</p>
+</blockquote>
+<p>后台测试代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RequestMapping(&quot;/testApplication&quot;)</span></span><br><span class="line"><span class="keyword">public</span> String <span class="title function_">testApplication</span><span class="params">(HttpSession session)</span> &#123;</span><br><span class="line">    <span class="type">ServletContext</span> <span class="variable">application</span> <span class="operator">=</span> session.getServletContext();</span><br><span class="line">    application.setAttribute(<span class="string">&quot;testApplicationScope&quot;</span>, <span class="string">&quot;hello, application!&quot;</span>);</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;successapplication&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>前台测试代码</p>
+<p><code>index.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">th:href</span>=<span class="string">&quot;@&#123;/scopeController/testApplication&#125;&quot;</span></span></span><br><span class="line"><span class="tag">  &gt;</span>通过 Servlet API 向 Application 域对象共享数据&lt;/a</span><br><span class="line">&gt;<span class="tag">&lt;<span class="name">br</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>successapplication.html</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span> <span class="attr">th:text</span>=<span class="string">&quot;$&#123;application.testApplicationScope&#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试结果</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/0ba615a646d2b71bf36ada9f2d8f5c6c.gif"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>域对象有三种：<code>request</code>（请求域）、<code>session</code>（会话域）和<code>application</code>（上下文）</p>
+<p>向<code>request</code>域对象共享数据方式：本质都是<code>ModelAndView</code></p>
+<ul>
+<li><code>Servlet API</code>（不推荐）：<code>HttpServletRequest</code></li>
+<li><code>ModelAndView</code>：需要返回自身</li>
+<li><code>Model</code>、<code>Map</code>、<code>ModelMap</code>：本质都是<code>BindingAwareModelMap</code></li>
+</ul>
+<p>向<code>session</code>域共享数据：<code>HttpSession</code></p>
+<p>向<code>application</code>域共享数据：<code>ServletContext</code></p>
+<p>附上导图，仅供参考</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/93f9b498/72d050affcd73f56ab863d184236fead.png"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/93f9b498">https://fulsun.github.io/p/93f9b498</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/SpringMVC/">SpringMVC</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/009.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/e075e581" title="SpringMVC之RESTful简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">SpringMVC之RESTful简介</div></div></a></div><div class="next-post pull-right"><a href="/p/d259d27d" title="SpringMVC 视图"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringMVC 视图</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/c981d7b3" title="SpringMVC 简介"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 简介</div></div></a></div><div><a href="/p/777f3582" title="SpringMVC的执行流程"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC的执行流程</div></div></a></div><div><a href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-22</div><div class="title">SpringMVC基于cors的跨域解决方案</div></div></a></div><div><a href="/p/78b93ee9" title="RequestMapping注解"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">RequestMapping注解</div></div></a></div><div><a href="/p/3b6d56d0" title="SpringMVC 获取请求参数"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 获取请求参数</div></div></a></div><div><a href="/p/d259d27d" title="SpringMVC 视图"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-16</div><div class="title">SpringMVC 视图</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E7%A7%8D%E5%9F%9F%E5%AF%B9%E8%B1%A1"><span class="toc-text">三种域对象</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91-request-%E5%9F%9F%E5%AF%B9%E8%B1%A1%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE"><span class="toc-text">向 request 域对象共享数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-Servlet-API"><span class="toc-text">通过 Servlet API</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-ModelAndView"><span class="toc-text">通过 ModelAndView</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-Model"><span class="toc-text">通过 Model</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-Map"><span class="toc-text">通过 Map</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%9A%E8%BF%87-ModelMap"><span class="toc-text">通过 ModelMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ModelMap-%E5%92%8C-Map"><span class="toc-text">ModelMap 和 Map</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91-session-%E5%9F%9F%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE"><span class="toc-text">向 session 域共享数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%91-application-%E5%9F%9F%E5%85%B1%E4%BA%AB%E6%95%B0%E6%8D%AE"><span class="toc-text">向 application 域共享数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>

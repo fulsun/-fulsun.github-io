@@ -1,0 +1,360 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>NVIDIA+ollama | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="OLLAMA可以在本地快速启动并运行大型语言模型。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="NVIDIA+ollama">
+<meta property="og:url" content="https://fulsun.github.io/p/8cd234c7">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="OLLAMA可以在本地快速启动并运行大型语言模型。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/004.webp">
+<meta property="article:published_time" content="2024-07-19T21:13:31.000Z">
+<meta property="article:modified_time" content="2024-11-08T13:02:07.394Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="OLLAMA">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/004.webp"><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/8cd234c7"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=4.13.0"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.5.1/css/all.min.css"><link rel="stylesheet" href="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.css" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"找不到您查询的内容：${query}","hits_stats":"共找到 ${hits} 篇文章"}},
+  translate: undefined,
+  noticeOutdate: {"limitDay":500,"position":"top","messagePrev":"至上次更新后的","messageNext":"天,文章内容可能已过时。"},
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":300},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.11.1/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyload: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'NVIDIA+ollama',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-11-08 13:02:07'
+}</script><script>(win=>{
+      win.saveToLocal = {
+        set: (key, value, ttl) => {
+          if (ttl === 0) return
+          const now = Date.now()
+          const expiry = now + ttl * 86400000
+          const item = {
+            value,
+            expiry
+          }
+          localStorage.setItem(key, JSON.stringify(item))
+        },
+      
+        get: key => {
+          const itemStr = localStorage.getItem(key)
+      
+          if (!itemStr) {
+            return undefined
+          }
+          const item = JSON.parse(itemStr)
+          const now = Date.now()
+      
+          if (now > item.expiry) {
+            localStorage.removeItem(key)
+            return undefined
+          }
+          return item.value
+        }
+      }
+    
+      win.getScript = (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        script.onerror = reject
+        script.onload = script.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          script.onload = script.onreadystatechange = null
+          resolve()
+        }
+
+        Object.keys(attr).forEach(key => {
+          script.setAttribute(key, attr[key])
+        })
+
+        document.head.appendChild(script)
+      })
+    
+      win.getCSS = (url, id = false) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onerror = reject
+        link.onload = link.onreadystatechange = function() {
+          const loadState = this.readyState
+          if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+          link.onload = link.onreadystatechange = null
+          resolve()
+        }
+        document.head.appendChild(link)
+      })
+    
+      win.activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+          const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+          const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+          const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+          if (t === undefined) {
+            if (isLightMode) activateLightMode()
+            else if (isDarkMode) activateDarkMode()
+            else if (isNotSpecified || hasNoSupport) {
+              const now = new Date()
+              const hour = now.getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            window.matchMedia('(prefers-color-scheme: dark)').addListener(e => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else if (t === 'light') activateLightMode()
+          else activateDarkMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    
+      const detectApple = () => {
+        if(/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)){
+          document.documentElement.classList.add('apple')
+        }
+      }
+      detectApple()
+    })(window)</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="onerror=null;src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="sidebar-site-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><hr class="custom-hr"/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('/medias/featureimages/004.webp')"><nav id="nav"><span id="blog-info"><a href="/" title="凉月の博客"><span class="site-name">凉月の博客</span></a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><a class="site-page group" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></a><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><a class="site-page" href="javascript:void(0);" rel="external nofollow noreferrer"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">NVIDIA+ollama</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2024-07-19T21:13:31.000Z" title="发表于 2024-07-19 21:13:31">2024-07-19</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2024-11-08T13:02:07.394Z" title="更新于 2024-11-08 13:02:07">2024-11-08</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/OLLAMA/">OLLAMA</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">2.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>13分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title="NVIDIA+ollama"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><span id="more"></span>
+
+<h2 id="安装-GPU-驱动程序"><a href="#安装-GPU-驱动程序" class="headerlink" title="安装 GPU 驱动程序"></a>安装 GPU 驱动程序</h2><blockquote>
+<p><strong>这是您唯一需要安装的驱动程序。不要在 WSL 中安装任何 Linux 显示驱动程序。</strong></p>
+</blockquote>
+<p>下载并安装<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.nvidia.com/download/index.aspx">支持 NVIDIA CUDA 的 WSL 驱动程序</a>，以用于现有的 CUDA ML 工作流。</p>
+<h2 id="安装-WSL2"><a href="#安装-WSL2" class="headerlink" title="安装 WSL2"></a>安装 WSL2</h2><p>参考历史文章 <a href="/posts/a8debf73">Windows安装WSL2</a></p>
+<h3 id="安装CUDA-Toolkit"><a href="#安装CUDA-Toolkit" class="headerlink" title="安装CUDA Toolkit"></a>安装CUDA Toolkit</h3><p>从这一点开始，您应该能够运行任何需要 CUDA 的现有 Linux 应用程序。<strong>不要在 WSL 环境中安装任何驱动程序</strong>。要构建 CUDA 应用程序，您将需要 CUDA 工具包。</p>
+<p>在系统上安装 Windows NVIDIA GPU 驱动程序后，CUDA 将在 WSL 2 中可用。安装在 Windows 主机上的 CUDA 驱动程序将在 WSL 2 中存根，因此<strong>用户不得在 WSL 2 中安装任何 NVIDIA GPU Linux 驱动程序</strong>。这里必须非常小心，因为默认的 CUDA 工具包附带驱动程序，并且很容易使用默认安装覆盖 WSL 2 NVIDIA 驱动程序。建议开发人员使用<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=WSL-Ubuntu&target_version=2.0">单独的 CUDA Toolkit</a> for WSL 2 （Ubuntu） 下载页面中提供的 CUDA Toolkit，以避免此覆盖。</p>
+<p>首先，删除旧的 GPG 密钥：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> apt-key del 7fa2af80</span><br><span class="line"><span class="built_in">sudo</span> apt install gcc dkms -y</span><br><span class="line"><span class="comment">## 方式一 Installer Type runfile</span></span><br><span class="line">wget https://developer.download.nvidia.com/compute/cuda/12.5.1/local_installers/cuda_12.5.1_555.42.06_linux.run</span><br><span class="line"><span class="built_in">sudo</span> sh cuda_12.5.1_555.42.06_linux.run</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">## 方式二 deb方式</span></span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> cuda-wsl-ubuntu.pin /etc/apt/preferences.d/cuda-repository-pin-600</span><br><span class="line"><span class="built_in">sudo</span> dpkg -i cuda-repo-wsl-ubuntu-12-5-local_12.5.1-1_amd64.deb</span><br><span class="line"><span class="built_in">sudo</span> <span class="built_in">cp</span> /var/cuda-repo-wsl-ubuntu-12-5-<span class="built_in">local</span>/cuda-*-keyring.gpg /usr/share/keyrings/</span><br><span class="line"><span class="built_in">sudo</span> apt-get update</span><br><span class="line"><span class="built_in">sudo</span> apt-get -y install cuda-toolkit-12-5</span><br></pre></td></tr></table></figure>
+
+<h2 id="WSL2-安装-Docker"><a href="#WSL2-安装-Docker" class="headerlink" title="WSL2 安装 Docker"></a>WSL2 安装 Docker</h2><p>参考历史文章 <a href="/posts/1882513b">WSL2安装Docker</a></p>
+<h2 id="安装-NVIDIA-容器工具包"><a href="#安装-NVIDIA-容器工具包" class="headerlink" title="安装 NVIDIA 容器工具包"></a>安装 NVIDIA 容器工具包</h2><ol>
+<li><p>配置生产存储库：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | <span class="built_in">sudo</span> gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg \</span><br><span class="line">  &amp;&amp; curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \</span><br><span class="line">    sed <span class="string">&#x27;s#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g&#x27;</span> | \</span><br><span class="line">    <span class="built_in">sudo</span> <span class="built_in">tee</span> /etc/apt/sources.list.d/nvidia-container-toolkit.list</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>从存储库更新软件包列表：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>安装 NVIDIA Container Toolkit 软件包：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install -y nvidia-container-toolkit</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用以下命令配置容器运行时：<code>nvidia-ctk</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">该命令修改主机上的/etc/docker/daemon.json，以便 Docker 可以使用 NVIDIA 容器运行时。</span></span><br><span class="line">sudo nvidia-ctk runtime configure --runtime=docker</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">重新启动 Docker 守护程序：</span></span><br><span class="line">sudo systemctl restart docker</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sudo docker run --rm --runtime=nvidia --gpus all ubuntu nvidia-smi</span><br><span class="line">sudo docker run --rm  --gpus=all ubuntu nvidia-smi -L</span><br><span class="line">sudo docker run -it --gpus=all --rm nvidia/cuda:12.2.0-base-ubuntu20.04 nvidia-smi</span><br><span class="line">sudo docker run --gpus=all --rm nvcr.io/nvidia/k8s/cuda-sample:nbody nbody -gpu -benchmark</span><br><span class="line">sudo docker run --rm --runtime nvidia --gpus all pytorch/pytorch:2.0.0-cuda11.7-cudnn8-runtime nvidia-smi</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="docker-desktop"><a href="#docker-desktop" class="headerlink" title="docker-desktop"></a>docker-desktop</h3><blockquote>
+<p>如果使用的是WSL+dockerdesktop</p>
+</blockquote>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/8cd234c7/ad79e929fbb2240502ce666df10f1d08.png"></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;builder&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;gc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultKeepStorage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20GB&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;experimental&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;runtimes&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;nvidia&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;path&quot;</span><span class="punctuation">:</span> <span class="string">&quot;/usr/bin/nvidia-container-runtime&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;runtimeArgs&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span><span class="punctuation">]</span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="问题1"><a href="#问题1" class="headerlink" title="问题1"></a>问题1</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@DESKTOP-8DE2K5S:/mnt/c/Users/fulsun# <span class="built_in">sudo</span> docker run --<span class="built_in">rm</span> --runtime=nvidia --gpus all ubuntu nvidia-smi</span><br><span class="line">Failed to initialize NVML: GPU access blocked by the operating system</span><br><span class="line">Failed to properly shut down NVML: GPU access blocked by the operating system</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>解决方案： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/microsoft/WSL/issues/9962">在 WSL2 的 docker 容器中：操作系统阻止的 GPU 访问 ·问题 #9962 ·微软&#x2F;WSL ·GitHub上</a></p>
+</blockquote>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">在文件 /etc/nvidia-container-runtime/config.toml 中，将  no-cgroups  从  <span class="literal">true</span>  更改为 <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="问题2"><a href="#问题2" class="headerlink" title="问题2"></a>问题2</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@DESKTOP-8DE2K5S:/mnt/g/大模型/nvida/cuda# nvidia-smi</span><br><span class="line">Sat Jul 20 01:37:58 2024</span><br><span class="line">+-----------------------------------------------------------------------------------------+</span><br><span class="line">| NVIDIA-SMI 555.58.02              Driver Version: 556.12         CUDA Version: 12.5     |</span><br><span class="line">|-----------------------------------------+------------------------+----------------------+</span><br><span class="line">| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |</span><br><span class="line">| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |</span><br><span class="line">|                                         |                        |               MIG M. |</span><br><span class="line">|=========================================+========================+======================|</span><br><span class="line">Segmentation fault</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>错误问题 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/microsoft/WSL/issues/11277">nvidia-smi segmentation fault in wsl2 but not in Windows · Issue #11277 · microsoft&#x2F;WSL · GitHub</a></p>
+</blockquote>
+<p>下载安装537版本的驱动：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://developer.nvidia.com/downloads/vulkan-beta-53796-windows">https://developer.nvidia.com/downloads/vulkan-beta-53796-windows</a></p>
+<h2 id="Ollama-安装"><a href="#Ollama-安装" class="headerlink" title="Ollama 安装"></a>Ollama 安装</h2><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://ollama.com/">https://ollama.com/</a><br><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ollama/ollama/blob/main/docs/linux.md">https://github.com/ollama/ollama/blob/main/docs/linux.md</a><br><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/ollama/ollama/blob/main/docs/faq.md">https://github.com/ollama/ollama/blob/main/docs/faq.md</a></p>
+<h3 id="Docker方式安装"><a href="#Docker方式安装" class="headerlink" title="Docker方式安装"></a>Docker方式安装</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">docker pull ollama/ollama</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">默认存放在宿主机的 /var/lib/docker/volumes/数据卷名称/_data</span></span><br><span class="line">docker volume create ollama</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">CPU only</span></span><br><span class="line">docker run -d -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Nvidia GPU</span></span><br><span class="line">docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --env OLLAMA_KEEP_ALIVE=60m --name ollama ollama/ollama</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">AMD GPU</span></span><br><span class="line">docker run -d --device /dev/kfd --device /dev/dri -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama:rocm</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">本地运行模型</span></span><br><span class="line">docker exec -it ollama ollama run gemma:2b</span><br><span class="line">docker exec -it ollama /bin/bash</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">设置自动启动</span></span><br><span class="line">docker update --restart=always 容器ID(或者容器名)</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash"><span class="comment"># 环境变量查看</span></span></span><br><span class="line">docker run -d --gpus=all -v ollama:/root/.ollama -p 11434:11434 --name ollama ollama/ollama</span><br><span class="line">2f2104f18c08f37b4e79e3a5aa35f2b9f4240659f6a1786e6d4b504aeb5b2e03</span><br><span class="line">docker exec 2f2104f1 env</span><br><span class="line">PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin</span><br><span class="line">HOSTNAME=2f2104f18c08</span><br><span class="line">OLLAMA_HOST=0.0.0.0</span><br><span class="line">LD_LIBRARY_PATH=/usr/local/nvidia/lib:/usr/local/nvidia/lib64</span><br><span class="line">NVIDIA_DRIVER_CAPABILITIES=compute,utility</span><br><span class="line">NVIDIA_VISIBLE_DEVICES=all</span><br><span class="line">HOME=/root</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">导出导入</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">docker save保存的是镜像（image），docker <span class="built_in">export</span>保存的是容器（container）；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">docker load用来载入镜像包，docker import用来载入容器包，但两者都会恢复为镜像；</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">docker load不能对载入的镜像重命名，而docker import可以为镜像指定新名称。</span></span><br><span class="line">cd /mnt/h/大模型/docker/</span><br><span class="line">docker save -o ollama.tar ollama/ollama</span><br><span class="line">docker load -i ollama.tar</span><br></pre></td></tr></table></figure>
+
+<h3 id="在Linux上设置环境变量-非docker"><a href="#在Linux上设置环境变量-非docker" class="headerlink" title="在Linux上设置环境变量(非docker)"></a>在Linux上设置环境变量(非docker)</h3><ul>
+<li>OLLAMA_HOST：这个变量定义了Ollama监听的网络接口。通过设置OLLAMA_HOST&#x3D;0.0.0.0，我们可以让Ollama监听所有可用的网络接口，从而允许外部网络访问。</li>
+<li>OLLAMA_MODELS：这个变量指定了模型镜像的存储路径。通过设置OLLAMA_MODELS&#x3D;E:\OllamaCache，我们可以将模型镜像存储在E盘，避免C盘空间不足的问题。</li>
+<li>OLLAMA_KEEP_ALIVE：这个变量控制模型在内存中的存活时间。设置OLLAMA_KEEP_ALIVE&#x3D;24h可以让模型在内存中保持24小时，提高访问速度。</li>
+<li>OLLAMA_PORT：这个变量允许我们更改Ollama的默认端口。例如，设置OLLAMA_PORT&#x3D;8080可以将服务端口从默认的11434更改为8080。</li>
+<li>OLLAMA_NUM_PARALLEL：这个变量决定了Ollama可以同时处理的用户请求数量。设置OLLAMA_NUM_PARALLEL&#x3D;4可以让Ollama同时处理两个并发请求。</li>
+<li>OLLAMA_MAX_LOADED_MODELS：这个变量限制了Ollama可以同时加载的模型数量。设置OLLAMA_MAX_LOADED_MODELS&#x3D;4可以确保系统资源得到合理分配。</li>
+</ul>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> vi /etc/systemd/system/ollama.service</span><br><span class="line"><span class="comment"># 添加以下内容</span></span><br><span class="line">Environment=<span class="string">&quot;OLLAMA_HOST=0.0.0.0:11434&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;OLLAMA_KEEP_ALIVE=60m&quot;</span></span><br><span class="line">Environment=<span class="string">&quot;OLLAMA_MAX_LOADED_MODELS=1&quot;</span></span><br><span class="line">ExecStart=/usr/local/bin/ollama serve</span><br><span class="line"></span><br><span class="line"><span class="comment"># 重载 systemd 并重启 Ollama：</span></span><br><span class="line">systemctl daemon-reload</span><br><span class="line"><span class="built_in">sudo</span> systemctl start ollama</span><br><span class="line"></span><br><span class="line"><span class="comment"># 检查</span></span><br><span class="line">curl http://localhost:11434</span><br><span class="line">显示 Ollama is running</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 下载模型</span></span><br><span class="line">ollama pull gemma:2b</span><br><span class="line">ollama list</span><br><span class="line">ollama run gemma:2b</span><br></pre></td></tr></table></figure>
+
+<h2 id="导入模型"><a href="#导入模型" class="headerlink" title="导入模型"></a>导入模型</h2><h3 id="导入-GGUF"><a href="#导入-GGUF" class="headerlink" title="导入 (GGUF)"></a>导入 (GGUF)</h3><ol>
+<li><p>首先创建一个Modelfile。 此文件是模型的蓝图，用于指定权重、参数、提示模板等。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">cp /mnt/h/大模型/模型/gguf/qwen2-7b-instruct-q4_k_s.gguf /var/lib/docker/volumes/ollama/_data/</span><br><span class="line">docker exec -it ollama /bin/bash</span><br><span class="line">cd /root/.ollama/</span><br><span class="line">vi Modelfile</span><br><span class="line">FROM ./qwen2-7b-instruct-q4_k_s.gguf</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">（可选）许多聊天模型需要提示模板才能正确回答</span></span><br><span class="line">FROM ./qwen2-7b-instruct-q4_k_s.gguf</span><br><span class="line">TEMPLATE &quot;[INST] &#123;&#123; .Prompt &#125;&#125; [/INST]&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 Ollama 模型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ollama create qwen2-7b-instruct-q4_k_s.gguf -f Modelfile</span><br><span class="line">transferring model data ⠋</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>使用以下命令测试模型：<code>ollama run</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run qwen2-7b-instruct-q4_k_s.gguf &quot;What is your favourite condiment?&quot;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h3 id="导入（PyTorch-和-Safetensors）"><a href="#导入（PyTorch-和-Safetensors）" class="headerlink" title="导入（PyTorch 和 Safetensors）"></a>导入（PyTorch 和 Safetensors）</h3><blockquote>
+<p>从 PyTorch 和 Safetensors 导入的过程比从 GGUF 导入要长。使它更容易的改进正在进行中。</p>
+</blockquote>
+<ol>
+<li><p>首先，克隆存储库：<code>ollama/ollama</code></p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> git@github.com:ollama/ollama.git ollama</span><br><span class="line"><span class="built_in">cd</span> ollama</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后获取其子模块：<code>llama.cpp</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git submodule init</span><br><span class="line">git submodule update llm/llama.cpp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>接下来，安装 Python 依赖项：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">python3 -m venv llm/llama.cpp/.venv</span><br><span class="line">source llm/llama.cpp/.venv/bin/activate</span><br><span class="line">pip install -r llm/llama.cpp/requirements.txt</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后构建工具：<code>quantize</code></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">make -C llm/llama.cpp quantize</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果模型当前托管在 HuggingFace 存储库中，请首先克隆该存储库以下载原始模型。（可选）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装Git LFS，验证它是否已安装，然后克隆模型的存储库：</span></span><br><span class="line">git lfs install</span><br><span class="line">git clone https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1 model</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>转换模型</strong> 注意：某些模型架构需要使用特定的转换脚本。例如，Qwen 模型需要运行<code>convert-hf-to-gguf.py</code>而不是<code>convert.py</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">python llm/llama.cpp/convert.py ./model --outtype f16 --outfile converted.bin</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>量化模型</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">llm/llama.cpp/quantize converted.bin quantized.bin q4_0</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>为您的模型创建一个：<code>Modelfile</code></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">FROM quantized.bin</span><br><span class="line">TEMPLATE &quot;[INST] &#123;&#123; .Prompt &#125;&#125; [/INST]&quot;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建 Ollama 模型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama create example -f Modelfile</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>运行模型</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ollama run example &quot;What is your favourite condiment?&quot;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="调用模型"><a href="#调用模型" class="headerlink" title="调用模型"></a>调用模型</h2><h3 id="Curl调用模型"><a href="#Curl调用模型" class="headerlink" title="Curl调用模型"></a>Curl调用模型</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl http://localhost:11434/api/chat -d <span class="string">&#x27;&#123;&quot;model&quot;: &quot;gemma:2b&quot;,&quot;messages&quot;: [&#123; &quot;role&quot;: &quot;user&quot;, &quot;content&quot;: &quot;who are you&quot; &#125;]&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Python调用模型"><a href="#Python调用模型" class="headerlink" title="Python调用模型"></a>Python调用模型</h3><p>（Python代码调用，建议在conda下运行)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">vim test.py</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">send_message_to_ollama</span>(<span class="params">message, port=<span class="number">11434</span></span>):</span><br><span class="line">url = <span class="string">f&quot;http://localhost:<span class="subst">&#123;port&#125;</span>/api/chat&quot;</span></span><br><span class="line">payload = &#123;</span><br><span class="line"><span class="string">&quot;model&quot;</span>: <span class="string">&quot;gemma:2b&quot;</span>,</span><br><span class="line"><span class="string">&quot;messages&quot;</span>: [&#123;<span class="string">&quot;role&quot;</span>: <span class="string">&quot;user&quot;</span>, <span class="string">&quot;content&quot;</span>: message&#125;]</span><br><span class="line">&#125;</span><br><span class="line">response = requests.post(url, json=payload)</span><br><span class="line"><span class="keyword">if</span> response.status_code == <span class="number">200</span>:</span><br><span class="line">response_content = <span class="string">&quot;&quot;</span></span><br><span class="line"><span class="keyword">for</span> line <span class="keyword">in</span> response.iter_lines():</span><br><span class="line"><span class="keyword">if</span> line:</span><br><span class="line">response_content += json.loads(line)[<span class="string">&quot;message&quot;</span>][<span class="string">&quot;content&quot;</span>]</span><br><span class="line"><span class="keyword">return</span> response_content</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line"><span class="keyword">return</span> <span class="string">f&quot;Error: <span class="subst">&#123;response.status_code&#125;</span> - <span class="subst">&#123;response.text&#125;</span>&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">user_input = <span class="string">&quot;who are you&quot;</span></span><br><span class="line">response = send_message_to_ollama(user_input)</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;Ollama&#x27;s response:&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(response)</span><br></pre></td></tr></table></figure>
+
+<p>在 conda环境中运行Python脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">conda activate XXX</span><br><span class="line">pip install requests</span><br><span class="line">python test.py</span><br><span class="line">conda deactivate</span><br></pre></td></tr></table></figure>
+
+<h2 id="Open-WebUI-部署"><a href="#Open-WebUI-部署" class="headerlink" title="Open WebUI 部署"></a>Open WebUI 部署</h2><p><a target="_blank" rel="noopener external nofollow noreferrer" href="https://openwebui.com/">https://openwebui.com/</a><br><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/open-webui/open-webui">https://github.com/open-webui/open-webui</a></p>
+<h3 id="Docker方式安装-1"><a href="#Docker方式安装-1" class="headerlink" title="Docker方式安装"></a>Docker方式安装</h3><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker images</span><br><span class="line">docker pull ghcr.io/open-webui/open-webui:main</span><br><span class="line"></span><br><span class="line"><span class="built_in">cd</span> /mnt/h/大模型/docker/</span><br><span class="line">docker save -o open-webui.tar ghcr.io/open-webui/open-webui:main</span><br><span class="line">docker load -i open-webui.tar</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Ollama 在同一台电脑</span></span><br><span class="line">docker run -d -p 3000:8080 --add-host=host.docker.internal:host-gateway -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">host模式</span></span><br><span class="line">docker run -d --network=host -v open-webui:/app/backend/data -e OLLAMA_BASE_URL=http://127.0.0.1:11434 --name open-webui88 --restart always ghcr.io/open-webui/open-webui:main</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">Ollama 在不同一台电脑</span></span><br><span class="line">docker run -d -p 3000:8080 -e OLLAMA_BASE_URL=https://example.com -v open-webui:/app/backend/data --name open-webui --restart always ghcr.io/open-webui/open-webui:main</span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新 open-webui</span></span><br><span class="line">docker run --rm --volume /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --run-once open-webui</span><br></pre></td></tr></table></figure>
+
+<p>部署后启动（时间有点长） 打开网站 <a href="http://127.0.0.1:3000先注册，选择模式（正常情况，会显示出刚才ollama已经下载好的模型）" rel="external nofollow noreferrer">http://127.0.0.1:3000先注册，选择模式（正常情况，会显示出刚才ollama已经下载好的模型）</a></p>
+<h3 id="Installation-with-pip-Beta"><a href="#Installation-with-pip-Beta" class="headerlink" title="Installation with pip (Beta)"></a>Installation with <code>pip</code> (Beta)<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.openwebui.com/getting-started/#installation-with-pip-beta"></a></h3><p>For users who prefer to use Python’s package manager <code>pip</code>, Open WebUI offers a installation method. Python 3.11 is required for this method.</p>
+<ol>
+<li><p><strong>Install Open WebUI</strong>: Open your terminal and run the following command:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip install open-webui</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Start Open WebUI</strong>: Once installed, start the server using:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">open-webui serve</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p>This method installs all necessary dependencies and starts Open WebUI, allowing for a simple and efficient setup. After installation, you can access Open WebUI at <a target="_blank" rel="noopener external nofollow noreferrer" href="http://localhost:8080/">http://localhost:8080</a>. Enjoy! 😄</p>
+<h3 id="Install-from-Open-WebUI-Github-Repo"><a href="#Install-from-Open-WebUI-Github-Repo" class="headerlink" title="Install from Open WebUI Github Repo"></a>Install from Open WebUI Github Repo<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.openwebui.com/getting-started/#install-from-open-webui-github-repo"></a></h3><p>INFO</p>
+<p>Open WebUI consists of two primary components: the frontend and the backend (which serves as a reverse proxy, handling static frontend files, and additional features). Both need to be running concurrently for the development environment.</p>
+<h4 id="Requirements-📦"><a href="#Requirements-📦" class="headerlink" title="Requirements 📦"></a>Requirements 📦<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.openwebui.com/getting-started/#requirements-"></a></h4><ul>
+<li>🐰 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://nodejs.org/en">Node.js</a> &gt;&#x3D; 20.10</li>
+<li>🐍 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://python.org/">Python</a> &gt;&#x3D; 3.11</li>
+</ul>
+<h4 id="Build-and-Install-🛠️"><a href="#Build-and-Install-🛠️" class="headerlink" title="Build and Install 🛠️"></a>Build and Install 🛠️<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.openwebui.com/getting-started/#build-and-install-%EF%B8%8F"></a></h4><p>Run the following commands to install:</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">git <span class="built_in">clone</span> https://github.com/open-webui/open-webui.git</span><br><span class="line"><span class="built_in">cd</span> open-webui/</span><br><span class="line"></span><br><span class="line"><span class="comment"># Copying required .env file</span></span><br><span class="line"><span class="built_in">cp</span> -RPp .env.example .<span class="built_in">env</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Building Frontend Using Node</span></span><br><span class="line">npm i</span><br><span class="line">npm run build</span><br><span class="line"></span><br><span class="line"><span class="comment"># Serving Frontend with the Backend</span></span><br><span class="line"><span class="built_in">cd</span> ./backend</span><br><span class="line">pip install -r requirements.txt -U</span><br><span class="line">bash start.sh</span><br></pre></td></tr></table></figure>
+
+<p>You should have Open WebUI up and running at <a target="_blank" rel="noopener external nofollow noreferrer" href="http://localhost:8080/">http://localhost:8080/</a>. Enjoy! 😄</p>
+<h2 id="ollama环境参数"><a href="#ollama环境参数" class="headerlink" title="ollama环境参数"></a>ollama环境参数</h2><ol>
+<li><code>OLLAMA_HOST</code>：这个变量定义了Ollama监听的<a target="_blank" rel="noopener external nofollow noreferrer" href="https://so.csdn.net/so/search?q=%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3&spm=1001.2101.3001.7020">网络接口</a>。通过设置OLLAMA_HOST&#x3D;0.0.0.0，我们可以让Ollama监听所有可用的网络接口，从而允许外部网络访问。</li>
+<li><code>OLLAMA_MODELS</code>：这个变量指定了模型镜像的存储路径。通过设置OLLAMA_MODELS&#x3D;F:\OllamaCache，我们可以将模型镜像存储在E盘，避免C盘空间不足的问题。</li>
+<li><code>OLLAMA_KEEP_ALIVE</code>：这个变量控制模型在内存中的存活时间。设置OLLAMA_KEEP_ALIVE&#x3D;24h可以让模型在内存中保持24小时，提高访问速度。</li>
+<li><code>OLLAMA_PORT</code>：这个变量允许我们更改Ollama的默认端口。例如，设置OLLAMA_PORT&#x3D;8080可以将服务端口从默认的11434更改为8080。</li>
+<li><code>OLLAMA_NUM_PARALLEL</code>：这个变量决定了Ollama可以同时处理的用户请求数量。设置OLLAMA_NUM_PARALLEL&#x3D;4可以让Ollama同时处理两个并发请求。</li>
+<li><code>OLLAMA_MAX_LOADED_MODELS</code>：这个变量限制了Ollama可以同时加载的模型数量。设置OLLAMA_MAX_LOADED_MODELS&#x3D;4可以确保<a target="_blank" rel="noopener external nofollow noreferrer" href="https://so.csdn.net/so/search?q=%E7%B3%BB%E7%BB%9F%E8%B5%84%E6%BA%90&spm=1001.2101.3001.7020">系统资源</a>得到合理分配。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/8cd234c7">https://fulsun.github.io/p/8cd234c7</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/OLLAMA/">OLLAMA</a></div><div class="post_share"><div class="social-share" data-image="/medias/featureimages/004.webp" data-sites="wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.3/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/p/e9c51444" title="InterGPU+ollama"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">InterGPU+ollama</div></div></a></div><div class="next-post pull-right"><a href="/p/fff5dab4" title="SpringMVC的拦截器和异常处理"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">SpringMVC的拦截器和异常处理</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><div><a href="/p/e9c51444" title="InterGPU+ollama"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/004.webp" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-07-19</div><div class="title">InterGPU+ollama</div></div></a></div></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="is-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info__name">凉月</div><div class="author-info__description">记录生活,分享知识。</div></div><div class="card-info-data site-data is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">226</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">71</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">33</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-GPU-%E9%A9%B1%E5%8A%A8%E7%A8%8B%E5%BA%8F"><span class="toc-text">安装 GPU 驱动程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-WSL2"><span class="toc-text">安装 WSL2</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85CUDA-Toolkit"><span class="toc-text">安装CUDA Toolkit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WSL2-%E5%AE%89%E8%A3%85-Docker"><span class="toc-text">WSL2 安装 Docker</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-NVIDIA-%E5%AE%B9%E5%99%A8%E5%B7%A5%E5%85%B7%E5%8C%85"><span class="toc-text">安装 NVIDIA 容器工具包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#docker-desktop"><span class="toc-text">docker-desktop</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%981"><span class="toc-text">问题1</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%982"><span class="toc-text">问题2</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Ollama-%E5%AE%89%E8%A3%85"><span class="toc-text">Ollama 安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85"><span class="toc-text">Docker方式安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8Linux%E4%B8%8A%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-%E9%9D%9Edocker"><span class="toc-text">在Linux上设置环境变量(非docker)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%E6%A8%A1%E5%9E%8B"><span class="toc-text">导入模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5-GGUF"><span class="toc-text">导入 (GGUF)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5%EF%BC%88PyTorch-%E5%92%8C-Safetensors%EF%BC%89"><span class="toc-text">导入（PyTorch 和 Safetensors）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9E%8B"><span class="toc-text">调用模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Curl%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9E%8B"><span class="toc-text">Curl调用模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Python%E8%B0%83%E7%94%A8%E6%A8%A1%E5%9E%8B"><span class="toc-text">Python调用模型</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Open-WebUI-%E9%83%A8%E7%BD%B2"><span class="toc-text">Open WebUI 部署</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Docker%E6%96%B9%E5%BC%8F%E5%AE%89%E8%A3%85-1"><span class="toc-text">Docker方式安装</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Installation-with-pip-Beta"><span class="toc-text">Installation with pip (Beta)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Install-from-Open-WebUI-Github-Repo"><span class="toc-text">Install from Open WebUI Github Repo</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Requirements-%F0%9F%93%A6"><span class="toc-text">Requirements 📦</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Build-and-Install-%F0%9F%9B%A0%EF%B8%8F"><span class="toc-text">Build and Install 🛠️</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ollama%E7%8E%AF%E5%A2%83%E5%8F%82%E6%95%B0"><span class="toc-text">ollama环境参数</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/73b4571" title="Linux镜像源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Linux镜像源"/></a><div class="content"><a class="title" href="/p/73b4571" title="Linux镜像源">Linux镜像源</a><time datetime="2024-11-01T23:00:00.000Z" title="发表于 2024-11-01 23:00:00">2024-11-01</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c1cdcea9" title="Dubbo原理"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Dubbo原理"/></a><div class="content"><a class="title" href="/p/c1cdcea9" title="Dubbo原理">Dubbo原理</a><time datetime="2024-09-27T23:18:33.000Z" title="发表于 2024-09-27 23:18:33">2024-09-27</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/777f3582" title="SpringMVC的执行流程"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/005.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC的执行流程"/></a><div class="content"><a class="title" href="/p/777f3582" title="SpringMVC的执行流程">SpringMVC的执行流程</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/011.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC基于cors的跨域解决方案"/></a><div class="content"><a class="title" href="/p/798cea3c" title="SpringMVC基于cors的跨域解决方案">SpringMVC基于cors的跨域解决方案</a><time datetime="2024-07-22T22:08:36.000Z" title="发表于 2024-07-22 22:08:36">2024-07-22</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/f3da9428" title="SpringMVC中完全注解开发"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringMVC中完全注解开发"/></a><div class="content"><a class="title" href="/p/f3da9428" title="SpringMVC中完全注解开发">SpringMVC中完全注解开发</a><time datetime="2024-07-22T21:08:36.000Z" title="发表于 2024-07-22 21:08:36">2024-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2024 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=4.13.0"></script><script src="/js/main.js?v=4.13.0"></script><script src="https://unpkg.com/@fancyapps/ui@5.0.33/dist/fancybox/fancybox.umd.js"></script><script src="https://unpkg.com/vanilla-lazyload@17.8.8/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjax', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = async () => {
+    if (initFn) initWaline(initFn)
+    else {
+      await getCSS('https://unpkg.com/@waline/client@3.1.2/dist/waline.css')
+      const { init } = await import('https://unpkg.com/@waline/client@3.1.2/dist/waline.js')
+      initFn = init || Waline.init
+      initWaline(initFn)
+      window.walineFn = initFn
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.3/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">搜索</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  数据库加载中</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js?v=4.13.0"></script></div></div></body></html>
