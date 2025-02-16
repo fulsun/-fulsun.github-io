@@ -1,0 +1,784 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>可见性与有序性的原理 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="介绍Java如何解决并发编程中的可见性和有序性问题。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="可见性与有序性的原理">
+<meta property="og:url" content="https://fulsun.github.io/p/1c8195dc">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="介绍Java如何解决并发编程中的可见性和有序性问题。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/011.webp">
+<meta property="article:published_time" content="2025-01-10T00:22:06.000Z">
+<meta property="article:modified_time" content="2025-02-16T05:36:57.316Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="CAS原理">
+<meta property="article:tag" content="JUC原子类">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/011.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "可见性与有序性的原理",
+  "url": "https://fulsun.github.io/p/1c8195dc",
+  "image": "https://fulsun.github.io/medias/featureimages/011.webp",
+  "datePublished": "2025-01-10T00:22:06.000Z",
+  "dateModified": "2025-02-16T05:36:57.316Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "凉月",
+      "url": "https://fulsun.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/1c8195dc"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.2"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '可见性与有序性的原理',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: linear-gradient(90deg, rgba(247, 149, 51, .1), rgba(243, 112, 85, .1) 15%, rgba(239, 78, 123, .1) 30%, rgba(161, 102, 171, .1) 44%, rgba(80, 115, 184, .1) 58%, rgba(16, 152, 173, .1) 72%, rgba(7, 179, 155, .1) 86%, rgba(109, 186, 130, .1));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/medias/featureimages/011.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">凉月の博客</span></a><a class="nav-page-title" href="/"><span class="site-name">可见性与有序性的原理</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">可见性与有序性的原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-10T00:22:06.000Z" title="发表于 2025-01-10 00:22:06">2025-01-10</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-16T05:36:57.316Z" title="更新于 2025-02-16 05:36:57">2025-02-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%BC%96%E7%A8%8B/">多线程编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">17.8k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>57分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:500,&quot;messagePrev&quot;:&quot;至上次更新后的&quot;,&quot;messageNext&quot;:&quot;天,文章内容可能已过时。&quot;,&quot;postUpdate&quot;:&quot;2025-02-16 05:36:57&quot;}" hidden></div><span id="more"></span>
+
+<h2 id="CPU物理缓存结构"><a href="#CPU物理缓存结构" class="headerlink" title="CPU物理缓存结构"></a>CPU物理缓存结构</h2><p>由于CPU的运算速度比主存（物理内存）的存取速度快很多，为了提高处理速度，现代CPU不直接和主存进行通信，而是在CPU和主存之间设计了多层的Cache（高速缓存），越靠近CPU的高速缓存越快，容量也越小。</p>
+<p>按照数据读取顺序和与CPU内核结合的紧密程度，CPU高速缓存有L1和L2高速缓存（即一级高速缓存和二级缓存高速），部分高端CPU还具有L3高速缓存（即三级高速缓存）。<strong>每一级高速缓存中所存储的数据都是下一级高速缓存的一部分，越靠近CPU的高速缓存读取越快，容量也越小。</strong>所以L1高速缓存容量很小，但存取速度最快，并且紧靠着使用它的CPU内核。L2容量大一些，存取速度也慢一些，并且仍然只能被一个单独的CPU核使用。L3在现代多核CPU中更普遍，容量更大、读取速度更慢些，能被同一个CPU芯片板上的所有CPU内核共享。最后，系统还拥有一块主存（即主内存），由系统中的所有CPU共享。拥有L3高速缓存的CPU，CPU存取数据的命中率可达95%，也就是说只有不到5%的数据需要从主存中去存取</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/72a30598bf53b93af74723edb374e558.png"></p>
+<p>CPU内核读取数据时，先从L1高速缓存中读取，如果没有命中，再到L2、L3高速缓存中读取，假如这些高速缓存都没有命中，它就会到主存中读取所需要的数据。高速缓存大大缩小了高速CPU内核与低速主存之间的速度差距。以三层高速缓存架构为例：</p>
+<ul>
+<li>L1高速缓存最接近CPU，容量最小（如32KB、64KB等）、存取速度最快，每个核上都有一个L1高速缓存。</li>
+<li>L2高速缓存容量更大（如256KB）、速度低些，在一般情况下，每个内核上都有一个独立的L2高速缓存。</li>
+<li>L3高速缓存最接近主存，容量最大（如12MB）、速度最低，由在同一个CPU芯片板上的不同CPU内核共享。</li>
+</ul>
+<p>CPU通过高速缓存进行数据读取有以下优势：</p>
+<ol>
+<li>写缓冲区可以保证指令流水线持续运行，可以避免由于CPU停顿下来等待向内存写入数据而产生的延迟。</li>
+<li>通过以批处理的方式刷新写缓冲区，以及合并写缓冲区中对同一内存地址的多次写，减少对内存总线的占用。</li>
+</ol>
+<h2 id="并发编程的三大问题"><a href="#并发编程的三大问题" class="headerlink" title="并发编程的三大问题"></a>并发编程的三大问题</h2><p>由于需要尽可能释放CPU的能力，因此在CPU上不断增加内核和缓存。内核是越加越多，从之前的单核演变成8核、32核甚至更多。缓存也不止一层，可能是2层、3层甚至更多。<strong>随着CPU内核和缓存的增加，导致了并发编程的可见性和有序性问题</strong>。</p>
+<h3 id="原子性问题"><a href="#原子性问题" class="headerlink" title="原子性问题"></a>原子性问题</h3><p>所谓原子操作，就是“不可中断的一个或一系列操作”，是指不会被线程调度机制打断的操作。这种操作一旦开始，就一直运行到结束，中间不会有任何线程的切换。</p>
+<p>下面来看一小段程序：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">CounterSample</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">sum</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">increase</span><span class="params">()</span> &#123;</span><br><span class="line">    	sum++; <span class="comment">//①</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>很多读者认为，sum++是单一操作，所以是原子性的。本书前面我们用实验证明了sum++不是原子操作。接下来，我们使用javap命令解析出以上代码的汇编指令信息，从汇编指令的角度来看看++操作的细分操作。<br>说明</p>
+<blockquote>
+<p>javap是JDK提供的一个命令行工具，能对给定的class文件提供的字节代码进行反编译。通过它可以对照源代码和字节码，从而了解很多编译器内部的工作，对更深入地理解如何提高程序执行的效率等问题有极大的帮助。命令选项-c表示对代码进行反汇编。</p>
+</blockquote>
+<p>使用javap命令解析出CounterSample的汇编代码，具体的命令如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// javap -c .\CounterSample.class</span></span><br><span class="line">Compiled from <span class="string">&quot;CounterSample.java&quot;</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">pers</span>.fulsun._3.CounterSample &#123;</span><br><span class="line">  <span class="type">int</span> sum;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> pers.fulsun._3.CounterSample();</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: aload_0</span><br><span class="line">       <span class="number">1</span>: invokespecial #<span class="number">1</span>                  <span class="comment">// Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span></span><br><span class="line">       <span class="number">4</span>: aload_0</span><br><span class="line">       <span class="number">5</span>: iconst_0</span><br><span class="line">       <span class="number">6</span>: putfield      #<span class="number">2</span>                  <span class="comment">// Field sum:I</span></span><br><span class="line">       <span class="number">9</span>: <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">increase</span><span class="params">()</span>;</span><br><span class="line">    Code:</span><br><span class="line">       <span class="number">0</span>: aload_0</span><br><span class="line">       <span class="number">1</span>: dup</span><br><span class="line">①        <span class="number">2</span>: getfield      #<span class="number">2</span>                  <span class="comment">// Field sum:I</span></span><br><span class="line">②        <span class="number">5</span>: iconst_1</span><br><span class="line">③        <span class="number">6</span>: iadd</span><br><span class="line">④        <span class="number">7</span>: putfield      #<span class="number">2</span>                  <span class="comment">// Field sum:I</span></span><br><span class="line">      <span class="number">10</span>: <span class="keyword">return</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<p>解释一下上面的4个关键性的汇编指令：</p>
+<ul>
+<li>① 获取当前sum变量的值，并且放入栈顶。</li>
+<li>② 将常量1放入栈顶。</li>
+<li>③ 将当前栈顶中的两个值（sum的值和1）相加，并把结果放入栈顶。</li>
+<li>④ 把栈顶的结果再赋值给sum变量。</li>
+</ul>
+<p>通过以上4个关键性的汇编指令可以看出，在汇编代码的层面，++操作实质上是4个操作。这4个操作之间是可以发生线程切换的，或者说是可以被其他线程中断的。所以，++操作不是原子操作，在并行场景会发生原子性问题。</p>
+<h3 id="可见性问题"><a href="#可见性问题" class="headerlink" title="可见性问题"></a><strong>可见性问题</strong></h3><p><strong>一个线程对共享变量的修改，另一个线程能够立刻可见，我们称该共享变量具备内存可见性。</strong>谈到内存可见性，要先引出JMM（Java Memory Model，Java内存模型）的概念。<strong>JMM规定，将所有的变量都存放在公共主存中，当线程使用变量时会把主存中的变量复制到自己的工作空间（或者叫私有内存）中，线程对变量的读写操作，是自己工作内存中的变量副本。如果两个线程同时操作一个共享变量，就可能发生可见性问题</strong>。</p>
+<p>举一个例子：</p>
+<ol>
+<li>主存中有变量sum，初始值为0。</li>
+<li>线程A计划将sum加1，先将sum&#x3D;0复制到自己的私有内存中，然后更新sum的值。线程A操作完成之后其私有内存中sum的值为1，然而线程A将更新后的sum值回刷到主存的时间是不固定的。</li>
+<li>在线程A没有回刷sum到主存前，刚好线程B同样从主存中读取sum，此时值为0，和线程A进行同样的操作，最后期盼的sum&#x3D;2目标没有达成，最终sum&#x3D;1。</li>
+</ol>
+<p>线程B没有将sum变成2的原因是：线程A的修改还在其工作内存中，对线程B不可见，因为线程A的修改还没有刷入主存。这就发生了典型的内存可见性问题。</p>
+<p>要想解决多线程的内存可见性问题，所有线程都必须将共享变量刷新到主存，<strong>一种简单的方案是：使用Java提供的关键字volatile修饰共享变量。</strong></p>
+<blockquote>
+<p><strong>为什么Java局部变量、方法参数不存在内存可见性问题？</strong></p>
+<p>在Java中，所有的局部变量、方法定义参数都不会在线程之间共享，所以也就不会有内存可见性问题。所有的Object实例、Class实例和数组元素都存储在JVM堆内存中，<strong>堆内存在线程之间共享，所以存在可见性问题</strong>。</p>
+</blockquote>
+<h3 id="有序性问题"><a href="#有序性问题" class="headerlink" title="有序性问题"></a>有序性问题</h3><p>所谓程序的有序性，是指程序按照代码的先后顺序执行。如果程序执行的顺序与代码的先后顺序不同，并导致了错误的结果，即发生了有序性问题。</p>
+<p>举一个简单的例子，看下面这段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">InstructionReorder</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>, y = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="type">int</span> <span class="variable">a</span> <span class="operator">=</span> <span class="number">0</span>, b = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        <span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (; ; ) &#123;</span><br><span class="line">            i++;</span><br><span class="line">            x = <span class="number">0</span>;</span><br><span class="line">            y = <span class="number">0</span>;</span><br><span class="line">            a = <span class="number">0</span>;</span><br><span class="line">            b = <span class="number">0</span>;</span><br><span class="line">            <span class="type">Thread</span> <span class="variable">one</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                a = <span class="number">1</span>; <span class="comment">//①</span></span><br><span class="line">                x = b; <span class="comment">//②</span></span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">            <span class="type">Thread</span> <span class="variable">other</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(() -&gt; &#123;</span><br><span class="line">                b = <span class="number">1</span>; <span class="comment">//③</span></span><br><span class="line">                y = a; <span class="comment">//④</span></span><br><span class="line">            &#125;);</span><br><span class="line">            one.start();</span><br><span class="line">            other.start();</span><br><span class="line">            one.join();</span><br><span class="line">            other.join();</span><br><span class="line">            <span class="type">String</span> <span class="variable">result</span> <span class="operator">=</span> <span class="string">&quot;第&quot;</span> + i + <span class="string">&quot;次 (&quot;</span> + x + <span class="string">&quot;,&quot;</span> + y + <span class="string">&quot;）&quot;</span>;</span><br><span class="line">            <span class="keyword">if</span> (x == <span class="number">0</span> &amp;&amp; y == <span class="number">0</span>) &#123;</span><br><span class="line">                System.err.println(result);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 第55577次 (0,0）</span></span><br><span class="line"><span class="comment">// 第136129次 (0,0）</span></span><br></pre></td></tr></table></figure>
+
+<p>以上程序的代码很简单，两个线程交替给a、b、x、y赋值。由于并发执行的无序性，赋值之后x、y的值可能为(1,0)、(0,1)或(1,1)。为什么呢？</p>
+<p>因为线程one可能在线程two开始之前就执行完了，也可能线程two在线程one开始之前就执行完了，甚至有可能二者的指令是同时或交替执行的。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/6821ca935b19f75a0de0a2a02a3d81b4.png"></p>
+<p>然而，执行以上代码时，出乎意料的事情发生了：这段代码的执行结果也可能是(0,0)。以上代码特意将结果(0,0)进行过滤和输出，部分结果如下： <code>第55577次 (0,0）</code></p>
+<p>对于以上程序来说，(0,0)结果是错误的，意味着已经发生了并发的有序性问题。为什么会出现(0,0)结果呢？<strong>可能在程序的执行过程中发生了指令重排序（Reordering）。</strong></p>
+<h3 id="指令重排序"><a href="#指令重排序" class="headerlink" title="指令重排序"></a>指令重排序</h3><p>下面解释一下什么是指令重排序。一般来说，CPU为了提高程序运行效率，可能会对输入代码进行优化，它不保证程序中各个语句的执行顺序同代码中的先后顺序一致，但是它会保证程序最终的执行结果和代码顺序执行的结果是一致的。</p>
+<p>重排序也是单核时代非常优秀的优化手段，有足够多的措施保证其在单核下的正确性。在多核时代，如果工作线程之间不共享数据或仅共享不可变数据，重排序也是性能优化的利器。然而，如果工作线程之间共享了可变数据，由于两种重排序的结果都不是固定的，因此会导致工作线程似乎表现出了随机行为。得到了(0,0)结果的语句执行过程，对于线程one来说，可能a&#x3D;1和x&#x3D;b这两个语句的赋值操作顺序被颠倒了，对于线程two来说，可能b&#x3D;1和y&#x3D;a这两个语句的赋值操作顺序被颠倒了，从而出现了(x,y)值为(0,0)的错误结果。</p>
+<p>线程one和线程two发生错误结果时的执行顺序如图所示。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/28cb56f203b316d7a024c0939ee3c49b.png"></p>
+<p>从上面可以看出，指令重排序不会影响单个线程的执行，但是会影响多个线程并发执行的正确性。</p>
+<blockquote>
+<p>事实上，<strong>输出了乱序的结果，并不代表一定发生了指令重排序，内存可见性问题也会导致这样的输出。但是，指令重排序也是导致乱序的原因之一</strong>。总之，要想并发程序正确地执行，必须要保证原子性、可见性以及有序性。只要有一个没有得到保证，就有可能会导致程序运行不正确。</p>
+</blockquote>
+<h2 id="硬件层的MESI协议原理"><a href="#硬件层的MESI协议原理" class="headerlink" title="硬件层的MESI协议原理"></a>硬件层的MESI协议原理</h2><p>为了缓解内存速度和CPU内核速度差的问题，现代计算机会在CPU上增加高速缓存，每个CPU内核都只有自己的一级、二级高速缓存，CPU芯片板上的CPU内核之间共享一个三级高速缓存。</p>
+<p>每个CPU的处理过程为：先将计算需要用到的数据缓存在CPU的高速缓存中，在CPU进行计算时，直接从高速缓存中读取数据并且在计算完成之后写回高速缓存中。在整个运算过程完成后，再把高速缓存中的数据同步到主存。</p>
+<p>由于每个线程可能会运行在不同的CPU内核中，因此每个线程拥有自己的高速缓存。同一份数据可能会被缓存到多个CPU内核中，在不同CPU内核中运行的线程看到同一个变量的缓存值就会不一样，就可能发生内存的可见性问题。</p>
+<p><strong>硬件层的MESI协议是一种用于解决内存的可见性问题的手段</strong>，接下来为大家介绍MESI协议的原理和具体内容。</p>
+<blockquote>
+<p><strong>缓存行是高速缓存操作的基本单位，在Intel的CPU上一般是64字节。</strong></p>
+</blockquote>
+<h3 id="总线锁和缓存锁"><a href="#总线锁和缓存锁" class="headerlink" title="总线锁和缓存锁"></a>总线锁和缓存锁</h3><p>为了解决内存的可见性问题，CPU主要提供了两种解决办法：<code>总线锁</code>和<code>缓存锁</code>。</p>
+<ul>
+<li><p>总线锁</p>
+<ul>
+<li>操作系统提供了总线锁机制。前端总线（也叫CPU总线）是所有CPU与芯片组连接的主干道，负责CPU与外界所有部件的通信，包括高速缓存、内存、北桥，其控制总线向各个部件发送控制信号，通过地<br>址总线发送地址信号指定其要访问的部件，通过数据总线实现双向传输。</li>
+<li><strong>在CPU内核1要执行i++操作的时候，将在总线上发出一个LOCK#信号锁住缓存（具体来说是变量所在的缓存行），这样其他CPU内核就不能操作缓存了，从而阻塞其他CPU内核，使CPU内核1可以独享此共享内存</strong>。</li>
+<li>每当CPU内核访问L3中的数据时，都会通过线程总线来进行读取。总线锁的意思是在线程总线中加入一把锁，当不同的CPU内核访问同一个缓存行时，<strong>只允许一个CPU内核进行读取</strong>。</li>
+<li>在多CPU的系统中，当其中一个CPU要对共享主存进行操作时，在总线上发出一个LOCK#信号，这个信号使得其他CPU无法通过总线来访问共享主存中的数据，总线锁把CPU和主存之间的通信锁住了，这使得锁定期间，其他CPU不能操作其他主存地址的数据，总线锁的开销比较大，这种机制显然是不合适的。</li>
+</ul>
+</li>
+<li><p>总线锁的缺陷是：</p>
+<ul>
+<li>某一个CPU访问主存时，总线锁把CPU和主存的通信给锁住了，其他CPU不能操作其他主存地址的数据，使得效率低下，开销较大。</li>
+<li>总线锁的粒度太大了，会<strong>导致其他CPU核心的访问延迟</strong>。最好的方法就是控制锁的保护粒度，只需要保证被多个CPU缓存的同一份数据一致即可。所以引入了缓存锁（如缓存一致性机制），后来的CPU都提供了缓存一致性机制，Intel 486之后的处理器就提供了这种优化。</li>
+</ul>
+</li>
+<li><p>缓存锁</p>
+<ul>
+<li>比总线锁，缓存锁降低了锁的粒度。为了达到数据访问的一致，需要各个CPU在访问高速缓存时遵循一些协议，在存取数据时根据协议来操作，常见的协议有MSI、MESI、MOSI等。最常见的就是MESI协议。</li>
+<li>就整体而言，缓存一致性机制就是当某CPU对高速缓存中的数据进行操作之后，<strong>通知其他CPU放弃存储在它们内部的缓存数据，或者从主存中重新读取</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>为了提高处理速度，CPU不直接和主存进行通信，而是先将系统主存的数据读到内部高速缓存（L1、L2或其他）后再进行操作，但操作完不知道何时会写入内存。<strong>如果对声明了volatile的变量进行写操作，JVM就会向CPU发送一条带lock前缀的指令，将这个变量所在缓存行的数据写回系统主存。但是，即使写回系统主存，如果其他CPU高速缓存中的值还是旧的，再执行计算操作也会有问题。</strong></p>
+<p>所以，在多CPU的系统中，为了保证各个CPU的高速缓存中数据的一致性，会实现<strong>缓存一致性协议</strong>，<code>每个CPU通过嗅探在总线上传播的数据来检查自己的高速缓存中的值是否过期，当CPU发现自己缓存行对应的主存地址被修改时，就会将当前CPU的缓存行设置成无效状态，当CPU对这个数据执行修改操作时，会重新从系统主存中把数据读到CPU的高速缓存中。因为高速缓存的内容是部分主存内容的副本，所以应该与主存内容保持一致。</code></p>
+<p>而CPU对高速缓存副本如何与主存内容保持一致有几种写入模式供选择，主要的写入模式有以下两种：<br>（1）<code>Write-Through（直写）模式</code>：在数据更新时，同时写入低一级的高速缓存和主存。此模式的优点是操作简单，因为所有的数据都会更新到主存，所以其他CPU读取主存时都是最新值。此模式的缺点是数据写入速度较慢，因为数据修改之后需要同时写入低一级的高速缓存和主存。<br>（2）<code>Write-Back（回写）模式</code>：数据的更新并不会立即反映到主存，而是只写入高速缓存。只在数据被替换出高速缓存或者变成共享（S）状态时，如果发现数据有变动，才会将最新的数据更新到主存。</p>
+<p>Write-Back模式的优点是数据写入速度快，因为发生数据变动时不需要写入主存，所以这种模式占用总线少，大多数CPU的高速缓存采用这种模式。</p>
+<p>此模式的缺点为：实现一致性协议比较复杂，因为最新值可能存放在私有高速缓存中，而不是存放在共享的高速缓存或者主存中。主要的缓存一致性协议有MSI协议、MESI协议等。</p>
+<h3 id="MSI协议"><a href="#MSI协议" class="headerlink" title="MSI协议"></a>MSI协议</h3><p>多核CPU都有自己的专有高速缓存（一般为L1、L2），以及同一个CPU芯片板上不同CPU内核之间共享的高速缓存（一般为L3）。不同CPU内核的高速缓存中难免会加载同样的数据，那么如何保证数据的一致性呢？这就需要用到缓存一致性协议。</p>
+<p>缓存一致性协议的基础版本为MSI协议，也叫作写入失效协议。<strong>如果同时有多个CPU要写入，总线会进行串行化，同一时刻只会有一个CPU获得总线的访问权</strong>。</p>
+<p>MSI协议是一种简化的缓存一致性协议，全称为Modified、Shared、Invalid（修改、共享、无效）。它用于在多处理器系统中维护缓存一致性，确保每个处理器缓存中的数据与主内存中的数据保持一致。MSI协议是MESI协议的一个变种，去掉了Exclusive状态，简化了协议的实现。以下是MSI协议的详细介绍：</p>
+<ol>
+<li><strong>Modified（修改）</strong>：<ul>
+<li>当一个缓存行处于Modified状态时，表示该缓存行的数据已经被修改，并且与主内存中的数据不一致。</li>
+<li>只有一个处理器的缓存可以拥有该缓存行的Modified状态，其他处理器的缓存中该缓存行必须处于Invalid状态。</li>
+<li>当处理器写入数据时，缓存行进入Modified状态，并且不需要立即写回主内存。</li>
+</ul>
+</li>
+<li><strong>Shared（共享）</strong>：<ul>
+<li>当一个缓存行处于Shared状态时，表示该缓存行的数据与主内存中的数据一致，并且多个处理器的缓存可能拥有该缓存行的副本。</li>
+<li>处理器可以读取该缓存行，但写入操作会导致缓存行状态转换为Modified，并通知其他处理器将该缓存行设置为Invalid。</li>
+</ul>
+</li>
+<li><strong>Invalid（无效）</strong>：<ul>
+<li>当一个缓存行处于Invalid状态时，表示该缓存行的数据无效，处理器不能读取或写入该缓存行。</li>
+<li>如果处理器需要访问该缓存行，必须从主内存或其他处理器的缓存中获取最新的数据，并将缓存行状态更新为Shared或Modified。</li>
+</ul>
+</li>
+</ol>
+<p>比如CPU c1、c2对变量m进行读写，采用缓存回写模式，总线操作:</p>
+<blockquote>
+<p>初始状态</p>
+</blockquote>
+<ul>
+<li>变量m在主内存中，初始值为0。</li>
+<li>c1和c2的缓存中都没有变量m的副本，即变量m的缓存行状态为Invalid。</li>
+</ul>
+<blockquote>
+<p>步骤1：c1读取变量m</p>
+</blockquote>
+<ol>
+<li>c1发出读请求，请求变量m的数据。</li>
+<li>总线仲裁器检测到c1的读请求，并从主内存中读取变量m的数据。</li>
+<li>主内存将变量m的数据发送给c1，c1的缓存中变量m的缓存行状态变为Shared。</li>
+</ol>
+<blockquote>
+<p>步骤2：c2读取变量m</p>
+</blockquote>
+<ol>
+<li>c2发出读请求，请求变量m的数据。</li>
+<li>总线仲裁器检测到c2的读请求，并从主内存中读取变量m的数据。</li>
+<li>主内存将变量m的数据发送给c2，c2的缓存中变量m的缓存行状态变为Shared。</li>
+</ol>
+<blockquote>
+<p>步骤3：c1写入变量m</p>
+</blockquote>
+<ol>
+<li>c1发出写请求，准备修改变量m的值。</li>
+<li>c1的缓存中变量m的缓存行状态从Shared变为Modified。</li>
+<li>c1通过总线发出无效化请求（Invalidate），通知其他CPU核心（包括c2）将变量m的缓存行设置为Invalid。</li>
+<li>c2接收到无效化请求，将其缓存中变量m的缓存行状态设置为Invalid。</li>
+<li>c1修改变量m的值，缓存行状态保持为Modified。</li>
+</ol>
+<blockquote>
+<p>步骤4：c2再次读取变量m</p>
+</blockquote>
+<ol>
+<li>c2发出读请求，请求变量m的数据。</li>
+<li>总线仲裁器检测到c2的读请求，并发现c1的缓存中变量m的缓存行状态为Modified。</li>
+<li>c1将修改后的变量m的数据发送给c2，并将其缓存中变量m的缓存行状态变为Shared。</li>
+<li>c2接收到变量m的数据，缓存中变量m的缓存行状态变为Shared。</li>
+</ol>
+<blockquote>
+<p>步骤5：c1回写变量m到主内存</p>
+</blockquote>
+<ol>
+<li>c1决定回写变量m的数据到主内存。</li>
+<li>c1将变量m的数据写回主内存，并将其缓存中变量m的缓存行状态变为Shared。</li>
+<li>主内存更新变量m的值。</li>
+</ol>
+<h3 id="MESI协议及RFO请求"><a href="#MESI协议及RFO请求" class="headerlink" title="MESI协议及RFO请求"></a>MESI协议及RFO请求</h3><p>目前主流的缓存一致性协议为MESI写入失效协议，而MESI是MSI协议的扩展。在MESI协议中，每个缓存行（Cache Line）有4种状态，即M、E、S和I（全名是Modified、Exclusive、Shared和Invalid），可<br>用2 bit表示。</p>
+<p>以下是对每个状态的解释：</p>
+<ol>
+<li>**Modified (M)**：缓存行是脏的，即缓存行的数据已经被修改，但还没有写回到内存中。这个缓存行只存在于一个处理器的缓存中，其他处理器的缓存中没有这个数据的副本。</li>
+<li>**Exclusive (E)**：缓存行是干净的，且只存在于一个处理器的缓存中。数据与内存中的数据一致，但其他处理器的缓存中没有这个数据的副本。</li>
+<li>**Shared (S)**：缓存行是干净的，且可能存在于多个处理器的缓存中。数据与内存中的数据一致，多个处理器可以共享这个数据。</li>
+<li>**Invalid (I)**：缓存行是无效的，即缓存行中的数据不可用。这个缓存行需要从内存中重新加载数据。</li>
+</ol>
+<blockquote>
+<p>MESI协议的工作原理如下：</p>
+</blockquote>
+<ul>
+<li>当一个处理器需要读取数据时，它会首先检查自己的缓存。如果数据在缓存中，并且状态是M、E或S，那么处理器可以直接使用这个数据。</li>
+<li>如果数据不在缓存中，或者状态是I，处理器会向总线发出读请求。其他处理器会监听这个请求，并根据自己缓存中的数据状态做出响应。</li>
+<li>如果其他处理器的缓存中有这个数据，并且状态是M，那么这个处理器会将数据写回到内存，并将自己的缓存行状态改为S。请求数据的处理器会从内存中读取数据，并将自己的缓存行状态设置为S。</li>
+<li>如果其他处理器的缓存中有这个数据，并且状态是E或S，那么这些处理器会将自己的缓存行状态改为S。请求数据的处理器会从内存中读取数据，并将自己的缓存行状态设置为S。</li>
+<li>如果其他处理器的缓存中没有这个数据，请求数据的处理器会从内存中读取数据，并将自己的缓存行状态设置为E。</li>
+</ul>
+<h2 id="volatile的原理"><a href="#volatile的原理" class="headerlink" title="volatile的原理"></a>volatile的原理</h2><p>前面介绍过，为了解决CPU访问主存时主存读写性能的短板，在CPU中增加了高速缓存，但这带来了可见性问题。而Java的<code>volatile关</code>键字可以保证共享变量的主存可见性，也就是将共享变量的改动值立即刷新回主存。</p>
+<p>在正常情况下，系统操作并不会校验共享变量的缓存一致性，只有当共享变量用volatile关键字修饰了，该变量所在的缓存行才被要求进行缓存一致性的校验。</p>
+<p>接下来，从volatile关键字的汇编代码出发分析一下volatile关键字的底层原理，参考如下示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VolatileVar</span> &#123;</span><br><span class="line">    <span class="comment">// 使用volatile保障内存可见性</span></span><br><span class="line">    <span class="keyword">volatile</span> <span class="type">int</span> <span class="variable">var</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setVar</span><span class="params">(<span class="type">int</span> <span class="keyword">var</span>)</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;setVar = &quot;</span> + <span class="keyword">var</span>);</span><br><span class="line">        <span class="built_in">this</span>.<span class="keyword">var</span> = <span class="keyword">var</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">VolatileVar</span> <span class="variable">var</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">VolatileVar</span>();</span><br><span class="line">        <span class="keyword">var</span>.setVar(<span class="number">100</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>输出汇编代码的操作命令</p>
+<ul>
+<li>-Xcomp：表示永远以编译模式运行（禁止解释器模式）。</li>
+<li>-XX:-Inline：禁止内联优化。</li>
+<li>-server：设置虚拟机使用何种运行模式，“-server”表示选择server模式JVM，在Windows中默认的JVM类型为client模式。client模式启动比较快，但运行时性能和内存管理效率不如server模式，通常用于客户端应用程序。相反，server模式启动比client模式慢，但可获得更高的运行性能。如果要使用server模式，就需要在启动虚拟机时添加-server参数，以获得更高的性能。对于服务器端应用，推荐采用server模式，尤其是拥有多个CPU的系统。在Linux下，Solaris上默认采用server模式。</li>
+<li>输出汇编代码中可能出现的错误<strong>无法加载hsdis-amd64.dll</strong>,<a target="_blank" rel="noopener external nofollow noreferrer" href="https://chriswhocodes.com/hsdis/">下载hsdis HotSpot Disassembly Plugin Downloads</a>,放在 $JAVA_HOME&#x2F;jre&#x2F;bin&#x2F;server 目录下</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">target\classes&gt; java -server -Xcomp -XX:-Inline  -XX:+UnlockDiagnosticVMOptions  -XX:+PrintAssembly <span class="string">&quot;-XX:CompileCommand=compileonly,*VolatileVar.setVar&quot;</span>  .\VolatileVar.java &gt; <span class="keyword">volatile</span>.log</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>分析volatile关键字对应的汇编指令,运行程序后，volatile.log会有VolatileVar类的汇编指令。<br>volatile.log可能很长，可以根据共享变量的名称进行检索，这里的共享变量为var，所以可以减少到以下两行代码：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0x00000000031fe26a: lock addl <span class="variable">$0x0</span>,(%rsp)     ;*putfield var</span><br><span class="line">                                              ; - pers.fulsun._3.VolatileVar::setVar@27 (line 9)</span><br><span class="line">  </span><br><span class="line">0x00000000031fe26f: add    <span class="variable">$0x50</span>,%rsp</span><br><span class="line">0x00000000031fe273: pop    %rbp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>由于共享变量var加了volatile关键字，因此在汇编指令中，操作var之前多出一个lock前缀指令<code>lock addl</code>，该lock前缀指令有三个功能。</p>
+<ol>
+<li>将当前CPU缓存行的数据立即写回系统内存<ul>
+<li>在对volatile修饰的共享变量进行写操作时，其汇编指令前用lock前缀修饰。lock前缀指令使得在执行指令期间，CPU可以独占共享内存（即主存）。对共享内存的独占，老的CPU（如Intel 486）通过总线锁方式实现。由于总线锁开销比较大，因此新版CPU（如IA-32、Intel 64）通过缓存锁实现对共享内存的独占性访问，缓存锁（缓存一致性协议）会阻止两个CPU同时修改共享内存的数据。</li>
+</ul>
+</li>
+<li>lock前缀指令会引起在其他CPU中缓存了该内存地址的数据无效<ul>
+<li>写回操作时要经过总线传播数据，而每个CPU通过嗅探在总线上传播的数据来检查自己缓存的值是否过期，当CPU发现自己缓存行对应的内存地址被修改时，就会将当前CPU的缓存行设置为无效状态，当CPU要对这个值进行修改的时候，会强制重新从系统内存中把数据读到CPU缓存。</li>
+</ul>
+</li>
+<li>lock前缀指令禁止指令重排<ul>
+<li>lock前缀指令的最后一个作用是作为内存屏障（Memory Barrier）使用，可以禁止指令重排序，从而避免多线程环境下程序出现乱序执行的现象。</li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+<h2 id="有序性与内存屏障"><a href="#有序性与内存屏障" class="headerlink" title="有序性与内存屏障"></a>有序性与内存屏障</h2><p>有序性是与可见性完全不同的概念，虽然二者都是CPU不断迭代升级的产物。由于CPU技术不断发展，为了重复释放硬件的高性能，编译器、CPU会优化待执行的指令序列，包括调整某些指令的顺序执行。优化的结果，指令执行顺序会与代码顺序略有不同，可能会导致代码执行出现有序性问题。</p>
+<p>内存屏障又称内存栅栏（Memory Fences），是一系列的CPU指令，它的作用主要是保证特定操作的执行顺序，保障并发执行的有序性。在编译器和CPU都进行指令的重排优化时，可以通过在指令间插入一个内存屏障指令，告诉编译器和CPU，禁止在内存屏障指令前（或后）执行指令重排序。</p>
+<h3 id="重排序"><a href="#重排序" class="headerlink" title="重排序"></a>重排序</h3><p>为了提高性能，编译器和CPU常常会对指令进行重排序。重排序主要分为两类：<code>编译器重排序</code>和<code>CPU重排序</code>，具体如图所示:</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/c21352aaff3d8a9b2076b26f4c72095a.png"></p>
+<ul>
+<li><strong>编译器重排序</strong><ul>
+<li>编译器重排序指的是在代码编译阶段进行指令重排，不改变程序执行结果的情况下，为了提升效率，编译器对指令进行乱序（Out-ofOrder）的编译。例如，在代码中，A操作需要获取其他资源而进入等待的状态，而A操作后面的代码跟A操作没有数据依赖关系，如果编译器一直等待A操作完成再往下执行的话，效率要慢得多，所以可以先编译后面的代码，这样的乱序可以提升编译速度。编译器为什么要重排序（Re-Order）呢？它的目的为：与其等待阻塞指令（如等待缓存刷入）完成，不如先去执行其他指令。与CPU乱序执行相比，编译器重排序能够完成更大范围、效果更好的乱序优化。</li>
+</ul>
+</li>
+<li><strong>CPU重排序</strong><ul>
+<li>流水线（Pipeline）和乱序执行（Out-of-Order Execution）是现代CPU基本都具有的特性。机器指令在流水线中经历取指令、译码、执行、访存、写回等操作。为了CPU的执行效率，流水线都是并行处理的，在不影响语义的情况下。处理次序（Process Ordering，机器指令在CPU实际执行时的顺序）和程序次序（Program Ordering，程序代码的逻辑执行顺序）是允许不一致的，只要满足As-if-Serial规则即可。显然，这里的不影响语义依旧只能保证指令间的显式因果关系，无法保证隐式因果关系，即无法保证语义上不相关但是在程序逻辑上相关的操作序列按序执行。</li>
+</ul>
+</li>
+<li><strong>CPU重排序包括两类</strong>：<code>指令级重排序</code>和<code>内存系统重排序</code>。<ul>
+<li>指令级重排序。在不影响程序执行结果的情况下，CPU内核采用ILP（Instruction-Level Parallelism，指令级并行运算）技术来将多条指令重叠执行，主要是为了提升效率。如果指令之间不存在数据依赖性，CPU就可以改变语句的对应机器指令的执行顺序，叫作指令级重排序。</li>
+<li>内存系统重排序：对于现代的CPU来说，在CPU内核和主存之间都具备一个高速缓存，高速缓存的作用主要是减少CPU内核和主存的交互（CPU内核的处理速度要快得多），在CPU内核进行读操作时，如<br>果缓存没有的话就从主存取，而对于写操作都是先写在缓存中，最后再一次性写入主存，原因是减少跟主存交互时CPU内核的短暂卡顿，从而提升性能。但是，内存系统重排序可能会导致一个问题——数据不一致。</li>
+<li>内存系统重排序和指令级重排序不同，内存系统重排序为伪重排序，也就是说只是看起来像在乱序执行而已。</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>所谓“乱序”，仅仅是被称为“乱序”，实际上也遵循着一定规则：只要两个指令之间不存在“数据依赖”，就可以对这两个指令乱序。</p>
+</blockquote>
+<h3 id="As-if-Serial规则"><a href="#As-if-Serial规则" class="headerlink" title="As-if-Serial规则"></a>As-if-Serial规则</h3><p>在单核CPU的场景下，当指令被重排序之后，如何保障运行的正确性呢？其实很简单，编译器和CPU都需要遵守As-if-Serial规则。<strong>As-if-Serial规则的具体内容为：无论如何重排序，都必须保证代码在单线程下运行正确。</strong></p>
+<p>为了遵守As-if-Serial规则，编译器和CPU不会对存在数据依赖关系的操作进行重排序，因为这种重排序会改变执行结果。但是，如果指令之间不存在数据依赖关系，这些指令可能被编译器和CPU重排序。</p>
+<p>下面是一段非常简单的示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReorderDemo</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> a=<span class="number">1</span>; <span class="comment">//①</span></span><br><span class="line">        <span class="type">int</span> b=<span class="number">2</span>; <span class="comment">//②</span></span><br><span class="line">        <span class="type">int</span> c=a+b; <span class="comment">//③</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在示例代码中，③和①之间存在数据依赖关系，同时③和②之间也存在数据依赖关系。因此，在最终执行的指令序列中，③不能被重排序到①和②的前面，因为③排到①和②的前面，程序的结果将会被改变。但①和②之间没有数据依赖关系，编译器和CPU可以重排序①和②之间的执行顺序。</p>
+<p>为了保证As-if-Serial规则，Java异常处理机制也会为指令重排序做一些特殊处理。下面是一段非常简单的Java异常处理示例代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReorderDemo2</span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="type">int</span> x, y;</span><br><span class="line">        x = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123; </span><br><span class="line">            x = <span class="number">2</span>; <span class="comment">//①</span></span><br><span class="line">        	 y = <span class="number">0</span>/<span class="number">0</span>; <span class="comment">//②</span></span><br><span class="line">        &#125; <span class="keyword">catch</span> (Exception e) &#123; <span class="comment">//③</span></span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        	System.out.println(<span class="string">&quot;x = &quot;</span> + x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>在上面的代码中，语句①（x&#x3D;2）和语句②（y&#x3D;0&#x2F;0）之间没有数据依赖关系，语句②可能会被重排序在①之前执行。重排之后，语句①尚未执行，语句②已经抛出异常，因而重排后会导致语句①得不到执行，最终x得到错误结果1。所以，为了保证最终不至于输出x&#x3D;1的错误结果，JIT在重排序时会在catch语句中插入错误补偿代码，补偿执行语句②，将x赋值为2，将程序恢复到发生异常时应有的状态。这种做法的确将异常捕捉的和处理的底层逻辑变得非常复杂，但是JIT的优化原则是，尽力保障正确的运行逻辑，哪怕以catch块逻辑变得复杂为代价。</p>
+<blockquote>
+<p>JIT是Just In Time的缩写，也就是“即时编译器”。JVM读入“.class”文件的字节码后，默认情况下是解释执行的。但是对于运行频率很高（如大于5000次）的字节码，JVM采用了JIT技术，将直接编译为机器指令，以提高性能。</p>
+</blockquote>
+<p>虽然编译器和CPU遵守了As-if-Serial规则，无论如何，也只能在单CPU执行的情况下保证结果正确。在多核CPU并发执行的场景下，由于CPU的一个内核无法清晰分辨其他内核上指令序列中的数据依赖关系，因此可能出现乱序执行，从而导致程序运行结果错误。</p>
+<p>所以，<strong>As-if-Serial规则只能保障单内核指令重排序之后的执行结果正确，不能保障多内核以及跨CPU指令重排序之后的执行结果正确。</strong></p>
+<h3 id="硬件层面的内存屏障"><a href="#硬件层面的内存屏障" class="headerlink" title="硬件层面的内存屏障"></a>硬件层面的内存屏障</h3><p>多核情况下，所有的CPU操作都会涉及缓存一致性协议（MESI协议）校验，该协议用于保障内存可见性。但是，缓存一致性协议仅仅保障内存弱可见（高速缓存失效），没有保障共享变量的强可见，而且缓存一致性协议更不能禁止CPU重排序，也就是不能确保跨CPU指令的有序执行。</p>
+<p>如何保障跨CPU指令重排序之后的程序结果正确呢？需要用到<strong>内存屏障</strong>。</p>
+<p><strong>内存屏障又称内存栅栏，是让一个CPU高速缓存的内存状态对其他CPU内核可见的一项技术，也是一项保障跨CPU内核有序执行指令的技术</strong>。</p>
+<p>硬件层常用的内存屏障分为三种：<code>读屏障（Load Barrier）</code>、<code>写屏障（Store Barrier）</code>和<code>全屏障（Full Barrier）</code>。</p>
+<ol>
+<li>读屏障<ul>
+<li><strong>读屏障让高速缓存中相应的数据失效</strong>。在指令前插入读屏障，可以让高速缓存中的数据失效，强制重新从主存加载数据。并且，读屏障会告诉CPU和编译器，先于这个屏障的指令必须先执行。</li>
+<li>读屏障对应着X86处理器上的lfence指令，将强制所有在该指令之后的读操作都在lfence指令执行之后被执行，并且强制本地高速缓冲区的值全部失效，以便从主存中重新读取共享变量的值。</li>
+<li>读屏障既使得当前CPU内核对共享变量的更改对所有CPU内核可见，又阻止了一些可能导致读取无效数据的指令重排。</li>
+</ul>
+</li>
+<li>写屏障<ul>
+<li>在指令后插入写屏障指令能让高速缓存中的最新数据更新到主存，让其他线程可见。并且，写屏障会告诉CPU和编译器，后于这个屏障的指令必须后执行。</li>
+<li>写屏障对应X86处理器上的sfence指令，sfence指令会保证所有写操作都在该指令执行之前被完成，并<strong>把高速缓冲区的数据都刷新到主存中，使得当前CPU对共享变量的更改对所有CPU可见</strong>。</li>
+</ul>
+</li>
+<li>全屏障<ul>
+<li>全屏障是一种全能型的屏障，具备读屏障和写屏障的能力。Full Barrier又称为StoreLoad Barriers，对应X86处理器上的mfence指令。</li>
+<li>在X86处理器平台上mfence指令综合了sfence指令与lfence指令的作用。X86处理器强制所有在mfence之前的store&#x2F;load指令都在mfence执行之前被执行；所有在mfence之后的store&#x2F;load指令都在该mfence执行之后被执行。简单来说，X86处理器禁止对mfence指令前后的<br>store&#x2F;load指令进行重排序。</li>
+<li>X86处理器上的lock前缀指令也具有内存全屏障的功能。lock前缀后面可以跟ADD、ADC、AND、BTC、BTR、BTS、CMPXCHG、CMPXCH8B、DEC、INC、NEG、NOT、OR、SBB、SUB、XOR、XADD、XCHG等指令。</li>
+</ul>
+</li>
+</ol>
+<h3 id="硬件层的内存屏障的作用"><a href="#硬件层的内存屏障的作用" class="headerlink" title="硬件层的内存屏障的作用"></a>硬件层的内存屏障的作用</h3><ol>
+<li>阻止屏障两侧的指令重排序编译器和CPU可能为了使性能得到优化而对指令重排序，但是插入一个硬件层的内存屏障相当于告诉CPU和编译器先于这个屏障的指令必须先执行，后于这个屏障的指令必须后执行。</li>
+<li>强制让高速缓存的数据失效硬件层的内存屏障强制把高速缓存中的最新数据写回主存，让高速缓存中相应的脏数据失效。一旦完成写入，任何访问这个变量的线程将会得到最新的值。</li>
+</ol>
+<p>内存屏障的使用示例, 下面是一段可能乱序执行的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReorderDemo3</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> x= <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">Boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">()</span> &#123;</span><br><span class="line">        x= <span class="number">8</span>; <span class="comment">//①</span></span><br><span class="line">        flag = <span class="literal">true</span>; <span class="comment">//②</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(flag) &#123; <span class="comment">//③</span></span><br><span class="line">            <span class="comment">// x是多少？</span></span><br><span class="line">            System.out.println(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>ReorderDemo3并发运行之后，控制台所输出的x值可能是0或8。为什么x可能会输出0呢？</p>
+<p>主要原因是：update()和show()方法可能在两个CPU内核并发执行，语句①和语句②如果发生了重排序，那么show()方法输出的x就可能为0。如果输出的x结果是0，显然不是程序的正常结果。</p>
+<p>如何确保ReorderDemo3的并发运行结果正确呢？可以通过内存屏障进行保障。Java语言没有办法直接使用硬件层的内存屏障，只能使用含有JMM内存屏障语义的Java关键字，这类关键字的典型为<code>volatile</code>。使用volatile关键字对实例中的x进行修饰，修改后的ReorderDemo3代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ReorderDemo3</span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">volatile</span> <span class="type">int</span> x= <span class="number">0</span>; <span class="comment">//使用volatile 关键字对x进行修饰</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">Boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">()</span> &#123;</span><br><span class="line">        x= <span class="number">8</span>; <span class="comment">//① //volatile 要求编译器在这里插入Store Barrier写屏障</span></span><br><span class="line">        flag = <span class="literal">true</span>; <span class="comment">//② </span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">show</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span>(flag) &#123; <span class="comment">//③</span></span><br><span class="line">            <span class="comment">// x是多少</span></span><br><span class="line">            System.out.println(x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>修改后的ReorderDemo3代码使用volatile关键字对成员变量x进行修饰，<strong>volatile含有JMM全屏障的语义，要求JVM编译器在语句①的后面插入全屏障指令。该全屏障确保x的最新值对所有的后序操作是可见</strong><br><strong>的（含跨CPU场景），并且禁止编译器和处理器对语句①和语句②进行重排序</strong>。</p>
+<p>前面介绍volatile关键字的原理时介绍过，volatile在X86处理器上被JVM编译之后，它的汇编代码中会被插入一条lock前缀指令（lock ADD），从而实现全屏障目的。</p>
+<p>由于不同的物理CPU硬件所提供的内存屏障指令的差异非常大，因此JMM定义了自己的一套相对独立的内存屏障指令，用于屏蔽不同硬件的差异性。很多Java关键字（如volatile）在语义中包含JMM内存屏障指令，在不同的硬件平台上，这些JMM内存屏障指令会要求JVM为不同的平台生成相应的硬件层的内存屏障指令。</p>
+<h2 id="JMM详解"><a href="#JMM详解" class="headerlink" title="JMM详解"></a>JMM详解</h2><p>JMM（Java Memory Model，Java内存模型）并不像JVM内存结构一样是真实存在的运行实体，<strong>更多体现为一种规范和规则</strong>。</p>
+<h3 id="什么是Java内存模型"><a href="#什么是Java内存模型" class="headerlink" title="什么是Java内存模型"></a>什么是Java内存模型</h3><p>JMM最初由JSR-133（Java Memory Model and Thread Specification）文档描述，JMM定义了一组规则或规范，该规范定义了一个线程对共享变量写入时，如何确保对另一个线程是可见的。实际上，<strong>JMM提供了合理的禁用缓存以及禁止重排序的方法，所以其核心的价值在于解决可见性和有序性。</strong></p>
+<p>JMM的另一大价值在于能<strong>屏蔽各种硬件和操作系统的访问差异，保证Java程序在各种平台下对内存的访问最终都是一致的</strong>。</p>
+<p>Java内存模型规定所有的变量都存储在主存中，JMM的主存类似于物理内存，但有区别，还能包含部分共享缓存。每个Java线程都有自己的工作内存（类似于CPU高速缓存，但也有区别）。</p>
+<p>Java内存模型定义的两个概念：</p>
+<ul>
+<li><strong>主存</strong>：主要存储的是Java实例对象，所有线程创建的实例对象都存放在主存中，无论该实例对象是成员变量还是方法中的本地变量（也称局部变量），当然也包括共享的类信息、常量、静态变量。由于是共享数据区域，因此多条线程对同一个变量进行访问可能会发现线程安全问题。</li>
+<li><strong>工作内存</strong>：主要存储当前方法的所有本地变量信息（工作内存中存储着主存中的变量副本），<strong>每个线程只能访问自己的工作内存，即线程中的本地变量对其他线程是不可见的</strong>，即使两个线程执行的是同一段代码，它们也会各自在自己的工作内存中创建属于当前线程的本地变量，当然也包括字节码行号指示器、相关Native方法的信息。注意，由于工作内存是每个线程的私有数据，线程间无法相互访问工作内存，因此存储在工作内存的数据不存在线程安全问题。</li>
+</ul>
+<p>Java内存模型的规定如下：<br>（1）所有变量存储在主存中。<br>（2）每个线程都有自己的工作内存，且对变量的操作都是在工作内存中进行的。<br>（3）不同线程之间无法直接访问彼此工作内存中的变量，要想访问只能通过主存来传递。</p>
+<p>在JMM中，Java线程、工作内存、主存之间的关系大致如图所示。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/44c4aed7c29e0bd5b809ced36297e775.png"></p>
+<p>JMM将所有的变量都存放在公共主存中，当线程使用变量时，会把公共主存中的变量复制到自己的工作内存（或者叫作私有内存)中，线程对变量的读写操作是自己的工作内存中的变量副本。因此，JMM模型也需要解决代码重排序和缓存可见性问题。<strong>JMM提供了一套自己的方案去禁用缓存以及禁止重排序来解决这些可见性和有序性问题</strong>。JMM提供的方案包括大家都很熟悉的<code>volatile</code>、<code>synchronized</code>、<code>fina</code>等。</p>
+<p>JMM定义了一些内存操作的抽象指令集，然后将这些抽象指令包含到Java的<code>volatile</code>、<code>synchronized</code>等关键字的语义中，并要求JVM在实现这些关键字时必须具备其包含的JMM抽象指令的能力。</p>
+<h3 id="JMM与JVM物理内存的区别"><a href="#JMM与JVM物理内存的区别" class="headerlink" title="JMM与JVM物理内存的区别"></a>JMM与JVM物理内存的区别</h3><ol>
+<li>JMM（Java 内存模型）</li>
+</ol>
+<ul>
+<li>定义：Java 内存模型（JMM）是一个规范，定义了 Java 线程如何通过内存进行交互，以及在并发编程中允许哪些行为。它指定了在多线程环境下变量的可见性、顺序性和原子性等规则。</li>
+<li>内存管理：JMM 并不直接涉及物理内存，它关注的是线程如何访问和共享内存。它确保不同线程对内存有一致的视图，这是编写安全高效的多线程程序的关键。</li>
+<li>JMM 的关键方面：<ul>
+<li>可见性：确保一个线程对共享变量的修改对其他线程可见。</li>
+<li>原子性：规定某些变量（如 volatile 变量）的操作是原子的，即操作不会被中断。</li>
+<li>顺序性：指定内存访问的顺序，如跨线程读取和写入操作的允许顺序。</li>
+</ul>
+</li>
+<li>抽象概念：<strong>JMM 更多的是关于内存操作的规则和语义，而不是物理内存的布局。</strong></li>
+</ul>
+<ol start="2">
+<li>JVM（Java 虚拟机）物理内存</li>
+</ol>
+<ul>
+<li>定义：JVM 是运行 Java 程序的虚拟机，通过解释字节码（编译后的 Java 代码）来执行 Java 程序。JVM 提供了一个环境，在其中 Java 程序可以运行，并抽象化了底层的硬件和操作系统。JVM 使用物理内存来存储数据和执行 Java 程序的上下文。</li>
+<li>内存管理：JVM 的内存模型包括多个物理内存区域，如：<ul>
+<li>堆：用于动态内存分配（如对象、数组）。</li>
+<li>栈：存储方法调用的栈帧和局部变量。</li>
+<li>方法区：存储类、方法、常量等的元数据。</li>
+<li>程序计数器（PC 寄存器）：存储当前执行指令的地址。</li>
+<li>本地方法栈：用于本地方法调用（如果有）。</li>
+</ul>
+</li>
+<li>物理内存：JVM 实际上运行在主机机器的物理内存（RAM）上。JVM 会在物理内存中分配堆、栈等内存区域来运行 Java 程序。</li>
+</ul>
+<blockquote>
+<p><strong>关键区别</strong>: 总结来说，JMM 关注的是 线程间如何共享和访问内存，而 JVM 的物理内存则是 JVM 在运行时实际使用的内存资源。</p>
+</blockquote>
+<ol>
+<li>概念层次：<ol>
+<li>JMM 是一个高层的抽象，定义了 Java 程序在多线程下如何通过内存进行交互与一致性。</li>
+<li>JVM 物理内存 指的是 Java 虚拟机在实际机器上用于运行 Java 程序的物理内存资源。</li>
+</ol>
+</li>
+<li>关注点：<ol>
+<li>JMM 关注的是 多线程和内存一致性，即如何确保不同线程对内存的访问是一致的。</li>
+<li>JVM 物理内存 关注的是 内存的分配和管理，如堆、栈等在物理内存中的分配和使用。</li>
+</ol>
+</li>
+</ol>
+<h3 id="JMM的8个操作"><a href="#JMM的8个操作" class="headerlink" title="JMM的8个操作"></a>JMM的8个操作</h3><p>Java内存模型规定所有的变量都存储在主存中（类似于前面讲的主存或者物理内存），每个线程都有自己的工作内存（类似于CPU中的高速缓存）。工作内存保存了线程使用到的变量的拷贝副本，线程对变量的所有操作（读取、赋值等）必须在该线程的工作内存中进行。</p>
+<p><strong>JMM定义了一套自己的主存与工作内存之间的交互协议，即一个变量如何从主存拷贝到工作内存，又如何从工作内存写入主存，该协议包含8种操作，并且要求JVM具体实现必须保证其中每一种操作都是原子的、不可再分的。</strong></p>
+<p>JMM主存与工作内存之间的交互协议的8种操作:</p>
+<ol>
+<li>lock(锁定)：作用于主内存，它把一个变量标记为一条线程独占状态；</li>
+<li>read(读取)：作用于主内存，它把变量值从主内存传送到线程的工作内存中，以便随后的load动作使用；</li>
+<li>load(载入)：作用于工作内存，它把read操作的值放入工作内存中的变量副本中；</li>
+<li>use(使用)：作用于工作内存，它把工作内存中的值传递给执行引擎，每当虚拟机遇到一个需要使用这个变量的指令时候，将会执行这个动作；</li>
+<li>assign(赋值)：作用于工作内存，它把从执行引擎获取的值赋值给工作内存中的变量，每当虚拟机遇到一个给变量赋值的指令时候，执行该操作；</li>
+<li>store(存储)：作用于工作内存，它把工作内存中的一个变量传送给主内存中，以备随后的write操作使用；</li>
+<li>write(写入)：作用于主内存，它把store传送值放到主内存中的变量中。</li>
+<li>unlock(解锁)：作用于主内存，它将一个处于锁定状态的变量释放出来，释放后的变量才能够被其他线程锁定；</li>
+</ol>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/f325e487a99000388e35ca3404eee6e5.png"></p>
+<p>Java内存模型还规定了执行上述8种基本操作时必须满足如下规则：</p>
+<ol>
+<li>不允许read和load、store和write操作之一单独出现，以上两个操作必须按顺序执行，但没有保证必须连续执行，也就是说，read与load之间、store与write之间是可插入其他指令的。<strong>不允许read和load、store和write操作之一单独出现，意味着有read就有load，不能读取了变量值而不予加载到工作内存中；有store就有write，也不能存储了变量值而不写到主存中</strong>。</li>
+<li>不允许一个线程丢弃它最近的assign操作，也就是说当线程使用assign操作对私有内存的变量副本进行变更时，它必须使用write操作将其同步到主存中。<strong>assign操作不允许丢弃，即，工作内存中变量改变必须同步给主内存</strong>。</li>
+<li>不允许一个线程无原因地（没有发生过任何assign操作）把数据从线程的工作内存同步回主存中。</li>
+<li>一个新的变量只能从主存中“诞生”，不允许在工作内存中直接使用一个未被初始化（load或assign）的变量，换句话说，就是对一个变量实施use和store操作之前，必须先执行assign和load操作。<strong>use前必须有load，store前必须有assign。</strong></li>
+<li>一个变量在同一个时刻只允许一个线程对其执行lock操作，但lock操作可以被同一个个线程重复执行多次，多次执行lock后，只有执行相同次数的unlock操作，变量才会被解锁。</li>
+<li>如果对一个变量执行lock操作，将会清空工作内存中此变量的值，在执行引擎使用这个变量前，需要重新执行load或assign操作初始化变量的值。</li>
+<li>如果一个变量实现没有被lock操作锁定，就不允许对它执行unlock操作，也不允许unlock一个被其他线程锁定的变量。</li>
+<li>对一个变量执行unlock操作之前，必须先把此变量同步回主存（执行store和write操作）。</li>
+</ol>
+<p>以上JMM的8大操作规范定义相当严谨，也极为烦琐，JVM实现起来也非常复杂。Java设计团队大概也意识到了这个问题，新的JMM版本不断地对这些操作进行简化，比如将8个操作简化为Read、Write、Lock和Unlock四个操作。虽然进行了简化，但是JMM的基础设计并未改变。</p>
+<blockquote>
+<p>JMM的规范细节是JVM开发人员需要掌握的内容，对于普通的Java应用工程师、应用架构师来说，只需要了解其基本的原理即可。</p>
+</blockquote>
+<h3 id="JMM内存屏障"><a href="#JMM内存屏障" class="headerlink" title="JMM内存屏障"></a>JMM内存屏障</h3><p>JMM如何解决顺序一致性问题？JMM提供了自己的内存屏障指令，要求JVM编译器实现这些指令，禁止特定类型的编译器和CPU重排序（不是所有的编译器重排序都要禁止）。</p>
+<p>由于不同CPU硬件实现内存屏障的方式不同，JMM屏蔽了这种底层CPU硬件平台的差异，定义了不对应任何CPU的JMM逻辑层内存屏障，由JVM在不同的硬件平台生成对应的内存屏障机器码。</p>
+<p>JMM内存屏障主要有Load和Store两类，具体如下：</p>
+<ol>
+<li><code>Load Barrier</code>（读屏障）<br>在读指令前插入读屏障，可以让高速缓存中的数据失效，重新从主存加载数据。</li>
+<li><code>Store Barrier</code>（写屏障）<br>在写指令之后插入写屏障，能让写入缓存的最新数据写回主存。</li>
+</ol>
+<p>在实际使用时，会对以上JMM的Load Barrier和Store Barrier两类屏障进行组合，组合成<code>LoadLoad（LL）</code>、<code>StoreStore（SS）</code>、<code>LoadStore（LS）</code>、<code>StoreLoad（SL）</code>四个屏障，用于禁止特定类型的CPU重排序。</p>
+<ul>
+<li><p><code>LoadLoad（LL）</code>屏障<br>在执行预加载（或支持乱序处理）的指令序列中，通常需要显式地声明LoadLoad屏障，因为这些Load指令可能会依赖其他CPU执行的Load指令的结果。<br>一段使用LoadLoad（LL）屏障的伪代码示例如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Load1; LoadLoad; Load2;</span><br><span class="line"><span class="comment">// 该示例的含义为：在Load2要读取的数据被访问前，使用LoadLoad屏障保证Load1要读取的数据被读取完毕。</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><code>StoreStore（SS）</code>屏障<br>通常情况下，如果CPU不能保证从高速缓冲向主存（或其他CPU）按顺序刷新数据，那么它需要使用StoreStore屏障。<br>一段使用StoreStore（SS）屏障的伪代码示例如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Store1; StoreStore; Store2;</span><br><span class="line"><span class="comment">// 该示例的含义为：在Store2及后续写入操作执行前，使StoreStore屏障保证Store1的写入结果对其他CPU可见。</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><code>LoadStore（LS）</code>屏障<br>该屏障用于在数据写入操作执行前确保完成数据的读取。</p>
+<p>一段使用LoadStore（LS）屏障的伪代码示例如下： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Load1; LoadStore; Store2;</span><br><span class="line"><span class="comment">// 该示例的含义为：在Store2及后续写入操作执行前，使LoadStore屏障保证Load1要读取的数据被读取完毕。</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+<li><p><code>StoreLoad（SL）</code></p>
+<p>屏障该屏障用于在数据读取操作执行前，确保完成数据的写入。</p>
+<p>StoreLoad（SL）屏障的开销是4种屏障中最大的，但是此屏障是一个“全能型”的屏障，兼具其他3个屏障的效果，现代的多核CPU大多支持该屏障。</p>
+<p>使用LoadStore（LS）屏障的伪代码示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Store1; StoreLoad; Load2;</span><br><span class="line"><span class="comment">// 该示例的含义为：在Load2及后续所有读取操作执行前，使StoreLoad屏障保证Store1的写入对所有CPU可见。</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="volatile语义中的内存屏障"><a href="#volatile语义中的内存屏障" class="headerlink" title="volatile语义中的内存屏障"></a>volatile语义中的内存屏障</h2><p>在Java代码中，volatile关键字主要有两层语义：</p>
+<ol>
+<li>不同线程对volatile变量的值具有内存可见性，即一个线程修改了某个volatile变量的值，该值对其他线程立即可见。</li>
+<li>禁止进行指令重排序。</li>
+</ol>
+<p>总之，<strong>volatile关键字除了保障内存可见性外，还能确保执行的有序性</strong>。volatile语义中的<strong>有序性是通过内存屏障指令来确保的</strong>。为了实现volatile关键字语义的有序性，JVM编译器在生成字节码时，会在指令序列中插入内存屏障来禁止特定类型的处理器重排序。JMM建议JVM采取保守策略对重排序进行严格禁止。下面是基于保守策略的volatile操作的内存屏障插入策略。</p>
+<ul>
+<li>在每个volatile读操作的后面插入一个LoadLoad屏障。</li>
+<li>在每个volatile读操作的后面插入一个LoadStore屏障。</li>
+<li>在每个volatile写操作的前面插入一个StoreStore屏障。</li>
+<li>在每个volatile写操作的后面插入一个StoreLoad屏障。</li>
+</ul>
+<p>volatile<strong>写操作的内存屏障插入策略</strong>为：在每个volatile写操作前插入StoreStore（SS）屏障，在写操作后面插入StoreLoad屏障，具体如图所示。</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/b3d79e517a7bd11bc874e67e9520adfe.png"></p>
+<p>volatile<strong>读操作的内存屏障插入策略</strong>为：在每个volatile写操作后插入LoadLoad（LL）屏障和LoadStore屏障，禁止后面的普通读、普通写和前面的volatile读操作发生重排序</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/5549182a4e943ef7603a93364ac0b856.png"></p>
+<p>上述JMM建议的volatile写和volatile读的内存屏障插入策略是针对任意处理器平台的，所以非常保守。不同的处理器有不同“松紧<br>度”的处理器内存模型，只要不改变volatile读写操作的内存语义，不同JVM编译器可以根据具体情况省略不必要的JMM屏障。以X86处理器为例，该平台的JVM实现仅仅在volatile写操作后面插入一个StoreLoad屏障，其他的JMM屏障都会被省略。由于StoreLoad屏障的开销大，因此在X86处理器中，volatile写操作比volatile读操作的开销会大很多。</p>
+<h2 id="volatile不具备原子性"><a href="#volatile不具备原子性" class="headerlink" title="volatile不具备原子性"></a>volatile不具备原子性</h2><p>volatile能保证数据的可见性，但volatile不能完全保证数据的原子性，对于volatile类型的变量进行复合操作（如++），其仍存在线程不安全的问题。</p>
+<p>下面的例子使用10个线程，每个线程进行1000次自增操作（复合操作），看看最终的结果是否正确，具体的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">testAtomicLong</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="comment">// 并发任务数</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TASK_AMOUNT</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线程池，获取CPU密集型任务线程池</span></span><br><span class="line">    <span class="type">ExecutorService</span> <span class="variable">pool</span> <span class="operator">=</span> ThreadUtil.getCpuIntensiveThreadPool();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 每个线程的执行轮数</span></span><br><span class="line">    <span class="keyword">final</span> <span class="type">int</span> <span class="variable">TURNS</span> <span class="operator">=</span> <span class="number">10000</span>;</span><br><span class="line">    <span class="comment">// 线程同步倒数闩</span></span><br><span class="line">    <span class="type">CountDownLatch</span> <span class="variable">countDownLatch</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">CountDownLatch</span>(TASK_AMOUNT);</span><br><span class="line">    <span class="type">long</span> <span class="variable">start</span> <span class="operator">=</span> System.currentTimeMillis();</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; TASK_AMOUNT; i++) &#123;</span><br><span class="line">        pool.submit(() -&gt; &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">j</span> <span class="operator">=</span> <span class="number">0</span>; j &lt; TURNS; j++) &#123;</span><br><span class="line">                    value++;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line">                e.printStackTrace();</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 倒数闩，倒数一次 countDownLatch.countDown();</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 省略，等待倒数闩完成所有的倒数操作</span></span><br><span class="line"></span><br><span class="line">    <span class="type">float</span> <span class="variable">time</span> <span class="operator">=</span> (System.currentTimeMillis() - start) / <span class="number">1000F</span>;</span><br><span class="line">    <span class="comment">// 输出统计结果</span></span><br><span class="line">    System.out.println(<span class="string">&quot;运行的时长为：&quot;</span> + time);</span><br><span class="line">    System.out.println(<span class="string">&quot;累加结果为：&quot;</span> + value);</span><br><span class="line">    System.out.println(<span class="string">&quot;与预期相差：&quot;</span> + (TURNS * TASK_AMOUNT - value));</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">运行的时长为：<span class="number">0.034</span></span><br><span class="line">累加结果为：<span class="number">8701</span></span><br><span class="line">与预期相差：<span class="number">91186</span></span><br></pre></td></tr></table></figure>
+
+<p>通过实验可以看出：volatile变量的复合操作不具备原子性。</p>
+<h3 id="不具备原子性的原理"><a href="#不具备原子性的原理" class="headerlink" title="不具备原子性的原理"></a>不具备原子性的原理</h3><p>首先回顾一下JMM对变量进行读取和写入的操作流程</p>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/3524c7ee69c1c10e8218366d25b071a7.png" alt="image-20250110210451232"></p>
+<ul>
+<li><p>对于<strong>非volatile修饰的普通变量</strong>而言，在读取变量时，<strong>JMM要求保持read、load有相对顺序即可</strong>。例如，若从主存读取i、j两个变量，可能的操作是<code>read i=&gt;read j=&gt;load j=&gt;load i</code>，并不要求read、load操作是连续的。</p>
+</li>
+<li><p>对于关键字volatile修饰的内存可见变量而言，具有两个重要的语义：</p>
+<ol>
+<li>使用volatile修饰的变量在变量值发生改变时，会立刻同步到主存，并使其他线程的变量副本失效。</li>
+<li>禁止指令重排序：用volatile修饰的变量在硬件层面上会通过在指令前后加入内存屏障来实现，编译器级别是通过下面的规则实现的。</li>
+</ol>
+</li>
+</ul>
+<blockquote>
+<p>为了实现这些volatile内存语义，<strong>JMM对于volatile变量会有特殊的约束：</strong></p>
+</blockquote>
+<ol>
+<li>使用volatile修饰的变量其<strong>read、load、use都是连续出现的</strong>，所以每次使用变量的时候都要从主存读取最新的变量值，替换私有内存的变量副本值（如果不同的话）。</li>
+<li>其对同一变量的<strong>assign、store、write操作都是连续出现的</strong>，所以每次对变量的改变都会立马同步到主存中。</li>
+</ol>
+<p>稍加思考就可以理解，虽然volatile修饰的变量可以强制刷新内存，但是其并不具备原子性。虽然其要求对变量的（read、load、<br>use）、（assign、store、write）必须是连续出现，但是在不同CPU内核上并发执行的线程还是有可能出现读取脏数据的时候。</p>
+<p>以前面的VolatileDemo为例，假设有两个线程A、B分别运行在Core1、Core2上，并假设此时的value为0，线程A、B也都读取了value值到自己的工作内存。</p>
+<ul>
+<li>现在线程A将value变成1之后，完成了assign、store的操作，假设在执行write指令之前，线程A的CPU时间片用完，线程A被空闲，但是线程A的write操作没有到达主存。</li>
+<li>由于线程A的store指令触发了写的信号，线程B缓存过期，重新从主存读取到value值，但是线程A的写入没有最终完成，线程B读到的value值还是0。</li>
+<li>线程B执行完成所有的操作之后，将value变成1写入主存。线程A的时间片重新拿到，重新执行store操作，将过期了的1写入主存。</li>
+</ul>
+<p><img src= "/medias/detail/load.gif" data-lazy-src="/p/1c8195dc/7751bfe7a083fcd76aa87177ff692bb0.png"></p>
+<p>对于复合操作，volatile变量无法保障其原子性，如果要保证复合操作的原子性，就需要使用锁。并且，<strong>在高并发场景下，volatile变量一定需要使用Java的显式锁结合使用</strong>。</p>
+<h2 id="Happens-Before规则"><a href="#Happens-Before规则" class="headerlink" title="Happens-Before规则"></a>Happens-Before规则</h2><p>JMM的内存屏障指令对Java工程师是透明的，是JMM对JVM实现的一种规范和要求。那么，作为Java工程师，如何确保自己设计和开发的Java代码不存在内存可见性问题或者有序性问题？</p>
+<p>JMM定义了一套自己的规则：Happens-Before（先行发生）规则，并且确保只要两个Java语句之间必须存在Happens-Before关系，JMM尽量确保这两个Java语句之间的内存可见性和指令有序性。</p>
+<h3 id="规则介绍"><a href="#规则介绍" class="headerlink" title="规则介绍"></a>规则介绍</h3><p>Happens-Before规则的主要内容包括以下几个方面：</p>
+<ol>
+<li><p><code>程序顺序执行规则</code>（as-if-serial规则）</p>
+<p>在同一个线程中，有依赖关系的操作按照先后顺序，前一个操作必须先行发生于后一个操作（Happens-Before）。换句话说，单个线程中的代码顺序无论怎么重排序，对于结果来说是不变的。</p>
+</li>
+<li><p><code>volatile变量规则</code><br>对volatile（修饰的）变量的写操作必须先行发生于对volatile变量的读操作。</p>
+</li>
+<li><p><code>传递性规则</code><br>如果A操作先于B操作，而B操作又先行发生于C操作，那么A操作先行发生于C操作。</p>
+</li>
+<li><p><code>监视锁规则</code>（Monitor Lock Rule）<br>对一个监视锁的解锁操作先行发生于后续对这个监视锁的加锁操作。</p>
+</li>
+<li><p><code>start规则</code><br>对线程的start操作先行于这个线程内部的其他任何操作。具体来说，如果线程A执行B.start()启动线程B，那么线程A的B.start()操作先行发生于线程B中的任意操作。</p>
+</li>
+<li><p><code>join规则</code><br>如果线程A执行了B.join()操作并成功返回，那么线程B中的任意操作先行发生于线程A所执行的ThreadB.join()操作。</p>
+</li>
+</ol>
+<h3 id="规则1：顺序性规则"><a href="#规则1：顺序性规则" class="headerlink" title="规则1：顺序性规则"></a>规则1：顺序性规则</h3><p>顺序性规则的具体内容：一个线程内，按照代码顺序，书写在前面的操作先行发生（Happens-Before）于书写在后面的操作。<br>一段程序的执行，在单个线程中看起来是有序的。程序次序规则看起来是按顺序执行的，因为虚拟机可能会对程序指令进行重排序。<br>虽然进行了重排序，但是最终执行的结果与程序顺序执行的结果是一致的。它只会对不存在数据依赖行的指令进行重排序。<br>该规则就是前面介绍的As-if-Serial规则，仅仅用来保证程序在单线程执行结果的正确性，但是无法保证程序在多线程执行结果的正<br>确性。</p>
+<h3 id="规则2：volatile规则"><a href="#规则2：volatile规则" class="headerlink" title="规则2：volatile规则"></a>规则2：volatile规则</h3><p>volatile规则的具体内容：对一个volatile变量的写先行发生（Happens-Before）于任意后续对这个volatile变量的读。<br>基于volatile变量的Happens-Before规则，罗列一下volatile操作与前后指令之间可否重排序的清单，</p>
+<table>
+<thead>
+<tr>
+<th>第一个操作</th>
+<th>第二个操作：普通读写</th>
+<th>第二个操作：volatile读</th>
+<th>第二个操作：volatile写</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>普通读写</td>
+<td>可以重排</td>
+<td>可以重排</td>
+<td>不可以重排</td>
+</tr>
+<tr>
+<td>volatile读</td>
+<td>不可以重排</td>
+<td>不可以重排</td>
+<td>不可以重排</td>
+</tr>
+<tr>
+<td>volatile写</td>
+<td>可以重排</td>
+<td>不可以重排</td>
+<td>不可以重排</td>
+</tr>
+</tbody></table>
+<ul>
+<li>当第二个操作是volatile写时，不管第一个操作是什么，都不能重排序。这个规则确保volatile写之前的操作不会被编译器重排序到volatile写之后。</li>
+<li>当第一个操作是volatile读时，不管第二个操作是什么，都不能重排序。这个规则确保volatile读之后的操作不会被编译器重排序到volatile读之前。</li>
+<li>当第一个操作是volatile写，第二个操作是volatile读或写时，不能重排序。</li>
+</ul>
+<h3 id="规则3：传递性规则"><a href="#规则3：传递性规则" class="headerlink" title="规则3：传递性规则"></a>规则3：传递性规则</h3><p>传递性规则的具体内容：如果A操作先行发生于B操作，且B操作先行发生于C操作，那么A操作先行发生于C操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VolatileReorderDemo2</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">doubleValue</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">()</span> &#123;</span><br><span class="line">        value = <span class="number">100</span>; <span class="comment">//①</span></span><br><span class="line">        flag = <span class="literal">true</span>; <span class="comment">//②</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">doubleX</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (flag) <span class="comment">//③        &#123;</span></span><br><span class="line">            doubleValue = x + x; <span class="comment">//④</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果线程B读到了flag是true，那么value&#x3D;100对线程B就一定可见了。</p>
+<h3 id="规则4：监视锁规则"><a href="#规则4：监视锁规则" class="headerlink" title="规则4：监视锁规则"></a>规则4：监视锁规则</h3><p>监视锁规则的具体内容：对一个锁的unlock操作先行发生于后面对同一个锁的lock操作，即无论在单线程还是多线程中，同一个锁如<br>果处于被锁定状态，那么必须先对锁进行释放操作，后面才能继续执行lock操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">VolatileReorderDemo2</span> &#123;</span><br><span class="line">    <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">10</span>;</span><br><span class="line">    <span class="type">int</span> <span class="variable">doubleValue</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">update</span><span class="params">()</span> &#123;</span><br><span class="line">        value = <span class="number">100</span>; <span class="comment">//①</span></span><br><span class="line">        flag = <span class="literal">true</span>; <span class="comment">//②</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title function_">doubleX</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (flag) <span class="comment">//③        &#123;</span></span><br><span class="line">            doubleValue = x + x; <span class="comment">//④</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>先获取锁的线程，对x赋值之后释放锁，另一个再获取锁，一定能看到对x赋值的改动，就是这么简单。请读者用如图4-19所示的命令查看上面的程序，看同步块和同步方法被转换成汇编指令有什么不同。</p>
+<p>监视锁规则不会对临界区内的代码进行约束，临界区内的代码可以重排序（但JMM不允许临界区内的代码“逸出”到临界区之外，那样<br>会破坏监视器的语义）。JMM会在退出临界区和进入临界区这两个关键时间点做一些特别处理，虽然线程A在临界区内进行了重排序，但由于监视器互斥执行的特性，这里的线程B根本无法“观察”到线程A在临界区内的重排序。这种重排序既提高了执行效率，又没有改变程序的执行结果。</p>
+<h3 id="规则5：start-规则"><a href="#规则5：start-规则" class="headerlink" title="规则5：start()规则"></a>规则5：start()规则</h3><p>start()规则的具体内容：如果线程A执行ThreadB.start()操作启动线程B，那么线程A的ThreadB.start()操作先行发生于线程B中的任意操作。反过来说，<strong>如果主线程A启动子线程B后，线程B能看到线程A在启动操作前的任何操作。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">startExample</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        Thread.currentThread().setName(<span class="string">&quot;线程A&quot;</span>);</span><br><span class="line">        <span class="type">startExample</span> <span class="variable">startExample</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">startExample</span>();</span><br><span class="line">        <span class="type">Thread</span> <span class="variable">threadB</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(startExample::writer, <span class="string">&quot;线程B&quot;</span>);</span><br><span class="line">        <span class="comment">// 启动线程B前，线程A进行了多个内存操作</span></span><br><span class="line">        System.out.println(<span class="string">&quot;开始赋值操作&quot;</span>);</span><br><span class="line">        startExample.x = <span class="number">10</span>;</span><br><span class="line">        startExample.y = <span class="number">20</span>;</span><br><span class="line">        startExample.flag = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">        threadB.start(); <span class="comment">// 启动线程B</span></span><br><span class="line">        System.out.println(<span class="string">&quot;线程结束&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">writer</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;x:&quot;</span> + x);</span><br><span class="line">        System.out.println(<span class="string">&quot;y:&quot;</span> + y);</span><br><span class="line">        System.out.println(<span class="string">&quot;flag:&quot;</span> + flag);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">[线程A|StartExample.main]：开始赋值操作</span><br><span class="line">[线程A|StartExample.main]：线程结束</span><br><span class="line">[线程B|StartExample.writer]：x:<span class="number">10</span></span><br><span class="line">[线程B|StartExample.writer]：y:<span class="number">20</span></span><br><span class="line">[线程B|StartExample.writer]：flag:<span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+
+<p>通过结果可以看出：线程B看到了线程A调用threadB.start()之前的所有赋值结果。</p>
+<h3 id="规则6：join-规则"><a href="#规则6：join-规则" class="headerlink" title="规则6：join()规则"></a>规则6：join()规则</h3><p>join()规则的具体内容：如果线程A执行threadB.join()操作并成功返回，那么线程B中的任意操作先行发生于线程A的ThreadB.join()操作。join()规则和start()规则刚好相反，线程A等待子线程B完成后，当前线程B的赋值操作，线程A都能够看到。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JoinExample</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">x</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">int</span> <span class="variable">y</span> <span class="operator">=</span> <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException &#123;</span><br><span class="line">        Thread.currentThread().setName(<span class="string">&quot;线程A&quot;</span>);</span><br><span class="line">        <span class="type">JoinExample</span> <span class="variable">joinExample</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JoinExample</span>();</span><br><span class="line"></span><br><span class="line">        <span class="type">Thread</span> <span class="variable">threadB</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(joinExample::writer, <span class="string">&quot;线程B&quot;</span>);</span><br><span class="line">        threadB.start();</span><br><span class="line"></span><br><span class="line">        threadB.join();<span class="comment">// 线程A join线程B</span></span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;x:&quot;</span> + joinExample.x);</span><br><span class="line">        System.out.println(<span class="string">&quot;y:&quot;</span> + joinExample.y);</span><br><span class="line">        System.out.println(<span class="string">&quot;flag:&quot;</span> + joinExample.flag);</span><br><span class="line">        System.out.println(<span class="string">&quot;本线程结束&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">writer</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;开始赋值操作&quot;</span>);</span><br><span class="line">        <span class="built_in">this</span>.x = <span class="number">100</span>;</span><br><span class="line">        <span class="built_in">this</span>.y = <span class="number">200</span>;</span><br><span class="line">        <span class="built_in">this</span>.flag = <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">[线程B|JoinExample.writer]：开始赋值操作</span><br><span class="line">[线程A|JoinExample.main]：x:<span class="number">100</span></span><br><span class="line">[线程A|JoinExample.main]：y:<span class="number">200</span></span><br><span class="line">[线程A|JoinExample.main]：flag:<span class="literal">true</span></span><br><span class="line">[线程A|JoinExample.main]：本线程结束</span><br></pre></td></tr></table></figure>
+
+
+
+<p>通过结果可以看出：线程A在调用了threadB.join()之后，看到了线程B所有的赋值结果</p>
+<script>var description="介绍Java如何解决并发编程中的可见性和有序性问题。"</script></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/1c8195dc">https://fulsun.github.io/p/1c8195dc</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/CAS%E5%8E%9F%E7%90%86/">CAS原理</a><a class="post-meta__tags" href="/tags/JUC%E5%8E%9F%E5%AD%90%E7%B1%BB/">JUC原子类</a></div><div class="post-share"><div class="social-share" data-image="/medias/featureimages/011.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/p/4793d884" title="CAS原理与JUC原子类"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">CAS原理与JUC原子类</div></div><div class="info-2"><div class="info-item-1">介绍CAS的原理和弊端，然后介绍基于CAS实现的JUC原子类。</div></div></div></a><a class="pagination-related" href="/p/de78061e" title="JUC显式锁的原理与实战"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">JUC显式锁的原理与实战</div></div><div class="info-2"><div class="info-item-1">JUC显式锁是一种非常灵活的、使用纯Java语言实现的锁。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/p/4793d884" title="CAS原理与JUC原子类"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/002.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-08</div><div class="info-item-2">CAS原理与JUC原子类</div></div><div class="info-2"><div class="info-item-1">介绍CAS的原理和弊端，然后介绍基于CAS实现的JUC原子类。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">凉月</div><div class="author-info-description">记录生活,分享知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU%E7%89%A9%E7%90%86%E7%BC%93%E5%AD%98%E7%BB%93%E6%9E%84"><span class="toc-text">CPU物理缓存结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E4%B8%89%E5%A4%A7%E9%97%AE%E9%A2%98"><span class="toc-text">并发编程的三大问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%9F%E5%AD%90%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-text">原子性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%AF%E8%A7%81%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-text">可见性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E6%80%A7%E9%97%AE%E9%A2%98"><span class="toc-text">有序性问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%87%E4%BB%A4%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-text">指令重排序</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%B1%82%E7%9A%84MESI%E5%8D%8F%E8%AE%AE%E5%8E%9F%E7%90%86"><span class="toc-text">硬件层的MESI协议原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BA%BF%E9%94%81%E5%92%8C%E7%BC%93%E5%AD%98%E9%94%81"><span class="toc-text">总线锁和缓存锁</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MSI%E5%8D%8F%E8%AE%AE"><span class="toc-text">MSI协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#MESI%E5%8D%8F%E8%AE%AE%E5%8F%8ARFO%E8%AF%B7%E6%B1%82"><span class="toc-text">MESI协议及RFO请求</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">volatile的原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E5%BA%8F%E6%80%A7%E4%B8%8E%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-text">有序性与内存屏障</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E6%8E%92%E5%BA%8F"><span class="toc-text">重排序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#As-if-Serial%E8%A7%84%E5%88%99"><span class="toc-text">As-if-Serial规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%B1%82%E9%9D%A2%E7%9A%84%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-text">硬件层面的内存屏障</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E5%B1%82%E7%9A%84%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-text">硬件层的内存屏障的作用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JMM%E8%AF%A6%E8%A7%A3"><span class="toc-text">JMM详解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFJava%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B"><span class="toc-text">什么是Java内存模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JMM%E4%B8%8EJVM%E7%89%A9%E7%90%86%E5%86%85%E5%AD%98%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">JMM与JVM物理内存的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JMM%E7%9A%848%E4%B8%AA%E6%93%8D%E4%BD%9C"><span class="toc-text">JMM的8个操作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JMM%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-text">JMM内存屏障</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile%E8%AF%AD%E4%B9%89%E4%B8%AD%E7%9A%84%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C"><span class="toc-text">volatile语义中的内存屏障</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#volatile%E4%B8%8D%E5%85%B7%E5%A4%87%E5%8E%9F%E5%AD%90%E6%80%A7"><span class="toc-text">volatile不具备原子性</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E5%85%B7%E5%A4%87%E5%8E%9F%E5%AD%90%E6%80%A7%E7%9A%84%E5%8E%9F%E7%90%86"><span class="toc-text">不具备原子性的原理</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Happens-Before%E8%A7%84%E5%88%99"><span class="toc-text">Happens-Before规则</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%99%E4%BB%8B%E7%BB%8D"><span class="toc-text">规则介绍</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%991%EF%BC%9A%E9%A1%BA%E5%BA%8F%E6%80%A7%E8%A7%84%E5%88%99"><span class="toc-text">规则1：顺序性规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%992%EF%BC%9Avolatile%E8%A7%84%E5%88%99"><span class="toc-text">规则2：volatile规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%993%EF%BC%9A%E4%BC%A0%E9%80%92%E6%80%A7%E8%A7%84%E5%88%99"><span class="toc-text">规则3：传递性规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%994%EF%BC%9A%E7%9B%91%E8%A7%86%E9%94%81%E8%A7%84%E5%88%99"><span class="toc-text">规则4：监视锁规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%995%EF%BC%9Astart-%E8%A7%84%E5%88%99"><span class="toc-text">规则5：start()规则</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%84%E5%88%996%EF%BC%9Ajoin-%E8%A7%84%E5%88%99"><span class="toc-text">规则6：join()规则</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/b3bc049e" title="Java中的SPI服务发现机制"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/003.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Java中的SPI服务发现机制"/></a><div class="content"><a class="title" href="/p/b3bc049e" title="Java中的SPI服务发现机制">Java中的SPI服务发现机制</a><time datetime="2025-02-16T05:36:57.339Z" title="发表于 2025-02-16 05:36:57">2025-02-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/3ca9bef3" title="SpringBoot预览PDF文件"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringBoot预览PDF文件"/></a><div class="content"><a class="title" href="/p/3ca9bef3" title="SpringBoot预览PDF文件">SpringBoot预览PDF文件</a><time datetime="2025-02-07T10:19:00.000Z" title="发表于 2025-02-07 10:19:00">2025-02-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/9b5fc26a" title="Debain12配置"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Debain12配置"/></a><div class="content"><a class="title" href="/p/9b5fc26a" title="Debain12配置">Debain12配置</a><time datetime="2025-02-06T16:07:00.000Z" title="发表于 2025-02-06 16:07:00">2025-02-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/42bd8820" title="Docker安装脚本与换源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Docker安装脚本与换源"/></a><div class="content"><a class="title" href="/p/42bd8820" title="Docker安装脚本与换源">Docker安装脚本与换源</a><time datetime="2025-02-05T16:00:00.000Z" title="发表于 2025-02-05 16:00:00">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c3561f90" title="Nvm包管理器"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Nvm包管理器"/></a><div class="content"><a class="title" href="/p/c3561f90" title="Nvm包管理器">Nvm包管理器</a><time datetime="2025-01-22T16:00:55.000Z" title="发表于 2025-01-22 16:00:55">2025-01-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.3.2"></script><script src="/js/main.js?v=5.3.2"></script><script src="https://unpkg.com/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://unpkg.com/@waline/client@3.4.3/dist/waline.css')
+        .then(() => import('https://unpkg.com/@waline/client@3.4.3/dist/waline.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.4/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

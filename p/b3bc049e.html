@@ -1,0 +1,366 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Java中的SPI服务发现机制 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="SPI（Service Provider Interface）是JDK内置的一种服务提供发现机制。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java中的SPI服务发现机制">
+<meta property="og:url" content="https://fulsun.github.io/p/b3bc049e">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="SPI（Service Provider Interface）是JDK内置的一种服务提供发现机制。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/003.webp">
+<meta property="article:published_time" content="2025-02-16T05:36:57.339Z">
+<meta property="article:modified_time" content="2025-02-16T05:36:57.340Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="凉月">
+<meta property="article:tag" content="凉月文">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="web网站">
+<meta property="article:tag" content="经验分享">
+<meta property="article:tag" content="hexo">
+<meta property="article:tag" content="个人博客">
+<meta property="article:tag" content="生活记录等">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/003.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Java中的SPI服务发现机制",
+  "url": "https://fulsun.github.io/p/b3bc049e",
+  "image": "https://fulsun.github.io/medias/featureimages/003.webp",
+  "datePublished": "2025-02-16T05:36:57.339Z",
+  "dateModified": "2025-02-16T05:36:57.340Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "凉月",
+      "url": "https://fulsun.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/b3bc049e"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.2"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Java中的SPI服务发现机制',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: linear-gradient(90deg, rgba(247, 149, 51, .1), rgba(243, 112, 85, .1) 15%, rgba(239, 78, 123, .1) 30%, rgba(161, 102, 171, .1) 44%, rgba(80, 115, 184, .1) 58%, rgba(16, 152, 173, .1) 72%, rgba(7, 179, 155, .1) 86%, rgba(109, 186, 130, .1));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/medias/featureimages/003.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">凉月の博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Java中的SPI服务发现机制</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Java中的SPI服务发现机制</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-02-16T05:36:57.339Z" title="发表于 2025-02-16 05:36:57">2025-02-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-16T05:36:57.340Z" title="更新于 2025-02-16 05:36:57">2025-02-16</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">2.4k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>9分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:500,&quot;messagePrev&quot;:&quot;至上次更新后的&quot;,&quot;messageNext&quot;:&quot;天,文章内容可能已过时。&quot;,&quot;postUpdate&quot;:&quot;2025-02-16 05:36:57&quot;}" hidden></div><span id="more"></span>
+
+<h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>SPI 是 Java 提供的一种插件化机制，核心思想是将服务接口和服务实现分离，使得服务调用者和服务提供者解耦。服务提供者只需要按照约定的接口进行实现，并在配置文件中声明，服务调用者就可以在运行时通过 SPI 机制发现并使用这些实现。</p>
+<h2 id="Java-SPI-的工作流程"><a href="#Java-SPI-的工作流程" class="headerlink" title="Java SPI 的工作流程"></a>Java SPI 的工作流程</h2><ol>
+<li><strong>定义接口</strong>：定义一个服务接口。</li>
+<li><strong>实现接口</strong>：编写接口的具体实现类。</li>
+<li><strong>配置文件</strong>：在 <code>META-INF/services/</code> 目录下创建配置文件，并列出实现类。</li>
+<li><strong>加载服务</strong>：使用 <code>ServiceLoader.load()</code> 方法加载接口的所有实现类。<code>ServiceLoader</code> 会扫描 <code>META-INF/services/</code> 目录下的配置文件，并通过反射实例化实现类。</li>
+<li><strong>服务调用</strong>: 遍历 <code>ServiceLoader</code> 加载的实现类，调用其方法。</li>
+</ol>
+<h2 id="Java-SPI-的优点"><a href="#Java-SPI-的优点" class="headerlink" title="Java SPI 的优点"></a>Java SPI 的优点</h2><ol>
+<li><strong>解耦</strong>：接口与实现分离，便于扩展和维护。</li>
+<li><strong>动态加载</strong>：通过配置文件动态加载实现类，无需修改代码。</li>
+<li><strong>标准化</strong>：Java 标准库提供了 SPI 机制，使用简单。</li>
+</ol>
+<h2 id="Java-SPI-的缺点"><a href="#Java-SPI-的缺点" class="headerlink" title="Java SPI 的缺点"></a>Java SPI 的缺点</h2><ol>
+<li><strong>配置文件依赖</strong>：必须严格按照规范配置 <code>META-INF/services/</code> 文件。</li>
+<li><strong>一次性加载</strong>：<code>ServiceLoader</code> 会加载所有实现类，无法按需加载。</li>
+<li><strong>缺乏依赖管理</strong>：无法处理实现类之间的依赖关系。</li>
+<li>多个并发多线程使用 ServiceLoader 类的实例是不安全的。</li>
+</ol>
+<h2 id="Java-SPI-的应用场景"><a href="#Java-SPI-的应用场景" class="headerlink" title="Java SPI 的应用场景"></a>Java SPI 的应用场景</h2><ol>
+<li><strong>数据库驱动加载</strong>：JDBC 使用 SPI 动态加载数据库驱动。</li>
+<li><strong>日志框架适配</strong>：SLF4J 使用 SPI 加载具体的日志实现（如 Logback、Log4j）。</li>
+<li><strong>插件化开发</strong>：在需要动态扩展功能的场景中，SPI 是一种常用的解决方案。</li>
+</ol>
+<h2 id="Java-SPI-示例代码"><a href="#Java-SPI-示例代码" class="headerlink" title="Java SPI 示例代码"></a>Java SPI 示例代码</h2><ol>
+<li><p><strong>服务接口（Service Interface）</strong><br>定义一个接口，表示某种服务或功能。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">MessageService</span> &#123;</span><br><span class="line">    String <span class="title function_">getMessage</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>服务实现（Service Implementation）</strong><br>提供接口的具体实现类。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EmailService</span> <span class="keyword">implements</span> <span class="title class_">MessageService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMessage</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Email Message&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SmsService</span> <span class="keyword">implements</span> <span class="title class_">MessageService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getMessage</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;SMS Message&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>配置文件（Service Configuration File）</strong><br>在 <code>META-INF/services/</code> 目录下创建一个以服务<strong>接口全限定名命名</strong>的文件（如 <code>com.example.MessageService</code>），并在文件中列出实现类的全限定名。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">com.example.EmailService</span><br><span class="line">com.example.SmsService</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>服务加载器（ServiceLoader）</strong><br>使用 <code>java.util.ServiceLoader</code> 动态加载服务实现类。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.ServiceLoader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SPIMain</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        ServiceLoader&lt;MessageService&gt; services = ServiceLoader.load(MessageService.class);</span><br><span class="line">        <span class="keyword">for</span> (MessageService service : services) &#123;</span><br><span class="line">            System.out.println(service.getMessage());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="Java-SPI-的工作原理"><a href="#Java-SPI-的工作原理" class="headerlink" title="Java SPI 的工作原理"></a>Java SPI 的工作原理</h2><ol>
+<li><p><strong>首先，</strong>ServiceLoader实现了Iterable接口，所以它有迭代器的属性，这里主要都是实现了迭代器的hasNext和next方法。这里主要都是调用的lookupIterator的相应hasNext和next方法，lookupIterator是懒加载迭代器。</p>
+</li>
+<li><p><strong>其次，</strong>LazyIterator中的hasNext方法，静态变量PREFIX就是”META-INF&#x2F;services&#x2F;”目录，这也就是为什么需要在classpath下的META-INF&#x2F;services&#x2F;目录里创建一个以服务接口命名的文件。</p>
+</li>
+<li><p><strong>最后，</strong>通过反射方法Class.forName()加载类对象，并用newInstance方法将类实例化，并把实例化后的类缓存到providers对象中，(LinkedHashMap&lt;String,S&gt;类型） 然后返回实例对象</p>
+</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ServiceLoader实现了Iterable接口，可以遍历所有的服务实现者</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">class</span> <span class="title class_">ServiceLoader</span>&lt;S&gt; <span class="keyword">implements</span> <span class="title class_">Iterable</span>&lt;S&gt;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 查找配置文件的目录</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">PREFIX</span> <span class="operator">=</span> <span class="string">&quot;META-INF/services/&quot;</span>;</span><br><span class="line">    <span class="comment">// 表示要被加载的服务的类或接口</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Class&lt;S&gt; service;</span><br><span class="line">    <span class="comment">// 这个ClassLoader用来定位，加载，实例化服务提供者</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> ClassLoader loader;</span><br><span class="line">    <span class="comment">// 访问控制上下文</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> AccessControlContext acc;</span><br><span class="line">    <span class="comment">// 缓存已经被实例化的服务提供者，按照实例化的顺序存储</span></span><br><span class="line">    <span class="keyword">private</span> LinkedHashMap&lt;String,S&gt; providers = <span class="keyword">new</span> <span class="title class_">LinkedHashMap</span>&lt;&gt;();</span><br><span class="line">    <span class="comment">// 迭代器</span></span><br><span class="line">    <span class="keyword">private</span> LazyIterator lookupIterator; </span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 服务提供者查找的迭代器</span></span><br><span class="line"><span class="keyword">public</span> Iterator&lt;S&gt; <span class="title function_">iterator</span><span class="params">()</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Iterator</span>&lt;S&gt;() &#123;</span><br><span class="line">        Iterator&lt;Map.Entry&lt;String,S&gt;&gt; knownProviders</span><br><span class="line">            = providers.entrySet().iterator();</span><br><span class="line">        <span class="comment">// hasNext方法</span></span><br><span class="line">        <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (knownProviders.hasNext())</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">            <span class="keyword">return</span> lookupIterator.hasNext();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// next方法</span></span><br><span class="line">        <span class="keyword">public</span> S <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (knownProviders.hasNext())</span><br><span class="line">                <span class="keyword">return</span> knownProviders.next().getValue();</span><br><span class="line">            <span class="keyword">return</span> lookupIterator.next();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 服务提供者查找的迭代器</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">class</span> <span class="title class_">LazyIterator</span> <span class="keyword">implements</span> <span class="title class_">Iterator</span>&lt;S&gt; &#123;</span><br><span class="line">    <span class="comment">// 服务提供者接口</span></span><br><span class="line">    Class&lt;S&gt; service;</span><br><span class="line">    <span class="comment">// 类加载器</span></span><br><span class="line">    ClassLoader loader;</span><br><span class="line">    <span class="comment">// 保存实现类的url</span></span><br><span class="line">    Enumeration&lt;URL&gt; configs = <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 保存实现类的全名</span></span><br><span class="line">    Iterator&lt;String&gt; pending = <span class="literal">null</span>;</span><br><span class="line">    <span class="comment">// 迭代器中下一个实现类的全名</span></span><br><span class="line">    <span class="type">String</span> <span class="variable">nextName</span> <span class="operator">=</span> <span class="literal">null</span>;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">hasNext</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (nextName != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (configs == <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="type">String</span> <span class="variable">fullName</span> <span class="operator">=</span> PREFIX + service.getName();</span><br><span class="line">                <span class="keyword">if</span> (loader == <span class="literal">null</span>)</span><br><span class="line">                    configs = ClassLoader.getSystemResources(fullName);</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    configs = loader.getResources(fullName);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException x) &#123;</span><br><span class="line">                fail(service, <span class="string">&quot;Error locating configuration files&quot;</span>, x);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> ((pending == <span class="literal">null</span>) || !pending.hasNext()) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!configs.hasMoreElements()) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            pending = parse(service, configs.nextElement());</span><br><span class="line">        &#125;</span><br><span class="line">        nextName = pending.next();</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    <span class="keyword">public</span> S <span class="title function_">next</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!hasNext()) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">NoSuchElementException</span>();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">cn</span> <span class="operator">=</span> nextName;</span><br><span class="line">        nextName = <span class="literal">null</span>;</span><br><span class="line">        Class&lt;?&gt; c = <span class="literal">null</span>;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            c = Class.forName(cn, <span class="literal">false</span>, loader);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException x) &#123;</span><br><span class="line">            fail(service,<span class="string">&quot;Provider &quot;</span> + cn + <span class="string">&quot; not found&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!service.isAssignableFrom(c)) &#123;</span><br><span class="line">            fail(service, <span class="string">&quot;Provider &quot;</span> + cn  + <span class="string">&quot; not a subtype&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">S</span> <span class="variable">p</span> <span class="operator">=</span> service.cast(c.newInstance());</span><br><span class="line">            providers.put(cn, p);</span><br><span class="line">            <span class="keyword">return</span> p;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable x) &#123;</span><br><span class="line">            fail(service, <span class="string">&quot;Provider &quot;</span> + cn + <span class="string">&quot; could not be instantiated: &quot;</span> + x, x);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">Error</span>();          <span class="comment">// This cannot happen</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Dubbo实现的SPI机制"><a href="#Dubbo实现的SPI机制" class="headerlink" title="Dubbo实现的SPI机制"></a>Dubbo实现的SPI机制</h2><p>Dubbo 对 Java 原生的 SPI 机制进行了增强和扩展，提供了更强大、更灵活的服务发现和加载功能。下面将详细介绍如何使用 Dubbo 实现的 SPI 机制，包括定义接口、实现接口、配置 SPI、加载和使用扩展等步骤。</p>
+<h3 id="添加依赖"><a href="#添加依赖" class="headerlink" title="添加依赖"></a>添加依赖</h3><p>首先，需要在项目中添加 Dubbo 的依赖。如果使用 Maven 项目，可以在 <code>pom.xml</code> 中添加以下依赖：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.dubbo<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>dubbo<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>3.2.3<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="定义服务接口"><a href="#定义服务接口" class="headerlink" title="定义服务接口"></a>定义服务接口</h3><p>使用 <code>@SPI</code> 注解标记服务接口，该注解是 Dubbo SPI 的核心注解，用于标识这是一个可扩展的接口。示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.dubbo.common.extension.SPI;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 @SPI 注解标记接口</span></span><br><span class="line"><span class="meta">@SPI</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">HelloService</span> &#123;</span><br><span class="line">    <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="实现服务接口"><a href="#实现服务接口" class="headerlink" title="实现服务接口"></a>实现服务接口</h3><p>提供多个实现类来实现上述定义的服务接口。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 实现类 1</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">EnglishHelloService</span> <span class="keyword">implements</span> <span class="title class_">HelloService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 实现类 2</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ChineseHelloService</span> <span class="keyword">implements</span> <span class="title class_">HelloService</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">sayHello</span><span class="params">()</span> &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;你好！&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="配置-SPI"><a href="#配置-SPI" class="headerlink" title="配置 SPI"></a>配置 SPI</h3><p>在 <code>META-INF/dubbo</code> 目录下创建一个以服务接口全限定名命名的文件，文件内容为键值对形式，键为扩展点名称，值为实现类的全限定名。例如，对于 <code>HelloService</code> 接口，文件路径为 <code>META-INF/dubbo/com.example.HelloService</code>，文件内容如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">english = com.example.EnglishHelloService</span><br><span class="line">chinese = com.example.ChineseHelloService</span><br></pre></td></tr></table></figure>
+
+<h3 id="加载和使用扩展"><a href="#加载和使用扩展" class="headerlink" title="加载和使用扩展"></a>加载和使用扩展</h3><p>使用 <code>ExtensionLoader</code> 类来加载和使用扩展。<code>ExtensionLoader</code> 是 Dubbo SPI 机制的核心类，负责从配置文件中加载扩展实现。示例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.dubbo.common.extension.ExtensionLoader;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Main</span> &#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">        <span class="comment">// 获取 ExtensionLoader 实例</span></span><br><span class="line">        ExtensionLoader&lt;HelloService&gt; extensionLoader = ExtensionLoader.getExtensionLoader(HelloService.class);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 根据扩展点名称获取具体的实现</span></span><br><span class="line">        <span class="type">HelloService</span> <span class="variable">englishService</span> <span class="operator">=</span> extensionLoader.getExtension(<span class="string">&quot;english&quot;</span>);</span><br><span class="line">        englishService.sayHello();</span><br><span class="line"></span><br><span class="line">        <span class="type">HelloService</span> <span class="variable">chineseService</span> <span class="operator">=</span> extensionLoader.getExtension(<span class="string">&quot;chinese&quot;</span>);</span><br><span class="line">        chineseService.sayHello();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码解释"><a href="#代码解释" class="headerlink" title="代码解释"></a>代码解释</h3><ul>
+<li><strong><code>@SPI</code> 注解</strong>：用于标记服务接口，表示这是一个可扩展的接口。</li>
+<li><strong><code>META-INF/dubbo</code> 目录</strong>：Dubbo 约定在该目录下查找 SPI 配置文件。</li>
+<li><strong>配置文件格式</strong>：使用键值对形式，键为扩展点名称，值为实现类的全限定名。</li>
+<li><strong><code>ExtensionLoader</code> 类</strong>：负责加载和管理扩展实现。通过 <code>getExtensionLoader</code> 方法获取 <code>ExtensionLoader</code> 实例，再通过 <code>getExtension</code> 方法根据扩展点名称获取具体的实现。</li>
+</ul>
+<h3 id="其他特性"><a href="#其他特性" class="headerlink" title="其他特性"></a>其他特性</h3><ul>
+<li><strong>自适应扩展</strong>：Dubbo 支持自适应扩展，通过 <code>@Adaptive</code> 注解可以在运行时根据参数动态选择扩展实现。</li>
+<li><strong>自动包装</strong>：Dubbo 支持自动包装扩展实现，通过实现 <code>Wrapper</code> 类可以对扩展实现进行包装和增强。</li>
+</ul>
+<h2 id="与Spring集成"><a href="#与Spring集成" class="headerlink" title="与Spring集成"></a>与Spring集成</h2><p>创建一个 Spring 配置类，用于将 Dubbo SPI 扩展点注入到 Spring 容器中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> org.apache.dubbo.common.extension.ExtensionLoader;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Bean;</span><br><span class="line"><span class="keyword">import</span> org.springframework.context.annotation.Configuration;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DubboSPIConfig</span> &#123;</span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> MyService <span class="title function_">myService</span><span class="params">()</span> &#123;</span><br><span class="line">        ExtensionLoader&lt;MyService&gt; extensionLoader = ExtensionLoader.getExtensionLoader(MyService.class);</span><br><span class="line">        <span class="keyword">return</span> extensionLoader.getExtension(<span class="string">&quot;myImpl&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="SPI方式比较"><a href="#SPI方式比较" class="headerlink" title="SPI方式比较"></a>SPI方式比较</h2><table>
+<thead>
+<tr>
+<th>对比维度</th>
+<th>Java 原生 SPI</th>
+<th>Dubbo 的 SPI</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>配置文件位置</strong></td>
+<td><code>META - INF/services</code> 目录下</td>
+<td>默认 <code>META - INF/dubbo</code> 目录，也支持 <code>META - INF/dubbo/internal</code> 和 <code>META - INF/services</code> 目录</td>
+</tr>
+<tr>
+<td><strong>配置文件内容格式</strong></td>
+<td>实现类全限定名，每行一个</td>
+<td>键值对形式，键为扩展点名称，值为实现类全限定名</td>
+</tr>
+<tr>
+<td><strong>加载类</strong></td>
+<td><code>java.util.ServiceLoader</code></td>
+<td><code>org.apache.dubbo.common.extension.ExtensionLoader</code></td>
+</tr>
+<tr>
+<td><strong>加载方式</strong></td>
+<td>一次性加载并实例化配置文件中所有实现类</td>
+<td>按需加载，可根据扩展点名称获取指定实现类</td>
+</tr>
+<tr>
+<td><strong>高级特性</strong></td>
+<td>无自动激活、自适应扩展、扩展点包装等高级特性</td>
+<td>支持自动激活（<code>@Activate</code> 注解）、自适应扩展（<code>@Adaptive</code> 注解）、扩展点包装</td>
+</tr>
+<tr>
+<td><strong>性能和灵活性</strong></td>
+<td>一次性加载可能造成资源浪费，缺乏灵活扩展定制能力</td>
+<td>按需加载，性能较好，借助各种注解和机制可灵活定制，适合复杂分布式系统</td>
+</tr>
+<tr>
+<td><strong>获取实现类方式</strong></td>
+<td>通过迭代器遍历获取所有实现类实例</td>
+<td>通过扩展点名称获取指定实现类实例</td>
+</tr>
+</tbody></table>
+<script>var description="SPI（Service Provider Interface）是JDK内置的一种服务提供发现机制。"</script></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/b3bc049e">https://fulsun.github.io/p/b3bc049e</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/medias/featureimages/003.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related full-width" href="/p/3ca9bef3" title="SpringBoot预览PDF文件"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">SpringBoot预览PDF文件</div></div><div class="info-2"><div class="info-item-1">这篇文章介绍了如何利用Spring Boot的预览PDF功能和HTTP Range请求实现大文件的大范围懒加载技术。</div></div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">凉月</div><div class="author-info-description">记录生活,分享知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-text">简介</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%9A%84%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-text">Java SPI 的工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-text">Java SPI 的优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-text">Java SPI 的缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">Java SPI 的应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81"><span class="toc-text">Java SPI 示例代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Java-SPI-%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-text">Java SPI 的工作原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Dubbo%E5%AE%9E%E7%8E%B0%E7%9A%84SPI%E6%9C%BA%E5%88%B6"><span class="toc-text">Dubbo实现的SPI机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E4%BE%9D%E8%B5%96"><span class="toc-text">添加依赖</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3"><span class="toc-text">定义服务接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%9C%8D%E5%8A%A1%E6%8E%A5%E5%8F%A3"><span class="toc-text">实现服务接口</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE-SPI"><span class="toc-text">配置 SPI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8A%A0%E8%BD%BD%E5%92%8C%E4%BD%BF%E7%94%A8%E6%89%A9%E5%B1%95"><span class="toc-text">加载和使用扩展</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A"><span class="toc-text">代码解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E7%89%B9%E6%80%A7"><span class="toc-text">其他特性</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8ESpring%E9%9B%86%E6%88%90"><span class="toc-text">与Spring集成</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SPI%E6%96%B9%E5%BC%8F%E6%AF%94%E8%BE%83"><span class="toc-text">SPI方式比较</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/b3bc049e" title="Java中的SPI服务发现机制"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/003.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Java中的SPI服务发现机制"/></a><div class="content"><a class="title" href="/p/b3bc049e" title="Java中的SPI服务发现机制">Java中的SPI服务发现机制</a><time datetime="2025-02-16T05:36:57.339Z" title="发表于 2025-02-16 05:36:57">2025-02-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/3ca9bef3" title="SpringBoot预览PDF文件"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringBoot预览PDF文件"/></a><div class="content"><a class="title" href="/p/3ca9bef3" title="SpringBoot预览PDF文件">SpringBoot预览PDF文件</a><time datetime="2025-02-07T10:19:00.000Z" title="发表于 2025-02-07 10:19:00">2025-02-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/9b5fc26a" title="Debain12配置"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Debain12配置"/></a><div class="content"><a class="title" href="/p/9b5fc26a" title="Debain12配置">Debain12配置</a><time datetime="2025-02-06T16:07:00.000Z" title="发表于 2025-02-06 16:07:00">2025-02-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/42bd8820" title="Docker安装脚本与换源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Docker安装脚本与换源"/></a><div class="content"><a class="title" href="/p/42bd8820" title="Docker安装脚本与换源">Docker安装脚本与换源</a><time datetime="2025-02-05T16:00:00.000Z" title="发表于 2025-02-05 16:00:00">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c3561f90" title="Nvm包管理器"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Nvm包管理器"/></a><div class="content"><a class="title" href="/p/c3561f90" title="Nvm包管理器">Nvm包管理器</a><time datetime="2025-01-22T16:00:55.000Z" title="发表于 2025-01-22 16:00:55">2025-01-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.3.2"></script><script src="/js/main.js?v=5.3.2"></script><script src="https://unpkg.com/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://unpkg.com/@waline/client@3.4.3/dist/waline.css')
+        .then(() => import('https://unpkg.com/@waline/client@3.4.3/dist/waline.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.4/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>

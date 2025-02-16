@@ -1,0 +1,986 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>路由的使用 | 凉月の博客</title><meta name="author" content="凉月"><meta name="copyright" content="凉月"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在传统Web前端框架（如Vue、Vite等）中使用路由时，如果遇到页面刷新变为404或部分路由显示为白色的问题，通常是由于以下原因：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="路由的使用">
+<meta property="og:url" content="https://fulsun.github.io/p/8448ab29">
+<meta property="og:site_name" content="凉月の博客">
+<meta property="og:description" content="在传统Web前端框架（如Vue、Vite等）中使用路由时，如果遇到页面刷新变为404或部分路由显示为白色的问题，通常是由于以下原因：">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://fulsun.github.io/medias/featureimages/003.webp">
+<meta property="article:published_time" content="2025-01-20T09:48:22.000Z">
+<meta property="article:modified_time" content="2025-02-16T05:36:57.338Z">
+<meta property="article:author" content="凉月">
+<meta property="article:tag" content="Vue3">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://fulsun.github.io/medias/featureimages/003.webp"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "路由的使用",
+  "url": "https://fulsun.github.io/p/8448ab29",
+  "image": "https://fulsun.github.io/medias/featureimages/003.webp",
+  "datePublished": "2025-01-20T09:48:22.000Z",
+  "dateModified": "2025-02-16T05:36:57.338Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "凉月",
+      "url": "https://fulsun.github.io/"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/medias/favicon.png"><link rel="canonical" href="https://fulsun.github.io/p/8448ab29"><link rel="preconnect" href="//unpkg.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.3.2"><link rel="stylesheet" href="https://unpkg.com/@fortawesome/fontawesome-free@6.7.2/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          const mediaQueryDark = window.matchMedia('(prefers-color-scheme: dark)')
+          const mediaQueryLight = window.matchMedia('(prefers-color-scheme: light)')
+          
+          if (theme === undefined) {
+            if (mediaQueryLight.matches) activateLightMode()
+            else if (mediaQueryDark.matches) activateDarkMode()
+            else {
+              const hour = new Date().getHours()
+              const isNight = hour <= 6 || hour >= 18
+              isNight ? activateDarkMode() : activateLightMode()
+            }
+            mediaQueryDark.addEventListener('change', () => {
+              if (saveToLocal.get('theme') === undefined) {
+                e.matches ? activateDarkMode() : activateLightMode()
+              }
+            })
+          } else {
+            theme === 'light' ? activateLightMode() : activateDarkMode()
+          }
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: {"limitCount":50,"languages":{"author":"作者: 凉月","link":"链接: ","source":"来源: 凉月の博客","info":"著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。"}},
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://unpkg.com/@egjs/infinitegrid@4.12.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: true
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '路由的使用',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background: linear-gradient(90deg, rgba(247, 149, 51, .1), rgba(243, 112, 85, .1) 15%, rgba(239, 78, 123, .1) 30%, rgba(161, 102, 171, .1) 44%, rgba(80, 115, 184, .1) 58%, rgba(16, 152, 173, .1) 72%, rgba(7, 179, 155, .1) 86%, rgba(109, 186, 130, .1));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/medias/featureimages/003.webp);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">凉月の博客</span></a><a class="nav-page-title" href="/"><span class="site-name">路由的使用</span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 文章</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></li><li><a class="site-page child" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page child" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-heartbeat"></i><span> 我的</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/gallery/"><i class="fa-fw fas fa-camera-retro"></i><span> 相册</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> 联系</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/about/"><i class="fa-fw fas fa-user-circle"></i><span> 博主</span></a></li><li><a class="site-page child" href="/contact"><i class="fa-fw fas fa-comments"></i><span> 留言</span></a></li><li><a class="site-page child" href="/journal"><i class="fa-fw fas fa-cogs"></i><span> 日志</span></a></li><li><a class="site-page child" href="/link/"><i class="fa-fw fas fa-link"></i><span> 友链</span></a></li></ul></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fa fa-list"></i><span> JS动画</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="/snake/"><i class="fa-fw fas fa-gamepad"></i><span> 贪吃蛇</span></a></li></ul></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">路由的使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2025-01-20T09:48:22.000Z" title="发表于 2025-01-20 09:48:22">2025-01-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2025-02-16T05:36:57.338Z" title="更新于 2025-02-16 05:36:57">2025-02-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/Vue/">Vue</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">12.6k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>45分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><div id="post-outdate-notice" data="{&quot;limitDay&quot;:500,&quot;messagePrev&quot;:&quot;至上次更新后的&quot;,&quot;messageNext&quot;:&quot;天,文章内容可能已过时。&quot;,&quot;postUpdate&quot;:&quot;2025-02-16 05:36:57&quot;}" hidden></div><span id="more"></span>
+
+<h3 id="1-页面刷新后变404"><a href="#1-页面刷新后变404" class="headerlink" title="1. 页面刷新后变404"></a>1. <strong>页面刷新后变404</strong></h3><p>  这种现象通常是因为：</p>
+<ul>
+<li><p><strong>服务端未配置支持 History 模式的功能</strong>：在部署到服务器之前，服务端（如Nginx、Express）可能没有启用对历史路径的支持。</p>
+</li>
+<li><p><strong>路由跳转逻辑有误</strong>：某些路由逻辑可能需要依赖于用户的行为（如滑块操作），但页面刷新可能导致这些逻辑失效。</p>
+</li>
+</ul>
+<h4 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a><strong>解决方案</strong></h4><ol>
+<li><p>确保服务端支持 History 模式的功能：</p>
+<ul>
+<li>如果使用Nginx，可以参考官方文档配置支持History fallback：[Nginx History Fallback Configuration](<a target="_blank" rel="noopener external nofollow noreferrer" href="https://docs.nginx.org/en/stable">https://docs.nginx.org/en/stable</a> brewed&#x2F;history-fallback.html)</li>
+<li>如果使用Express，可以安装<code>connect-history-api-fallback</code>中间件并激活它：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> connectHistoryFallback = <span class="built_in">require</span>(<span class="string">&#x27;connect-history-api-fallback&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">let</span> app = <span class="title function_">express</span>();</span><br><span class="line"><span class="keyword">if</span> (process.<span class="property">env</span>.<span class="property">NODE_ENV</span> === <span class="string">&#x27;production&#x27;</span>) &#123;</span><br><span class="line">    <span class="title function_">connectHistoryFallback</span>(app);</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// ...</span></span><br><span class="line">app.<span class="title function_">listen</span>(<span class="number">3000</span>, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;Server running on http://localhost:3000&#x27;</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>确保所有路径在服务端都已正确配置：</p>
+<ul>
+<li>检查根目录（如<code>public</code>或<code>assets</code>）中是否包含所有必要的支持文件。</li>
+<li>配置<code>publicPath</code>和<code>base</code>，确保与项目根目录一致。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="2-部分路由显示为白色"><a href="#2-部分路由显示为白色" class="headerlink" title="2. 部分路由显示为白色"></a>2. <strong>部分路由显示为白色</strong></h3><p>  这种现象通常是因为：</p>
+<ul>
+<li><p><strong>静态资源路径错误</strong>：路由配置的公共路径（如<code>./public</code>）未正确指向项目根目录中的资源。</p>
+</li>
+<li><p><strong>Nginx或Vite配置错误</strong>：服务器端没有正确配置支持二级或以上路由的结构。</p>
+</li>
+</ul>
+<h4 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a><strong>解决方案</strong></h4><ol>
+<li><p>如果使用Vite：</p>
+<ul>
+<li>确保项目中存在一个根目录，且在<code>config/vite.js</code>中将<code>publicPath</code>和<code>base</code>设置为根目录（例如<code>./</code>）。</li>
+<li>检查是否有以下配置：<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// vite.config.js</span></span><br><span class="line"><span class="keyword">const</span> config = &#123;</span><br><span class="line">    <span class="attr">routes</span>: &#123;</span><br><span class="line">        <span class="attr">router</span>: &#123;</span><br><span class="line">            <span class="attr">publicPath</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">            <span class="attr">base</span>: <span class="string">&#x27;/app&#x27;</span>,</span><br><span class="line">            <span class="attr">history</span>: <span class="literal">true</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="comment">// 其他路由配置...</span></span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p>如果使用Nginx：</p>
+<ul>
+<li>确保项目根目录下存在以下文件夹：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">public/</span><br><span class="line">assets/</span><br></pre></td></tr></table></figure></li>
+<li>配置<code>server.conf</code>中的相关参数：<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">root</span> /；</span><br><span class="line">    include ../config/variables.<span class="string">&quot;&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="3-检查根目录是否存在"><a href="#3-检查根目录是否存在" class="headerlink" title="3. 检查根目录是否存在"></a>3. <strong>检查根目录是否存在</strong></h3><p>  如果项目中没有配置根目录，或根目录下缺少必要的支持文件（如<code>index.html</code>、<code>style.css</code>等），可能导致部分路由无法加载。</p>
+<h4 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a><strong>解决方案</strong></h4><ul>
+<li><p>创建一个包含所有静态资源的根目录结构：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">project_root/</span><br><span class="line">  public/</span><br><span class="line">    index.html</span><br><span class="line">    style.css</span><br><span class="line">    // 其他静态资源...</span><br><span class="line">  assets/</span><br><span class="line">    images/</span><br><span class="line">      header.jpg</span><br><span class="line">    js/</span><br><span class="line">      main.js</span><br><span class="line">        // ...</span><br><span class="line">  // 非静态资源（如JavaScript、CSS）</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在项目根目录中运行以下命令创建根目录：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p project_root/public &amp;&amp; \</span><br><span class="line">       <span class="built_in">mkdir</span> -p project_root/assets &amp;&amp; \</span><br><span class="line">       <span class="built_in">mkdir</span> -p project_root/assets/images</span><br></pre></td></tr></table></figure></li>
+</ul>
+<hr>
+<h3 id="4-环境变量配置"><a href="#4-环境变量配置" class="headerlink" title="4. 环境变量配置"></a>4. <strong>环境变量配置</strong></h3><p>  如果使用Vite或Vue CLI，确保在开发环境中正确配置了相关环境变量。</p>
+<h4 id="示例（Vite）"><a href="#示例（Vite）" class="headerlink" title="示例（Vite）"></a><strong>示例（Vite）</strong></h4>  <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">// config/vite.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> vite = &#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="attr">router</span>: &#123;</span><br><span class="line">        <span class="attr">publicPath</span>: <span class="string">&#x27;./&#x27;</span>,</span><br><span class="line">        <span class="attr">base</span>: <span class="string">&#x27;/app&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<hr>
+<h3 id="5-验证服务端配置"><a href="#5-验证服务端配置" class="headerlink" title="5. 验证服务端配置"></a>5. <strong>验证服务端配置</strong></h3><p>  在部署到服务器之前，确保所有相关参数已正确配置：</p>
+<ul>
+<li>如果使用Nginx，检查<code>nginx.conf</code>中是否有以下设置：<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 历史路径支持</span></span><br><span class="line"><span class="section">server</span> &#123;</span><br><span class="line">    <span class="attribute">listen</span> <span class="number">80</span>;</span><br><span class="line">    <span class="attribute">root</span> /；</span><br><span class="line">    include ../config/variables.<span class="string">&quot;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string"># 允许历史路径请求</span></span><br><span class="line"><span class="string">location /admin-history &#123;</span></span><br><span class="line"><span class="string">    allow historical;</span></span><br><span class="line"><span class="string">    expires 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">location /public &#123;</span></span><br><span class="line"><span class="string">    allow historical;</span></span><br><span class="line"><span class="string">    expires 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br></pre></td></tr></table></figure></li>
+<li>如果使用Express，确保<code>connect-history-fallback</code>中间件已正确激活。</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>  要解决这些问题：</p>
+<ol>
+<li><p>确保根目录下存在所有静态资源。</p>
+</li>
+<li><p>配置Nginx或Vite的<code>publicPath</code>和<code>base</code>参数为项目根目录。</p>
+</li>
+<li><p>确保服务端支持 History 模式的功能（如有）已正确启用。</p>
+</li>
+</ol>
+<h2 id="如果问题仍然存在，可以提供更多具体信息（如错误日志），以便进一步诊断。date-2025-01-20-00-14-28"><a href="#如果问题仍然存在，可以提供更多具体信息（如错误日志），以便进一步诊断。date-2025-01-20-00-14-28" class="headerlink" title="  如果问题仍然存在，可以提供更多具体信息（如错误日志），以便进一步诊断。date: 2025-01-20 00:14:28"></a>  如果问题仍然存在，可以提供更多具体信息（如错误日志），以便进一步诊断。<br>date: 2025-01-20 00:14:28</h2><!-- more -->
+
+<p>在传统的 Web 开发过程中，当需要实现多个站内页面时，要写很多个 HTML 页面，然后通过 <code>&lt;a /&gt;</code> 标签来实现互相跳转。</p>
+<p>在如今工程化模式下的前端开发，像 Vue 工程，可以轻松实现只用一个 HTML 文件就完成多个站内页面渲染、跳转的功能，这就是路由。</p>
+<h2 id="路由的目录结构"><a href="#路由的目录结构" class="headerlink" title="路由的目录结构"></a>路由的目录结构</h2><p>Vue 3 引入路由的方式和 Vue 2 一样，路由的管理也是放在 src&#x2F;router 这个目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">src</span><br><span class="line">│ <span class="comment"># 路由目录</span></span><br><span class="line">├─router</span><br><span class="line">│   <span class="comment"># 路由入口文件</span></span><br><span class="line">├───index.ts</span><br><span class="line">│   <span class="comment"># 路由配置，如果路由很多，可以再拆分模块文件</span></span><br><span class="line">├───routes.ts</span><br><span class="line">│ <span class="comment"># 项目入口文件</span></span><br><span class="line">└─main.ts</span><br></pre></td></tr></table></figure>
+
+<p>其中 index.ts 是路由的入口文件，如果路由很少，那么可以只维护在这个文件里，但对复杂项目来说，往往需要配置二级、三级路由，把逻辑和配置都放到一个文件的话太臃肿了。</p>
+<p>所以如果项目稍微复杂一些，可以像上面这个结构一样拆出两个文件： index.ts 和 routes.ts ，在 routes.ts 里维护路由树的结构，在 index.ts 导入路由树结构并激活路由，同时可以在该文件里配置路由钩子。</p>
+<p>如果项目更加复杂，例如做一个 Admin 后台，可以按照业务模块，再把 routes 拆分得更细，例如 game.ts &#x2F; member.ts &#x2F; order.ts 等业务模块，再统一导入到 index.ts 文件里。</p>
+<blockquote>
+<p>TIP 需要注意与 Vue 3 配套的路由版本： vue-router 4.x 以上才可以正确适配项目。</p>
+</blockquote>
+<h2 id="在项目里引入路由"><a href="#在项目里引入路由" class="headerlink" title="在项目里引入路由"></a>在项目里引入路由</h2><p>不管是 Vue 2 还是 Vue 3 ，引入路由都是在 src&#x2F;router&#x2F;index.ts 文件里，但是版本升级带来的变化很大，由于本书关于 Vue 3 都是使用 TypeScript ，所以这里只做一个 TypeScript 的变化对比。</p>
+<blockquote>
+<p>TIP 下文可能会出现多次 <code>import.meta.env.BASE_URL</code> 这个变量，它是由 Vite 提供的环境变量，详见 Vite 官网关于 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.vitejs.dev/guide/env-and-mode.html#env-variables">环境变量</a> 的说明。</p>
+</blockquote>
+<p>使用其他构建工具请自行替换为对应构建工具提供的环境变量，例如使用 @vue&#x2F;cli 创建的项目：因为基于 Webpack ，所以使用的是 <code>process.env.BASE_URL</code> 。</p>
+<h3 id="回顾-Vue-2"><a href="#回顾-Vue-2" class="headerlink" title="回顾 Vue 2"></a>回顾 Vue 2</h3><p>Vue 2 的引入方式如下（其中 <code>RouteConfig</code> 是路由项目的 TS 类型）。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Vue</span> <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="title class_">VueRouter</span> <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">RouteConfig</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="title class_">Vue</span>.<span class="title function_">use</span>(<span class="title class_">VueRouter</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteConfig</span>&gt; = [</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="keyword">new</span> <span class="title class_">VueRouter</span>(&#123;</span><br><span class="line">  <span class="attr">mode</span>: <span class="string">&#x27;history&#x27;</span>,</span><br><span class="line">  <span class="attr">base</span>: <span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">BASE_URL</span>,</span><br><span class="line">  routes,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router</span><br></pre></td></tr></table></figure>
+
+<p>里面一些选项的功能说明：</p>
+<p><code>routes</code> 是路由树的配置，当项目的路由很多时可以集中到 routes.ts 管理，然后再 <code>import</code> 进来。</p>
+<p><code>mode</code> 决定访问路径模式，可配置为 <code>hash</code> 或者 <code>history</code> ， Hash 模式是 <code>http://abc.com/#/home</code> 这种带 <code>#</code> 号的地址，支持所有浏览器， History 模式是 <code>http://abc.com/home</code> 这样不带 <code>#</code> 号的，不仅美观，而且体验更好，但需要服务端做一些配置支持），也只对主流浏览器提供支持。</p>
+<p><code>base</code> 是 History 模式在进行路由切换时的基础路径，默认是 <code>/</code> 根目录，如果的项目不是部署在根目录下，而是二级目录、三级目录等多级目录，就必须指定这个 base ，否则路由切换会有问题。</p>
+<h3 id="了解-Vue-3"><a href="#了解-Vue-3" class="headerlink" title="了解 Vue 3"></a>了解 Vue 3</h3><p>Vue 3 的引入方式如下（其中 <code>RouteRecordRaw</code> 是路由项目的 TS 类型）。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createRouter, createWebHistory &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">RouteRecordRaw</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createRouter</span>(&#123;</span><br><span class="line">  <span class="attr">history</span>: <span class="title function_">createWebHistory</span>(<span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">BASE_URL</span>),</span><br><span class="line">  routes,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router</span><br></pre></td></tr></table></figure>
+
+<p>在 Vue 3 （也就是 vue-router 4.x） 里，路由简化了一些配置项，其中 <code>routes</code> 和 Vue 2 一样，是路由树的配置。</p>
+<p>但是 <code>history</code> 和 Vue 2 有所不同，在 Vue 3 ，使用 <code>history</code> 来代替 Vue 2 的 <code>mode</code> ，但功能是一样的，也用于决定访问路径模式是 Hash 模式 还是 History 模式，同时合并了 Vue 2 （也就是 vue-router 3.x） 的 <code>base</code> 选项作为模式函数的入参。</p>
+<p>和在使用 Vue 2 的时候一样， Vue 3 也可以配置一些额外的路由选项，比如：指定 <code>router-link</code> 为当前激活的路由所匹配的 <code>className</code> :</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="title function_">createRouter</span>(&#123;</span><br><span class="line">  <span class="attr">history</span>: <span class="title function_">createWebHistory</span>(<span class="keyword">import</span>.<span class="property">meta</span>.<span class="property">env</span>.<span class="property">BASE_URL</span>),</span><br><span class="line">  <span class="attr">linkActiveClass</span>: <span class="string">&#x27;cur&#x27;</span>,</span><br><span class="line">  <span class="attr">linkExactActiveClass</span>: <span class="string">&#x27;cur&#x27;</span>,</span><br><span class="line">  routes,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>更多的配置项可以参考 Vue Router 官网的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://router.vuejs.org/zh/api/">API 参考</a> 一章。</p>
+<h2 id="路由树的配置"><a href="#路由树的配置" class="headerlink" title="路由树的配置"></a>路由树的配置</h2><p>在 引入路由部分有说到，当项目的路由很多的时候，文件会变得非常长，难以维护，这个时候可以集中到 routes.ts 或者更多的模块化文件管理，然后再 <code>import</code> 到 index.ts 里。</p>
+<p>暂且把 routes.ts 这个文件称为 “路由树” ，因为它像一棵大树一样，不仅可以以一级路由为树干去生长，还可以添加二级、三级等多级路由来开枝散叶，下面来看看 routes.ts 应该怎么写。</p>
+<h3 id="基础格式"><a href="#基础格式" class="headerlink" title="基础格式"></a>基础格式</h3><p>在 TypeScript 里，路由文件的基础格式由三个部分组成：类型声明、数组结构、模块导出。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// src/router/routes.ts</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用 TypeScript 时需要导入路由项目的类型声明</span></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">type</span> &#123; <span class="title class_">RouteRecordRaw</span> &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用路由项目类型声明一个路由数组</span></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将路由数组导出给其他模块使用</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> routes</span><br></pre></td></tr></table></figure>
+
+<p>之后就可以在 index.ts 里导入使用了。</p>
+<p>那么里面的路由数组又是怎么写呢？这里就涉及到了 一级路由和 多级路由 的编写。</p>
+<h3 id="公共基础路径"><a href="#公共基础路径" class="headerlink" title="公共基础路径"></a>公共基础路径</h3><p>在配置路由之前，需要先了解 “公共基础路径” 的概念，在讲解使用 Vite 等工具创建项目时，都提到了一个项目配置的管理，以 Vite 项目的配置文件 <code>vite.config.ts</code> 为例，里面有一个选项base ，其实就是用来控制路由的公共基础路径，那么它有什么用呢？</p>
+<p><code>base</code> 的默认值是 <code>/</code>，也就是说，如果不配置它，那么所有的资源文件都是从域名根目录读取，如果项目部署在域名根目录那当然好，但是如果不是呢？那么就必须来配置它了。</p>
+<p>配置很简单，只要把项目要上线的最终地址，去掉域名，剩下的那部分就是 <code>base</code> 的值。假设项目是部署在 <code>https://example.com/vue3/</code> ，那么 <code>base</code> 就可以设置为 <code>/vue3/</code>。</p>
+<blockquote>
+<p>TIP 如果路由只有一级，那么 <code>base</code> 也可以设置为相对路径 <code>./</code>，这样可以把项目部署到任意地方。</p>
+<p>如果路由不止一级，那么请准确地指定 <code>base</code>，并且确保是以 <code>/</code> 开头并以 <code>/</code> 结尾，例如 <code>/foo/</code> 。</p>
+</blockquote>
+<h3 id="一级路由"><a href="#一级路由" class="headerlink" title="一级路由"></a>一级路由</h3><p>一级路由，顾名思义，就是在项目地址后面只有一级 Path ，比如 <code>https://example.com/home</code> ，这里的 <code>home</code> 就是一级路由。</p>
+<p>来看一下最基本的路由配置应该包含哪些字段：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>其中 <code>path</code> 是路由的访问路径，像上面说的，如果的域名是 <code>https://example.com</code>， 配置为 <code>/home</code>，那么访问路径就是 <code>https://example.com/home</code></p>
+<blockquote>
+<p>TIP一级路由的 path 都必须是以 <code>/</code> 开头，比如： <code>/home</code>、<code>/setting</code>；</p>
+</blockquote>
+<ul>
+<li><p>如果的项目首页不想带上 <code>home</code> 之类的尾巴，只想要通过 <code>https://example.com/</code> 这样的域名直达 ，其实也是配置一级路由，把路由的 <code>path</code> 指定为 <code>/</code> 即可。</p>
+</li>
+<li><p><code>name</code> 是路由的名称，非必填，但是一般都会配置上去，这样可以很方便地用 <code>name</code> 来代替 <code>path</code> 实现路由的跳转，例如有时候开发环境和生产环境的路径不一致，或者说路径变更，通过 <code>name</code> 无需调整，但如果通过 <code>path</code>，可能就要修改很多文件里面的链接跳转目标了。</p>
+</li>
+<li><p><code>component</code> 是路由的模板文件，指向一个 vue 组件，用于指定路由在浏览器端的视图渲染，这里有两种方式来指定使用哪个组件：</p>
+</li>
+</ul>
+<h4 id="同步组件"><a href="#同步组件" class="headerlink" title="同步组件"></a>同步组件</h4><p>字段 <code>component</code> 接收一个变量，变量的值就是对应的模板组件。</p>
+<p>在打包的时候，组件的所有代码都会被打包到一个文件里，对于大项目来说，这种方式的首屏加载是个灾难，要面对文件过大导致等待时间变长的问题。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="title class_">Home</span> <span class="keyword">from</span> <span class="string">&#x27;@views/home.vue&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="title class_">Home</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>所以现在都推荐使用第二种方式，可以实现 <strong>路由懒加载</strong> 。</p>
+<h4 id="异步组件"><a href="#异步组件" class="headerlink" title="异步组件"></a>异步组件</h4><p>字段 <code>component</code> 接收一个函数，在 return 的时候返回模板组件，同时组件里的代码在打包的时候都会生成独立的文件，并在访问到对应路由的时候按需引入。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>关于这部分的更多说明，可以查看路由懒加载]。</p>
+<h3 id="多级路由"><a href="#多级路由" class="headerlink" title="多级路由"></a>多级路由</h3><p>在 Vue 路由生态里，支持配置二级、三级、四级等多级路由，理论上没有上限，实际业务中用到的级数通常是三级到四级。</p>
+<p>比如做一个美食类网站，打算在 “中餐” 大分类下配置一个 “饺子” 栏目，那么地址就是：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com/chinese-food/dumplings</span><br></pre></td></tr></table></figure>
+
+<p>这种情况下，中餐 <code>chinese-food</code> 就是一级路由，饺子 <code>dumplings</code> 就是二级路由。</p>
+<p>如果想再细化一下，“饺子” 下面再增加一个 “韭菜” 、“白菜” 等不同馅料的子分类：</p>
+<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com/chinese-food/dumplings/chives</span><br></pre></td></tr></table></figure>
+
+<p>这里的韭菜 <code>chives</code> 就是饺子 <code>dumplings</code> 的子路由，也就是三级路由。</p>
+<p>在了解了子路由的概念后，来看一下具体如何配置以及注意事项。</p>
+<p>父子路由的关系，都是严格按照 JSON 的层级关系，子路由的信息配置到父级的 <code>children</code> 数组里面，孙路由也是按照一样的格式，配置到子路由的 <code>children</code> 里。</p>
+<p>这是一个简单的子路由示范：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// 注意：这里是一级路由</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/lv1&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;lv1&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/lv1.vue&#x27;</span>),</span><br><span class="line">    <span class="comment">// 注意：这里是二级路由，在 `path` 的前面没有 `/`</span></span><br><span class="line">    <span class="attr">children</span>: [</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="attr">path</span>: <span class="string">&#x27;lv2&#x27;</span>,</span><br><span class="line">        <span class="attr">name</span>: <span class="string">&#x27;lv2&#x27;</span>,</span><br><span class="line">        <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/lv2.vue&#x27;</span>),</span><br><span class="line">        <span class="comment">// 注意：这里是三级路由，在 `path` 的前面没有 `/`</span></span><br><span class="line">        <span class="attr">children</span>: [</span><br><span class="line">          &#123;</span><br><span class="line">            <span class="attr">path</span>: <span class="string">&#x27;lv3&#x27;</span>,</span><br><span class="line">            <span class="attr">name</span>: <span class="string">&#x27;lv3&#x27;</span>,</span><br><span class="line">            <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/lv3.vue&#x27;</span>),</span><br><span class="line">          &#125;,</span><br><span class="line">        ],</span><br><span class="line">      &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>上面这个配置，最终三级路由的访问地址如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https://example.com/lv1/lv2/lv3</span><br></pre></td></tr></table></figure>
+
+<p>可以看到在注释里提示了二级、三级路由的 <code>path</code> 字段前面没有 <code>/</code> ，这样路径前面才会有其父级路由的 <code>path</code> 以体现其层级关系，否则会从根目录开始。</p>
+<h3 id="路由懒加载"><a href="#路由懒加载" class="headerlink" title="路由懒加载"></a>路由懒加载</h3><p>在上面提过，路由在配置 <code>同步组件</code>的时候，构建出来的文件都集中在一起，大的项目的文件会变得非常大，影响页面加载。</p>
+<p>所以 Vue 在 Webpack 的代码分割功能的基础上，推出了<code>异步组件</code>，可以把不同路由对应的组件分割成不同的代码块，然后当路由被访问的时候才加载对应组件，这样按需载入，很方便地实现路由组件的懒加载。</p>
+<p>在这一段配置里面：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>起到懒加载配置作用的就是 <code>component</code> 接收的值 <code>() =&gt; import(&#39;@views/home.vue&#39;)</code> ，其中 <code>@views/home.vue</code> 就是路由的组件。</p>
+<p>在命令行运行 <code>npm run build</code> 打包构建后，会看到控制台输出的打包结果：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">❯ npm run build</span><br><span class="line"></span><br><span class="line">&gt; hello-vue3@0.0.0 build</span><br><span class="line">&gt; vue-tsc --noEmit &amp;&amp; vite build</span><br><span class="line"></span><br><span class="line">vite v2.9.15 building <span class="keyword">for</span> production...</span><br><span class="line">✓ 42 modules transformed.</span><br><span class="line">dist/index.html                       0.42 KiB</span><br><span class="line">dist/assets/home.03ad1823.js          0.65 KiB / gzip: 0.42 KiB</span><br><span class="line">dist/assets/HelloWorld.1322d484.js    1.88 KiB / gzip: 0.96 KiB</span><br><span class="line">dist/assets/about.c2af6d65.js         0.64 KiB / gzip: 0.41 KiB</span><br><span class="line">dist/assets/login.e9d1d9f9.js         0.65 KiB / gzip: 0.42 KiB</span><br><span class="line">dist/assets/index.60726771.css        0.47 KiB / gzip: 0.29 KiB</span><br><span class="line">dist/assets/login.bef803dc.css        0.12 KiB / gzip: 0.10 KiB</span><br><span class="line">dist/assets/HelloWorld.b2638077.css   0.38 KiB / gzip: 0.19 KiB</span><br><span class="line">dist/assets/home.ea56cd55.css         0.12 KiB / gzip: 0.10 KiB</span><br><span class="line">dist/assets/about.a0917080.css        0.12 KiB / gzip: 0.10 KiB</span><br><span class="line">dist/assets/index.19d6fb3b.js         79.94 KiB / gzip: 31.71 KiB</span><br></pre></td></tr></table></figure>
+
+<p>可以看到路由文件都按照 views 目录下的路由组件和 components 目录下的组件命名，输出了对应的 JS 文件和 CSS 文件，项目部署后， Vue 只会根据当前路由加载需要的文件，其他文件只做预加载，对于大型项目的访问体验非常友好。</p>
+<p>而如果不使用路由懒加载，打包出来的文件是这样的：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">❯ npm run build</span><br><span class="line"></span><br><span class="line">&gt; hello-vue3@0.0.0 build</span><br><span class="line">&gt; vue-tsc --noEmit &amp;&amp; vite build</span><br><span class="line"></span><br><span class="line">vite v2.9.15 building <span class="keyword">for</span> production...</span><br><span class="line">✓ 41 modules transformed.</span><br><span class="line">dist/index.html                  0.42 KiB</span><br><span class="line">dist/assets/index.67b1ee4f.css   1.22 KiB / gzip: 0.49 KiB</span><br><span class="line">dist/assets/index.f758ee53.js    78.85 KiB / gzip: 31.05 KiB</span><br></pre></td></tr></table></figure>
+
+<p>可以看到所有的组件都被打包成了一个很大的 JS 文件和 CSS 文件，没有进行代码分割，对大型项目来说，这种方式打包出来的文件可能会有好几兆，首屏加载的速度可想而知。</p>
+<h2 id="路由的渲染"><a href="#路由的渲染" class="headerlink" title="路由的渲染"></a>路由的渲染</h2><p>所有路由组件，要在访问后进行渲染，都必须在父级组件里带有 <code>&lt;router-view /&gt;</code> 标签。</p>
+<p><code>&lt;router-view /&gt;</code> 在哪里，路由组件的代码就渲染在哪个节点上，一级路由的父级组件，就是 src&#x2F;App.vue 这个根组件。</p>
+<p>其中最基础的配置就是 <code>&lt;template /&gt;</code> 里面直接就是写一个 <code>&lt;router-view /&gt;</code> ，整个页面就是路由组件。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;router-view /&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果站点带有全局公共组件，比如有全站统一的页头、页脚，只有中间区域才是路由，那么可以这样配置：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;!-- 全局页头 --&gt;</span><br><span class="line">  &lt;Header /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 路由 --&gt;</span><br><span class="line">  &lt;router-view /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 全局页脚 --&gt;</span><br><span class="line">  &lt;Footer /&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>如果有一部分路由带公共组件，一部分没有，比如大部分页面都需要有侧边栏，但登录页、注册页不需要，就可以这么处理：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;!-- 登录 --&gt;</span><br><span class="line">  &lt;Login v-if=&quot;route.name === &#x27;login&#x27;&quot; /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 注册 --&gt;</span><br><span class="line">  &lt;Register v-else-if=&quot;route.name === &#x27;register&#x27;&quot; /&gt;</span><br><span class="line"></span><br><span class="line">  &lt;!-- 带有侧边栏的其他路由 --&gt;</span><br><span class="line">  &lt;div v-else&gt;</span><br><span class="line">    &lt;!-- 固定在左侧的侧边栏 --&gt;</span><br><span class="line">    &lt;Sidebar /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 路由 --&gt;</span><br><span class="line">    &lt;router-view /&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>也可以通过路由元信息来管理这些规则。</p>
+<h2 id="使用-route-获取路由信息"><a href="#使用-route-获取路由信息" class="headerlink" title="使用 route 获取路由信息"></a>使用 route 获取路由信息</h2><p>和 Vue 2 可以直接在组件里使用 <code>this.$route</code> 来获取当前路由信息不同，在 Vue 3 的组件里，Vue 实例既没有了 <code>this</code>，也没有了 <code>$route</code>。</p>
+<p>要牢记一个事情就是，Vue 3 用啥都要导入，所以获取当前路由信息的正确用法是先导入路由 API ：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useRoute &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>再在 <code>setup</code> 里定义一个变量来获取当前路由：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> route = <span class="title function_">useRoute</span>()</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以通过定义好的变量 <code>route</code> 去获取当前路由信息了。</p>
+<p>当然，如果要在 <code>&lt;template /&gt;</code> 里使用路由，记得把 <code>route</code> 在 <code>setup</code> 里 return 出去。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取路由名称</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(route.<span class="property">name</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取路由参数</span></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(route.<span class="property">params</span>.<span class="property">id</span>)</span><br></pre></td></tr></table></figure>
+
+<p>Vue 3 的 <code>route</code> 和 Vue 2 的用法基本一致，日常使用应该很快能上手。</p>
+<blockquote>
+<p>WARNING </p>
+<p>但是 Vue 3 的新路由也有一些小变化，有一些属性被移除了，比如之前获取父级路由信息常用的 <code>parent</code> 属性，现在已经没有了，可以在 Vue Router 官网的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://router.vuejs.org/zh/guide/migration/">从 Vue2 迁移</a> 一章查看所有破坏性变化。</p>
+</blockquote>
+<p>类似被移除的 <code>parent</code> ，如果要获取父级路由信息（比如在做面包屑功能的时候），可以改成下面这样，手动指定倒数第二个为父级信息：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取路由记录</span></span><br><span class="line"><span class="keyword">const</span> matched = route.<span class="property">matched</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取该记录的路由个数</span></span><br><span class="line"><span class="keyword">const</span> max = matched.<span class="property">length</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 获取倒数第二个路由（也就是当前路由的父级路由）</span></span><br><span class="line"><span class="keyword">const</span> parentRoute = matched[max - <span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+
+<p>如果有配置父级路由，那么 <code>parentRoute</code> 就是父级路由信息，否则会返回 <code>undefined</code> 。</p>
+<h2 id="使用-router-操作路由"><a href="#使用-router-操作路由" class="headerlink" title="使用 router 操作路由"></a>使用 router 操作路由</h2><p>和 <code>route</code> 一样，在 Vue 3 也不能再使用 <code>this.$router</code> ，也必须通过导入路由 API 来使用：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; useRouter &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>和 <code>useRoute</code> 一样， <code>useRouter</code> 也是一个函数，需要在 <code>setup</code> 里定义一个变量来获取路由信息。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> router = <span class="title function_">useRouter</span>()</span><br></pre></td></tr></table></figure>
+
+<p>接下来就可以通过定义好的变量 <code>router</code> 去操作路由了：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 跳转首页</span></span><br><span class="line">router.<span class="title function_">push</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 返回上一页</span></span><br><span class="line">router.<span class="title function_">back</span>()</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用-router-link-标签跳转"><a href="#使用-router-link-标签跳转" class="headerlink" title="使用 router-link 标签跳转"></a>使用 router-link 标签跳转</h2><p><code>router-link</code> 是一个全局组件，可直接在 <code>&lt;template /&gt;</code> 里直接使用，无需导入，基础的用法在 Vue 2 和 Vue 3 里是一样。</p>
+<p>默认会被转换为一个 <code>a</code> 标签，对比写死的 <code>&lt;a href=&quot;...&quot;&gt;</code> ，使用 <code>router-link</code> 会更加灵活。</p>
+<h3 id="基础跳转"><a href="#基础跳转" class="headerlink" title="基础跳转"></a>基础跳转</h3><p>最基础的用法就是把它当成一个 <code>target=&quot;_self&quot;</code> 的 <code>a</code> 标签使用，但无需重新刷新页面，因为是路由跳转，它的体验和使用 <code>router</code> 去进行路由导航的效果完全一样。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;router-link to=&quot;/home&quot;&gt;首页&lt;/router-link&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>等价于 <code>router</code> 的 <code>push</code>：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">push</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>可以写个 <code>&lt;div /&gt;</code> 标签绑定 Click 事件达到 <code>router-link</code> 的效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;div</span><br><span class="line">    class=&quot;link&quot;</span><br><span class="line">    @click=&quot;</span><br><span class="line">      router.push(&#123;</span><br><span class="line">        name: &#x27;home&#x27;,</span><br><span class="line">      &#125;)</span><br><span class="line">    &quot;</span><br><span class="line">  &gt;</span><br><span class="line">    &lt;span&gt;首页&lt;/span&gt;</span><br><span class="line">  &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>了解这种使用对比，对学习下文其他跳转方式会有帮助。</p>
+<h3 id="带参数的跳转"><a href="#带参数的跳转" class="headerlink" title="带参数的跳转"></a>带参数的跳转</h3><p>使用 <code>router</code> 的时候，可以轻松地带上参数去那些有 ID 的内容页、用户资料页、栏目列表页等等。</p>
+<p>比如要访问一篇文章 <code>https://example.com/article/123</code> ，用 <code>push</code> 的写法是：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">push</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;article&#x27;</span>,</span><br><span class="line">  <span class="attr">params</span>: &#123;</span><br><span class="line">    <span class="attr">id</span>: <span class="number">123</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>同理，从基础跳转的写法，很容易就能猜到在 <code>router-link</code> 里应该怎么写：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;router-link</span><br><span class="line">    class=&quot;link&quot;</span><br><span class="line">    :to=&quot;&#123;</span><br><span class="line">      name: &#x27;article&#x27;,</span><br><span class="line">      params: &#123;</span><br><span class="line">        id: 123,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;&quot;</span><br><span class="line">  &gt;</span><br><span class="line">    这是文章的标题</span><br><span class="line">  &lt;/router-link&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="不生成-a-标签"><a href="#不生成-a-标签" class="headerlink" title="不生成 a 标签"></a>不生成 a 标签</h3><p><code>router-link</code> 默认被转换为一个 <code>a</code> 标签，但根据业务场景，也可以把它指定为生成其他标签，比如 <code>span</code> 、 <code>div</code> 、 <code>li</code> 等等，这些标签因为不具备 <code>href</code> 属性，所以在跳转时都是通过 Click 事件去执行。</p>
+<p>在 Vue 2 ，指定为其他标签只需要一个 <code>tag</code> 属性即可：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;router-link tag=&quot;span&quot; to=&quot;/home&quot;&gt;首页&lt;/router-link&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>但在 Vue 3 ，<code>tag</code> 属性已被移除，需要通过 <code>custom</code> 和 <code>v-slot</code> 的配合将其渲染为其他标签。</p>
+<p>比如要渲染为一个带有路由导航功能的其他标签：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">  &lt;router-link to=&quot;/home&quot; custom v-slot=&quot;&#123; navigate &#125;&quot;&gt;</span><br><span class="line">    &lt;span class=&quot;link&quot; @click=&quot;navigate&quot;&gt; 首页 &lt;/span&gt;</span><br><span class="line">  &lt;/router-link&gt;</span><br><span class="line">&lt;/template&gt;</span><br></pre></td></tr></table></figure>
+
+<p>渲染后就是一个普通的 <code>&lt;span /&gt;</code> 标签，当该标签被点击的时候，会通过路由的导航跳转到指定的路由页：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 渲染后的标签 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">span</span> <span class="attr">class</span>=<span class="string">&quot;link&quot;</span>&gt;</span>首页<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>关于这两个属性的参数说明如下：</p>
+<ol>
+<li><code>custom</code> ，一个布尔值，用于控制是否需要渲染为 <code>a</code> 标签，当不包含 <code>custom</code> 或者把 <code>custom</code> 设置为 <code>false</code> 时，则依然使用 <code>a</code> 标签渲染。</li>
+<li><code>v-slot</code> 是一个对象，用来决定标签的行为，它包含了：</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th align="left">字段</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">href</td>
+<td align="left">解析后的 URL，将会作为一个 <code>a</code> 元素的 <code>href</code> 属性</td>
+</tr>
+<tr>
+<td align="left">route</td>
+<td align="left">解析后的规范化的地址</td>
+</tr>
+<tr>
+<td align="left">navigate</td>
+<td align="left">触发导航的函数，会在必要时自动阻止事件，和 <code>router-link</code> 同理</td>
+</tr>
+<tr>
+<td align="left">isActive</td>
+<td align="left">如果需要应用激活的 <code>class</code> 则为 <code>true</code>，允许应用一个任意的 <code>class</code></td>
+</tr>
+<tr>
+<td align="left">isExactActive</td>
+<td align="left">如果需要应用精确激活的 <code>class</code> 则为 <code>true</code>，允许应用一个任意的 <code>class</code></td>
+</tr>
+</tbody></table>
+<p>一般来说，<code>v-slot</code> 必备的只有 <code>navigate</code> ，用来绑定元素的点击事件，否则点击元素后不会有任何反应，其他的可以根据实际需求来添加。</p>
+<blockquote>
+<p>TIP 要渲染为非 <code>a</code> 标签，切记两个点：</p>
+<ol>
+<li><code>router-link</code> 必须带上 <code>custom</code> 和 <code>v-slot</code> 属性</li>
+<li>最终要渲染的标签，写在 <code>router-link</code> 里，包括对应的 <code>className</code> 和点击事件</li>
+</ol>
+</blockquote>
+<h2 id="在独立-TS-JS-文件里使用路由"><a href="#在独立-TS-JS-文件里使用路由" class="headerlink" title="在独立 TS&#x2F;JS 文件里使用路由"></a>在独立 TS&#x2F;JS 文件里使用路由</h2><p>除了可以在 <code>.vue</code> 文件里使用路由之外，也可以在单独的 <code>.ts</code>、<code>.js</code> 里使用。</p>
+<p>比如要做一个带有用户系统的站点，登录的相关代码除了在 <code>login.vue</code> 里运用外，在注册页面 <code>register.vue</code>，用户注册成功还要帮用户执行一次自动登录。</p>
+<p>登录完成还要记录用户的登录信息、 Token 、过期时间等等，有不少数据要做处理，以及需要帮助用户自动切去登录前的页面等行为，这是两个不同的组件，如果写两次几乎一样的代码，会大大提高维护成本。</p>
+<p>这种情况下就可以通过抽离核心代码，封装成一个 <code>login.ts</code> 文件，在这个独立的 <code>ts</code> 文件里去操作路由。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 导入路由</span></span><br><span class="line"><span class="keyword">import</span> router <span class="keyword">from</span> <span class="string">&#x27;@/router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 执行路由跳转</span></span><br><span class="line">router.<span class="title function_">push</span>(&#123;</span><br><span class="line">  <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="路由元信息配置"><a href="#路由元信息配置" class="headerlink" title="路由元信息配置"></a>路由元信息配置</h2><p>有时候项目需要一些个性化配置，比如：</p>
+<ol>
+<li>给予每个路由独立的标题；</li>
+<li>管理后台的路由，部分页面需要限制一些访问权限；</li>
+<li>通过路由来自动生成侧边栏、面包屑；</li>
+<li>部分路由的生命周期需要做缓存（ Keep Alive ）;</li>
+<li>其他更多业务场景…</li>
+</ol>
+<p>无需维护很多套配置，在定义路由树的时候可以配置 <code>meta</code> 字段，比如下面就是包含了多种元信息的一个登录路由：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/login&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;login&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/login.vue&#x27;</span>),</span><br><span class="line">    <span class="attr">meta</span>: &#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;登录&#x27;</span>,</span><br><span class="line">      <span class="attr">isDisableBreadcrumbLink</span>: <span class="literal">true</span>,</span><br><span class="line">      <span class="attr">isShowBreadcrumb</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">addToSidebar</span>: <span class="literal">false</span>,</span><br><span class="line">      <span class="attr">sidebarIcon</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">      <span class="attr">sidebarIconAlt</span>: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">      <span class="attr">isNoLogin</span>: <span class="literal">true</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>这个是笔者曾经在做后台项目时用过的一些配置，主要的功能是：</p>
+<table>
+<thead>
+<tr>
+<th align="left">字段</th>
+<th align="left">类型</th>
+<th align="left">含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">title</td>
+<td align="left">string</td>
+<td align="left">用于在渲染的时候配置浏览器标题；</td>
+</tr>
+<tr>
+<td align="left">isDisableBreadcrumbLink</td>
+<td align="left">boolean</td>
+<td align="left">是否禁用面包屑链接（对一些没有内容的路由可以屏蔽访问）；</td>
+</tr>
+<tr>
+<td align="left">isShowBreadcrumb</td>
+<td align="left">boolean</td>
+<td align="left">是否显示面包屑（此处的登录页不需要面包屑）；</td>
+</tr>
+<tr>
+<td align="left">addToSidebar</td>
+<td align="left">boolean</td>
+<td align="left">是否加入侧边栏（此处的登录页不需要加入侧边栏）；</td>
+</tr>
+<tr>
+<td align="left">sidebarIcon</td>
+<td align="left">string</td>
+<td align="left">配置侧边栏的图标 className（默认）；</td>
+</tr>
+<tr>
+<td align="left">sidebarIconAlt</td>
+<td align="left">string</td>
+<td align="left">配置侧边栏的图标 className（展开状态）；</td>
+</tr>
+<tr>
+<td align="left">isNoLogin</td>
+<td align="left">boolean</td>
+<td align="left">是否免登录（后台默认强制登录，设置为 <code>true</code> 则可以免登录访问，此处的登录页不需要校验）；</td>
+</tr>
+</tbody></table>
+<p>类似的，如果有其他需求，比如要增加对不同用户组的权限控制（比如有管理员、普通用户分组，部分页面只有管理员允许访问），都可以通过配置 Meta 里的字段，再配合 <strong>路由拦截</strong> 一起使用。</p>
+<h2 id="路由重定向"><a href="#路由重定向" class="headerlink" title="路由重定向"></a>路由重定向</h2><p>对一些已下线的页面，直接访问原来的地址会导致 404 ，为了避免这种情况出现，通常会配置重定向将其指向一个新的页面，或者跳转回首页。</p>
+<h3 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h3><p>路由重定向是使用一个 <code>redirect</code> 字段进行配置到对应的路由里面去实现跳转：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">    <span class="attr">meta</span>: &#123;</span><br><span class="line">      <span class="attr">title</span>: <span class="string">&#x27;Home&#x27;</span>,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 访问这个路由会被重定向到首页</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/error&#x27;</span>,</span><br><span class="line">    <span class="attr">redirect</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>通常来说，配置了 <code>redirect</code> 的路由，只需要指定 2 个字段即可，1 个是 <code>path</code> 该路由本身的路径，1 个是 <code>redirect</code> 目标路由的路径，其他字段可以忽略。</p>
+<p><code>redirect</code> 字段可以接收三种类型的值：</p>
+<table>
+<thead>
+<tr>
+<th align="left">类型</th>
+<th align="left">填写的值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">string</td>
+<td align="left">另外一个路由的 <code>path</code></td>
+</tr>
+<tr>
+<td align="left">route</td>
+<td align="left">另外一个路由（类似 <code>router.push</code>）</td>
+</tr>
+<tr>
+<td align="left">function</td>
+<td align="left">可以判断不同情况的重定向目标，最终 <code>return</code> 一个 <code>path</code> 或者 <code>route</code></td>
+</tr>
+</tbody></table>
+<h3 id="业务场景"><a href="#业务场景" class="headerlink" title="业务场景"></a>业务场景</h3><p>路由重定向可以避免用户访问到一些无效路由页面：</p>
+<ol>
+<li>比如项目上线了一段时间后，有个路由需要改名，或者调整路径层级，可以把旧路由重定向到新的，避免原来的用户从收藏夹等地方进来后找不到</li>
+<li>一些容易打错的地址，比如通常个人资料页都是用 <code>/profile</code>，但是业务网站是使用 <code>/account</code>，那也可以把 <code>/profile</code> 重定向到 <code>/account</code> 去</li>
+<li>对于一些有会员体系的站点，可以根据用户权限进行重定向，分别指向他们具备访问权限的页面</li>
+<li>官网首页在 PC 端、移动端、游戏内嵌横屏版分别有 3 套页面，但希望能通过主域名来识别不同设备，帮助用户自动切换访问</li>
+</ol>
+<p>了解了业务场景，接下来就能比较清晰地了解应该如何配置重定向了。</p>
+<h3 id="配置为-path"><a href="#配置为-path" class="headerlink" title="配置为 path"></a>配置为 path</h3><p>最常用的场景，恐怕就是首页的指向了，比如首页地址是 <code>https://example.com/home</code>，但是想让主域名 <code>https://example.com/</code> 也能跳转到 <code>/home</code>，可以这么配置：</p>
+<p>这是最简单的配置方式，把目标路由的 <code>path</code> 配置进来就可以了：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// 重定向到 `/home`</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">redirect</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 真正的首页</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>但缺点也显而易见，只能针对那些不带参数的路由。</p>
+<h3 id="配置为-route"><a href="#配置为-route" class="headerlink" title="配置为 route"></a>配置为 route</h3><p>如果想要重定向后的路由地址带上一些参数，可以配置为 <code>route</code>：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// 重定向到 `/home` ，并带上一个 `query` 参数</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">redirect</span>: &#123;</span><br><span class="line">      <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">      <span class="attr">query</span>: &#123;</span><br><span class="line">        <span class="attr">from</span>: <span class="string">&#x27;redirect&#x27;</span>,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// 真正的首页</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>最终访问的地址就是 <code>https://example.com/home?from=redirect</code>， 像这样带有来路参数的，就可以在 “百度统计” 或者 “ CNZZ 统计” 之类的统计站点查看来路的流量。</p>
+<h3 id="配置为-function"><a href="#配置为-function" class="headerlink" title="配置为 function"></a>配置为 function</h3><p>结合业务场景来解释是最直观的，比如的网站有 3 个用户组，一个是管理员，一个是普通用户，还有一个是游客（未登录），他们的网站首页是不一样的：</p>
+<table>
+<thead>
+<tr>
+<th align="center">用户组</th>
+<th align="left">访问首页时</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">管理员</td>
+<td align="left">具备各种数据可视化图表、最新的网站数据、一些最新的用户消息等等</td>
+</tr>
+<tr>
+<td align="center">普通用户</td>
+<td align="left">只有一些常用模块的入口链接</td>
+</tr>
+<tr>
+<td align="center">未登录用户</td>
+<td align="left">直接跳转到登录页面</td>
+</tr>
+</tbody></table>
+<p>产品需要在访问网站主域名的时候，识别用户身份跳转不同的首页，那么就可以这样配置路由重定向：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// 访问主域名时，根据用户的登录信息，重定向到不同的页面</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/&#x27;</span>,</span><br><span class="line">    <span class="attr">redirect</span>: <span class="function">() =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// `loginInfo` 是当前用户的登录信息</span></span><br><span class="line">      <span class="comment">// 可以从 `localStorage` 或者 `Pinia` 读取</span></span><br><span class="line">      <span class="keyword">const</span> &#123; groupId &#125; = loginInfo</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 根据组别 ID 进行跳转</span></span><br><span class="line">      <span class="keyword">switch</span> (groupId) &#123;</span><br><span class="line">        <span class="comment">// 管理员跳去仪表盘</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">          <span class="keyword">return</span> <span class="string">&#x27;/dashboard&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 普通用户跳去首页</span></span><br><span class="line">        <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">          <span class="keyword">return</span> <span class="string">&#x27;/home&#x27;</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 其他都认为未登录，跳去登录页</span></span><br><span class="line">        <span class="attr">default</span>:</span><br><span class="line">          <span class="keyword">return</span> <span class="string">&#x27;/login&#x27;</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="路由别名配置"><a href="#路由别名配置" class="headerlink" title="路由别名配置"></a>路由别名配置</h2><p>根据的业务需求，也可以为路由指定一个别名，与上面的 路由重定向功能相似，但又有不同：</p>
+<p>配置了路由重定向，当用户访问 <code>/a</code> 时，URL 将会被替换成 <code>/b</code>，然后匹配的实际路由是 <code>/b</code> 。</p>
+<p>配置了路由别名，<code>/a</code> 的别名是 <code>/b</code>，当用户访问 <code>/b</code> 时，URL 会保持为 <code>/b</code>，但是路由匹配则为 <code>/a</code>，就像用户访问 <code>/a</code> 一样。</p>
+<p><strong>配置方法</strong></p>
+<p>添加一个 <code>alias</code> 字段即可轻松实现：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">alias</span>: <span class="string">&#x27;/index&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>如上的配置，即可实现可以通过 <code>/home</code> 访问首页，也可以通过 <code>/index</code> 访问首页。</p>
+<h2 id="404-路由页面配置"><a href="#404-路由页面配置" class="headerlink" title="404 路由页面配置"></a>404 路由页面配置</h2><p>可以配置一个 404 路由来代替站内的 404 页面。</p>
+<p><strong>配置方法</strong></p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/:pathMatch(.*)*&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;404&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/404.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>这样配置之后，只要访问到不存在的路由，就会显示为这个 404 模板。</p>
+<blockquote>
+<p>WARNING 新版的路由不再支持直接配置通配符 <code>*</code> ，而是必须使用带有自定义正则表达式的参数进行定义，详见官网 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://router.vuejs.org/zh/guide/migration/#%E5%88%A0%E9%99%A4%E4%BA%86-%EF%BC%88%E6%98%9F%E6%A0%87%E6%88%96%E9%80%9A%E9%85%8D%E7%AC%A6%EF%BC%89%E8%B7%AF%E7%94%B1">删除了 *（星标或通配符）路由</a> 的说明。</p>
+</blockquote>
+<h2 id="导航守卫"><a href="#导航守卫" class="headerlink" title="导航守卫"></a>导航守卫</h2><p>和 Vue 2 时使用的路由一样， Vue 3 也支持导航守卫，并且用法基本上是一样的。</p>
+<p>导航守卫这个词对初次接触的开发者来说应该会有点云里雾里，其实就是几个专属的钩子函数，先来看一下使用场景，大致理解一下基本概念和作用。</p>
+<h3 id="钩子的应用场景"><a href="#钩子的应用场景" class="headerlink" title="钩子的应用场景"></a>钩子的应用场景</h3><p>对于导航守卫还不熟悉的开发者，可以从一些实际使用场景来加强印象，比如：</p>
+<ol>
+<li>前面说的，在渲染的时候配置浏览器标题，由于 Vue 项目只有一个 HTML 文件，所以默认只有一个标题，但想在访问 <code>/home</code> 的时候标题显示为 “首页”，访问 <code>/about</code> 的时候标题显示为 “关于” 。</li>
+<li>部分页面需要管理员才能访问，普通用户不允许进入到该路由页面。</li>
+<li>Vue 单页面项目，传统的 CNZZ &#x2F; 百度统计等网站统计代码只会在页面加载的时候统计一次，但需要每次切换路由都上报一次 PV 数据。</li>
+</ol>
+<p>这样的场景还有很多，导航守卫支持全局使用，也可以在 <code>.vue</code> 文件里单独使用，接下来看看具体的用法。</p>
+<h3 id="路由里的全局钩子"><a href="#路由里的全局钩子" class="headerlink" title="路由里的全局钩子"></a>路由里的全局钩子</h3><p>顾名思义，是在创建 <code>router</code> 的时候进行全局的配置，也就是说，只要配置了钩子，那么所有的路由在被访问到的时候，都会触发这些钩子函数。</p>
+<table>
+<thead>
+<tr>
+<th align="left">可用钩子</th>
+<th align="left">含义</th>
+<th align="left">触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">beforeEach</td>
+<td align="left">全局前置守卫</td>
+<td align="left">在路由跳转前触发</td>
+</tr>
+<tr>
+<td align="left">beforeResolve</td>
+<td align="left">全局解析守卫</td>
+<td align="left">在导航被确认前，同时在组件内守卫和异步路由组件被解析后</td>
+</tr>
+<tr>
+<td align="left">afterEach</td>
+<td align="left">全局后置守卫</td>
+<td align="left">在路由跳转完成后触发</td>
+</tr>
+</tbody></table>
+<p>全局配置非常简单，在 src&#x2F;router&#x2F;index.ts 里，在创建路由之后、在导出去之前使用：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; createRouter &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建路由</span></span><br><span class="line"><span class="keyword">const</span> router = <span class="title function_">createRouter</span>(&#123; ... &#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在这里调用导航守卫的钩子函数</span></span><br><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 导出去</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> router</span><br></pre></td></tr></table></figure>
+
+<h4 id="beforeEach"><a href="#beforeEach" class="headerlink" title="beforeEach"></a>beforeEach</h4><p>全局前置守卫，这是导航守卫里面运用的最多的一个钩子函数，通常将其称为 “路由拦截”。</p>
+<p>拦截这个词，顾名思义，就是在 XXX 目的达到之前，把它拦下来，所以路由的目的就是渲染指定的组件，路由拦截就是在组件被渲染之前，做一些拦截操作。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>TIP</p>
+<p>和 Vue 2 不同，Vue 2 的 <code>beforeEach</code> 是默认三个参数，第三个参数是 <code>next</code>，用来操作路由接下来的跳转。</p>
+<p>但在新版本路由里，已经通过 RFC 将其删除，虽然目前还是作为可选参数使用，但以后不确定是否会移除，不建议继续使用，<a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/vuejs/rfcs/blob/master/active-rfcs/0037-router-return-guards.md#motivation">点击查看原因</a>。</p>
+</blockquote>
+<p>新版本路由可以通过 <code>return</code> 来代替 <code>next</code>。</p>
+<p><strong>用法</strong></p>
+<p>比如在进入路由之前，根据 Meta 路由元信息的配置，设定路由的网页标题：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; title &#125; = to.<span class="property">meta</span></span><br><span class="line">  <span class="variable language_">document</span>.<span class="property">title</span> = title || <span class="string">&#x27;默认标题&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>或者判断是否需要登录：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; isNoLogin &#125; = to.<span class="property">meta</span></span><br><span class="line">  <span class="keyword">if</span> (!isNoLogin) <span class="keyword">return</span> <span class="string">&#x27;/login&#x27;</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>或者针对一些需要 ID 参数，但参数丢失的路由做拦截，比如：很多网站的文章详情页都是类似 <code>https://example.com/article/123</code> 这样格式的地址，是需要带有文章 ID 作为 URL 的一部分，如果只访问 <code>https://example.com/article</code> 则需要拦截掉。</p>
+<p>这里是关于 <code>article</code> 路由的配置，是有要求 Params 要带上 ID 参数：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  <span class="comment">// 这是一个配置了 `params` ，访问的时候必须带 `id` 的路由</span></span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/article/:id&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;article&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/article.vue&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>当路由的 <code>params</code> 丢失的时候，路由记录 <code>matched</code> 是一个空数组，针对这样的情况，就可以配置一个拦截，丢失参数时返回首页：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">if</span> (to.<span class="property">name</span> === <span class="string">&#x27;article&#x27;</span> &amp;&amp; to.<span class="property">matched</span>.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;/&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="beforeResolve"><a href="#beforeResolve" class="headerlink" title="beforeResolve"></a>beforeResolve</h4><p>全局解析守卫，它会在每次导航时触发，但是在所有组件内守卫和异步路由组件被解析之后，将在确认导航之前被调用。</p>
+<p>这个钩子用得比较少，因为它和 <code>beforeEach</code> 非常相似，相信大部分开发者都会用 <code>beforeEach</code> 来代替它。</p>
+<p>那么它有什么用？</p>
+<p>它通常会用在一些申请权限的环节，比如一些 H5 页面需要申请系统相机权限、一些微信活动需要申请微信的登录信息授权，获得权限之后才允许获取接口数据和给用户更多的操作，使用 <code>beforeEach</code> 时机太早，使用 <code>afterEach</code> 又有点晚，那么这个钩子的时机就刚刚好。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<p><strong>用法</strong></p>
+<p>用以前 Vue Router 官网的申请照相机权限的例子来举例：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// https://router.vuejs.org/zh/guide/advanced/navigation-guards.html</span></span><br><span class="line"></span><br><span class="line">router.<span class="title function_">beforeResolve</span>(<span class="title function_">async</span> (to) =&gt; &#123;</span><br><span class="line">  <span class="comment">// 如果路由配置了必须调用相机权限</span></span><br><span class="line">  <span class="keyword">if</span> (to.<span class="property">meta</span>.<span class="property">requiresCamera</span>) &#123;</span><br><span class="line">    <span class="comment">// 正常流程，咨询是否允许使用照相机</span></span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">      <span class="keyword">await</span> <span class="title function_">askForCameraPermission</span>()</span><br><span class="line">    &#125; <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">      <span class="comment">// 容错</span></span><br><span class="line">      <span class="keyword">if</span> (error <span class="keyword">instanceof</span> <span class="title class_">NotAllowedError</span>) &#123;</span><br><span class="line">        <span class="comment">// ... 处理错误，然后取消导航</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 如果出现意外，则取消导航并抛出错误</span></span><br><span class="line">        <span class="keyword">throw</span> error</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="afterEach"><a href="#afterEach" class="headerlink" title="afterEach"></a>afterEach</h4><p>全局后置守卫，这也是导航守卫里面用得比较多的一个钩子函数。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<p><strong>用法</strong></p>
+<p>在刚刚的钩子的应用场景里面有个例子，就是每次切换路由都上报一次 PV 数据，类似这种每个路由都要执行一次，但又不必在渲染前操作的，都可以放到后置钩子里去执行。</p>
+<p>笔者之前写过两个数据统计的插件：<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.npmjs.com/package/vue-cnzz-analytics">Vue 版 CNZZ 统计</a>、<a target="_blank" rel="noopener external nofollow noreferrer" href="https://www.npmjs.com/package/vue-baidu-analytics">Vue 版百度统计</a>，就是用了这个后置钩子来实现自动上报数据。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">router.<span class="title function_">afterEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="comment">// 上报流量的操作</span></span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="在组件内使用全局钩子"><a href="#在组件内使用全局钩子" class="headerlink" title="在组件内使用全局钩子"></a>在组件内使用全局钩子</h3><p>上面所讲的都是全局钩子，虽然一般都是在路由文件里使用，但如果有需要，也可以在 <code>.vue</code> 文件里操作。</p>
+<blockquote>
+<p>TIP</p>
+<p>和路由的渲染不同，渲染时父级路由组件必须带有 <code>&lt;router-view /&gt;</code> 标签才能渲染，但是使用全局钩子不受此限制。</p>
+<p>建议只在一些入口文件里使用，比如 <code>App.vue</code> ，或者是一些全局的 <code>Header.vue</code>、<code>Footer.vue</code> 里使用，方便后续维护。</p>
+</blockquote>
+<p>在 <code>setup</code> 里，定义一个 <code>router</code> 变量获取路由之后，就可以操作了：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useRouter &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 定义路由</span></span><br><span class="line">    <span class="keyword">const</span> router = <span class="title function_">useRouter</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用全局钩子</span></span><br><span class="line">    router.<span class="title function_">beforeEach</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="路由里的独享钩子"><a href="#路由里的独享钩子" class="headerlink" title="路由里的独享钩子"></a>路由里的独享钩子</h3><p>介绍完全局钩子，如果只是有个别路由要做处理，可以使用路由独享的守卫，用来针对个别路由定制一些特殊功能，可以减少在全局钩子里面写一堆判断。</p>
+<table>
+<thead>
+<tr>
+<th align="left">可用钩子</th>
+<th align="left">含义</th>
+<th align="left">触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">beforeEnter</td>
+<td align="left">路由独享前置守卫</td>
+<td align="left">在路由跳转前触发</td>
+</tr>
+</tbody></table>
+<p>注：路由独享的钩子，必须配置在 <code>routes</code> 的 JSON 树里面，挂在对应的路由下面（与 <code>path</code>、 <code>name</code>、<code>meta</code> 这些字段同级）。</p>
+<h4 id="beforeEnte"><a href="#beforeEnte" class="headerlink" title="beforeEnte"></a>beforeEnte</h4><p>它和全局钩子 <code>beforeEach</code> 的作用相同，都是在进入路由之前触发，触发时机比 <code>beforeResolve</code> 要早。</p>
+<p>顺序：<code>beforeEach</code>（全局） &gt; <code>beforeEnter</code>（独享） &gt; <code>beforeResolve</code>（全局）。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>TIP 和 <code>beforeEach</code> 一样，也取消了 <code>next</code>，可以用 <code>return</code> 来代替。</p>
+</blockquote>
+<p><strong>用法</strong></p>
+<p>比如：整个站点都默认以 “栏目标题” + “全站关键标题” 的格式作为网页的 Title ，例如 “项目经验 - 程沛权” ，但在首页的时候，想做一些不一样的定制。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="attr">routes</span>: <span class="title class_">Array</span>&lt;<span class="title class_">RouteRecordRaw</span>&gt; = [</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="attr">path</span>: <span class="string">&#x27;/home&#x27;</span>,</span><br><span class="line">    <span class="attr">name</span>: <span class="string">&#x27;home&#x27;</span>,</span><br><span class="line">    <span class="attr">component</span>: <span class="function">() =&gt;</span> <span class="keyword">import</span>(<span class="string">&#x27;@views/home.vue&#x27;</span>),</span><br><span class="line">    <span class="comment">// 在这里添加单独的路由守卫</span></span><br><span class="line">    <span class="attr">beforeEnter</span>: <span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="variable language_">document</span>.<span class="property">title</span> = <span class="string">&#x27;程沛权 - 养了三只猫&#x27;</span></span><br><span class="line">    &#125;,</span><br><span class="line">  &#125;,</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<p>就可以通过 <code>beforeEnter</code> 来实现一些个别路由的单独定制。</p>
+<blockquote>
+<p>TIP 需要注意的是，只有从不同的路由切换进来，才会触发该钩子。</p>
+</blockquote>
+<p>针对同一个路由，切换不同的 <code>params</code> 、 <code>query</code> 或者 <code>hash</code> ，都不会重复触发该钩子。</p>
+<p>比如从 <code>https://example.com/article/123</code> 切换到 <code>https://example.com/article/234</code> 是不会触发的。</p>
+<p>其他的用法和 <code>beforeEach</code> 可以说是一样的。</p>
+<h3 id="组件内单独使用"><a href="#组件内单独使用" class="headerlink" title="组件内单独使用"></a>组件内单独使用</h3><p>组件里除了可以使用全局钩子外，还可以使用组件专属的路由钩子。</p>
+<table>
+<thead>
+<tr>
+<th align="left">可用钩子</th>
+<th align="left">含义</th>
+<th align="left">触发时机</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">onBeforeRouteUpdate</td>
+<td align="left">组件内的更新守卫</td>
+<td align="left">在当前路由改变，但是该组件被复用时调用</td>
+</tr>
+<tr>
+<td align="left">onBeforeRouteLeave</td>
+<td align="left">组件内的离开守卫</td>
+<td align="left">导航离开该组件的对应路由时调用</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>TIP</p>
+<p>1、组件内钩子的入参，也都取消了 <code>next</code>，可以用 <code>return</code> 来代替。</p>
+<p>2、和其他 Composition API 一样，需要先 <code>import</code> 再操作。</p>
+</blockquote>
+<p>和旧版路由不同，新版的 Composition API 移除了 <code>beforeRouteEnter</code> 这个钩子。</p>
+<h4 id="onBeforeRouteUpdate"><a href="#onBeforeRouteUpdate" class="headerlink" title="onBeforeRouteUpdate"></a>onBeforeRouteUpdate</h4><p>可以在当前路由改变但该组件被复用时，重新调用里面的一些函数，用来更新模板数据的渲染。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<p><strong>用法</strong></p>
+<p>比如一个内容网站，通常在文章详情页底部会有相关阅读推荐，这个时候就会有一个操作场景：从文章 A 跳转到文章 B。</p>
+<p>比如从 <code>https://example.com/article/111</code> 切去 <code>https://example.com/article/222</code> ，这种情况就属于 “路由改变，但是组件被复用” 的情况了。</p>
+<p>这种情况下，原本放在 <code>onMounted</code> 里执行数据请求的函数就不会被调用，可以借助该钩子来实现渲染新的文章内容。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent, onMounted &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useRoute, onBeforeRouteUpdate &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 其他代码略...</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 查询文章详情</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">queryArticleDetail</span>(<span class="params"><span class="attr">id</span>: <span class="built_in">number</span></span>) &#123;</span><br><span class="line">      <span class="comment">// 请求接口数据</span></span><br><span class="line">      <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">axios</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">`/article/<span class="subst">$&#123;id&#125;</span>`</span>,</span><br><span class="line">      &#125;)</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 组件挂载完成后执行文章内容的请求</span></span><br><span class="line">    <span class="comment">// 注意这里是获取 `route` 的 `params`</span></span><br><span class="line">    <span class="title function_">onMounted</span>(<span class="title function_">async</span> () =&gt; &#123;</span><br><span class="line">      <span class="keyword">const</span> id = <span class="title class_">Number</span>(route.<span class="property">params</span>.<span class="property">id</span>) || <span class="number">0</span></span><br><span class="line">      <span class="keyword">await</span> <span class="title function_">queryArticleDetail</span>(id)</span><br><span class="line">    &#125;)</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 组件被复用时重新请求新的文章内容</span></span><br><span class="line">    <span class="title function_">onBeforeRouteUpdate</span>(<span class="title function_">async</span> (to, <span class="keyword">from</span>) =&gt; &#123;</span><br><span class="line">      <span class="comment">// ID 不变时减少重复请求</span></span><br><span class="line">      <span class="keyword">if</span> (to.<span class="property">params</span>.<span class="property">id</span> === <span class="keyword">from</span>.<span class="property">params</span>.<span class="property">id</span>) <span class="keyword">return</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">// 注意这里是获取 `to` 的 `params`</span></span><br><span class="line">      <span class="keyword">const</span> id = <span class="title class_">Number</span>(to.<span class="property">params</span>.<span class="property">id</span>) || <span class="number">0</span></span><br><span class="line">      <span class="keyword">await</span> <span class="title function_">queryArticleDetail</span>(id)</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="onBeforeRouteLeave"><a href="#onBeforeRouteLeave" class="headerlink" title="onBeforeRouteLeave"></a>onBeforeRouteLeave</h4><p>可以在离开当前路由之前，实现一些离开前的判断拦截。</p>
+<p><strong>参数</strong></p>
+<table>
+<thead>
+<tr>
+<th align="left">参数</th>
+<th align="left">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">to</td>
+<td align="left">即将要进入的路由对象</td>
+</tr>
+<tr>
+<td align="left">from</td>
+<td align="left">当前导航正要离开的路由</td>
+</tr>
+</tbody></table>
+<p><strong>用法</strong></p>
+<p>这个离开守卫通常用来禁止用户在还未保存修改前突然离开，可以通过 <code>return false</code> 来取消用户离开当前路由。</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; onBeforeRouteLeave &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="comment">// 调用离开守卫</span></span><br><span class="line">    <span class="title function_">onBeforeRouteLeave</span>(<span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 弹出一个确认框</span></span><br><span class="line">      <span class="keyword">const</span> confirmText = <span class="string">&#x27;确认要离开吗？您的更改尚未保存！&#x27;</span></span><br><span class="line">      <span class="keyword">const</span> isConfirmLeave = <span class="variable language_">window</span>.<span class="title function_">confirm</span>(confirmText)</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 当用户点取消时，不离开路由</span></span><br><span class="line">      <span class="keyword">if</span> (!isConfirmLeave) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h2 id="路由侦听"><a href="#路由侦听" class="headerlink" title="路由侦听"></a>路由侦听</h2><p>路由的侦听，可以延续以往的 <code>watch</code> 大法，也可以用全新的 <code>watchEffect</code>。</p>
+<h3 id="watch"><a href="#watch" class="headerlink" title="watch"></a>watch</h3><p>在 Vue 2 的时候，侦听路由变化用得最多的就是 <code>watch</code> 了， Vue 3 的 <code>watch</code> API 使用更简单。</p>
+<h4 id="侦听整个路由"><a href="#侦听整个路由" class="headerlink" title="侦听整个路由"></a>侦听整个路由</h4><p>可以跟以前一样，直接侦听整个路由的变化：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent, watch &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useRoute &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> route = <span class="title function_">useRoute</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 侦听整个路由</span></span><br><span class="line">    <span class="title function_">watch</span>(route, <span class="function">(<span class="params">to, <span class="keyword">from</span></span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="comment">// 处理一些事情</span></span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数传入整个路由；第二个参数是个 Callback ，可以获取 <code>to</code> 和 <code>from</code> 来判断路由变化情况。</p>
+<h4 id="侦听路由的某个数据"><a href="#侦听路由的某个数据" class="headerlink" title="侦听路由的某个数据"></a>侦听路由的某个数据</h4><p>如果只想侦听路由的某个数据变化，比如侦听一个 Query ，或者一个 Param ，可以采用这种方式：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent, watch &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useRoute &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> route = <span class="title function_">useRoute</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 侦听路由参数的变化</span></span><br><span class="line">    <span class="title function_">watch</span>(</span><br><span class="line">      <span class="function">() =&gt;</span> route.<span class="property">query</span>.<span class="property">id</span>,</span><br><span class="line">      <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;侦听到 ID 变化&#x27;</span>)</span><br><span class="line">      &#125;</span><br><span class="line">    )</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>第一个参数传入一个 getter 函数， <code>return</code> 要侦听的值；第二个参数是个 Callback ，可以针对参数变化进行一些操作。</p>
+<h3 id="watchEffect"><a href="#watchEffect" class="headerlink" title="watchEffect"></a>watchEffect</h3><p>这是 Vue 3 新出的一个侦听函数，可以简化 <code>watch</code> 的行为。</p>
+<p>比如定义了一个函数，通过路由的参数来获取文章 ID ，然后请求文章内容：</p>
+<figure class="highlight ts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; defineComponent, watchEffect &#125; <span class="keyword">from</span> <span class="string">&#x27;vue&#x27;</span></span><br><span class="line"><span class="keyword">import</span> &#123; useRoute &#125; <span class="keyword">from</span> <span class="string">&#x27;vue-router&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="title function_">defineComponent</span>(&#123;</span><br><span class="line">  <span class="title function_">setup</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> route = <span class="title function_">useRoute</span>()</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从接口查询文章详情</span></span><br><span class="line">    <span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">queryArticleDetail</span>(<span class="params"></span>) &#123;</span><br><span class="line">      <span class="keyword">const</span> id = <span class="title class_">Number</span>(route.<span class="property">params</span>.<span class="property">id</span>) || <span class="number">0</span></span><br><span class="line">      <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;文章 ID 是：&#x27;</span>, id)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> res = <span class="keyword">await</span> <span class="title function_">axios</span>(&#123;</span><br><span class="line">        <span class="attr">url</span>: <span class="string">`/article/<span class="subst">$&#123;id&#125;</span>`</span>,</span><br><span class="line">      &#125;)</span><br><span class="line">      <span class="comment">// ...</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 直接侦听包含路由参数的那个函数</span></span><br><span class="line">    <span class="title function_">watchEffect</span>(queryArticleDetail)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>对比 <code>watch</code> 的使用， <code>watchEffect</code> 在操作上更加简单，把包含要被侦听数据的函数，当成它的入参传进去即可。</p>
+<h2 id="部署问题与服务端配置"><a href="#部署问题与服务端配置" class="headerlink" title="部署问题与服务端配置"></a>部署问题与服务端配置</h2><p>通常使用路由的 Hash 模式，部署后有问题的情况很少，但是如果使用 History 模式，可能会遇到这样那样的问题。</p>
+<h3 id="常见部署问题"><a href="#常见部署问题" class="headerlink" title="常见部署问题"></a>常见部署问题</h3><p>这里整理一些常见部署问题的原因分析和解决方案，可作参考。</p>
+<h4 id="页面刷新就-404"><a href="#页面刷新就-404" class="headerlink" title="页面刷新就 404"></a>页面刷新就 404</h4><p>页面部署到服务端之后，访问首页正常；通过导航上面的链接进行路由跳转，也正常；但是刷新页面就变成 404 了。</p>
+<h5 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h5><p>一般这种情况是路由开启了 History 模式，但是服务端没有配置功能支持。</p>
+<h5 id="解决方案-3"><a href="#解决方案-3" class="headerlink" title="解决方案"></a>解决方案</h5><p>请根据<strong>服务端配置</strong>部分的说明，与的运维同事沟通，让他帮忙修改服务端的配置。</p>
+<h4 id="部分路由白屏"><a href="#部分路由白屏" class="headerlink" title="部分路由白屏"></a>部分路由白屏</h4><p>如果在项目配置文件里，把里面的 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cli.vuejs.org/zh/config/#publicpath">publicPath</a> （使用 Vue CLI ） 或者 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.vitejs.dev/config/#base">base</a> （使用 Vite ） 配置成相对路径 <code>./</code> ，但是路由配置了二级或以上，那么就会出现这个问题。</p>
+<h5 id="问题原因-1"><a href="#问题原因-1" class="headerlink" title="问题原因"></a>问题原因</h5><p>原因是打包后的 JS 、 CSS 等静态资源都是存放在项目根目录下，一级路由的 <code>./</code> 就是根目录，所以访问正常；而二级路由的 <code>./</code> 则不是根目录了，是从当前目录载入的 ，这就导致无法正确载入 JS 文件，从而导致了白屏。</p>
+<p>假设项目域名是 <code>https://example.com</code> ，那么：</p>
+<ul>
+<li><p>一级路由是 <code>https://example.com/home</code></p>
+</li>
+<li><p>二级路由是 <code>https://example.com/foo/bar</code></p>
+</li>
+<li><p>假设打包后的 JS 文件等静态资产存放于 <code>https://example.com/assets/</code> 文件夹下</p>
+<ul>
+<li>访问一级路由时， <code>./</code> 访问到的 JS 文件是 <code>https://example.com/assets/home.js</code> ，所以一级路由可以正常访问到。</li>
+</ul>
+</li>
+<li><p>访问二级路由时， <code>./</code> 访问到的 JS 文件是 <code>https://example.com/foo/assets/bar.js</code> ，但实际上文件是存放在 <code>https://example.com/assets/bar.js</code> ，访问到的 URL 资源不存在，所以白屏了。</p>
+</li>
+</ul>
+<h5 id="解决方案-4"><a href="#解决方案-4" class="headerlink" title="解决方案"></a>解决方案</h5><p>如果的项目开启了 History 模式，并且配置有二级或者二级以上的路由时，不要使用 <code>./</code> 这样的相对路径。</p>
+<p>正确的方式应该是修改 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cli.vuejs.org/zh/config/#publicpath">publicPath</a> （使用 Vue CLI ） 或者 <a target="_blank" rel="noopener external nofollow noreferrer" href="https://cn.vitejs.dev/config/#base">base</a> （使用 Vite ），如果是部署在域名根目录则写 <code>/</code> ，如果是子目录，则按照子目录的格式，将其以 <code>/</code> 开头，以 <code>/</code> 结尾的形式配置（ e.g. <code>/hello-world/</code> ）</p>
+<h3 id="服务端配置方案"><a href="#服务端配置方案" class="headerlink" title="服务端配置方案"></a>服务端配置方案</h3><p>如果使用的是 HTML5 的 History 模式，那么服务端也需要配置对应的支持，否则会出现路由跳转正常，但页面一刷新就 404 的情况。</p>
+<blockquote>
+<p>TIP</p>
+<p>服务端配置后，就不再进入 404 了，需要在项目里手动配置 404 路由页面的路由。</p>
+</blockquote>
+<h4 id="Nginx"><a href="#Nginx" class="headerlink" title="Nginx"></a>Nginx</h4><p>现在大部分公司的服务程序都在使用 Nginx ，可以将以下代码发给运维工程师参考，调整 Nginx 的配置：</p>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">location</span> / &#123;</span><br><span class="line">  <span class="attribute">try_files</span> <span class="variable">$uri</span> <span class="variable">$uri</span>/ /index.html;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="Express"><a href="#Express" class="headerlink" title="Express"></a>Express</h4><p>如果是前端工程师使用 Node.js 作服务端，并且使用了 Express 服务端框架，那么操作将变得更简单：</p>
+<ol>
+<li>仅需要安装一个中间件</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install connect-history-api-fallback</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>在服务启动入口文件里导入该中间件并激活</li>
+</ol>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>)</span><br><span class="line"><span class="keyword">const</span> history = <span class="built_in">require</span>(<span class="string">&#x27;connect-history-api-fallback&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建 Express 实例</span></span><br><span class="line"><span class="keyword">const</span> app = <span class="title function_">express</span>()</span><br><span class="line">app</span><br><span class="line">  <span class="comment">// 启用 History 中间件</span></span><br><span class="line">  .<span class="title function_">use</span>(<span class="title function_">history</span>())</span><br><span class="line">  <span class="comment">// 这里是读取打包后的页面文件目录</span></span><br><span class="line">  .<span class="title function_">use</span>(<span class="string">&#x27;/&#x27;</span>, express.<span class="title function_">static</span>(<span class="title function_">resolve</span>(<span class="string">&#x27;../dist&#x27;</span>)))</span><br></pre></td></tr></table></figure>
+
+<p>更多用法可以看： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/bripkens/connect-history-api-fallback">connect-history-api-fallback</a> 的文档。</p>
+<h4 id="更多方案"><a href="#更多方案" class="headerlink" title="更多方案"></a>更多方案</h4><p>其他的诸如 Apache 、 IIS 、或者原生 Node 等等配置方案， Vue 官方都提供了对应的演示代码，点击查看更多配置方案： <a target="_blank" rel="noopener external nofollow noreferrer" href="https://router.vuejs.org/zh/guide/essentials/history-mode.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E9%85%8D%E7%BD%AE%E7%A4%BA%E4%BE%8B">服务器配置示例</a> 。</p>
+<script>var description="在传统Web前端框架（如Vue、Vite等）中使用路由时，如果遇到页面刷新变为404或部分路由显示为白色的问题，通常是由于以下原因："</script></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a href="https://fulsun.github.io">凉月</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://fulsun.github.io/p/8448ab29">https://fulsun.github.io/p/8448ab29</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="external nofollow noreferrer" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来源 <a href="https://fulsun.github.io" target="_blank">凉月の博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Vue3/">Vue3</a></div><div class="post-share"><div class="social-share" data-image="/medias/featureimages/003.webp" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://unpkg.com/butterfly-extsrc@1.1.4/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/p/e930893f" title="Vue3入门"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Vue3入门</div></div><div class="info-2"><div class="info-item-1">Vue3入门</div></div></div></a><a class="pagination-related" href="/p/28806695" title="Vue3项目实战"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="onerror=null;src='/medias/detail/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">Vue3项目实战</div></div><div class="info-2"><div class="info-item-1">通过这篇文章的学习，可以掌握如何高效地配置Vite项目，简化代码管理，并利用插件工具提升开发效率。每一步都需要实际操作以加深理解，并结合个人项目需求进行应用。</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/p/e930893f" title="Vue3入门"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/010.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-19</div><div class="info-item-2">Vue3入门</div></div><div class="info-2"><div class="info-item-1">Vue3入门</div></div></div></a><a class="pagination-related" href="/p/28806695" title="Vue3项目实战"><img class="cover" src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-21</div><div class="info-item-2">Vue3项目实战</div></div><div class="info-2"><div class="info-item-1">通过这篇文章的学习，可以掌握如何高效地配置Vite项目，简化代码管理，并利用插件工具提升开发效率。每一步都需要实际操作以加深理解，并结合个人项目需求进行应用。</div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/avatar.jpg" onerror="this.onerror=null;this.src='/medias/detail/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">凉月</div><div class="author-info-description">记录生活,分享知识。</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">26</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">9</div></a></div><a id="card-info-btn" target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/fulsun"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/fulsun" rel="external nofollow noreferrer" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:fl_6145@163.com" rel="external nofollow noreferrer" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="/atom.xml" target="_blank" title="RSS"><i class="fa fa-rss"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">感谢访问本站，若喜欢请收藏 ^_^</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%A1%B5%E9%9D%A2%E5%88%B7%E6%96%B0%E5%90%8E%E5%8F%98404"><span class="toc-text">1. 页面刷新后变404</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%83%A8%E5%88%86%E8%B7%AF%E7%94%B1%E6%98%BE%E7%A4%BA%E4%B8%BA%E7%99%BD%E8%89%B2"><span class="toc-text">2. 部分路由显示为白色</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%A3%80%E6%9F%A5%E6%A0%B9%E7%9B%AE%E5%BD%95%E6%98%AF%E5%90%A6%E5%AD%98%E5%9C%A8"><span class="toc-text">3. 检查根目录是否存在</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-2"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E9%85%8D%E7%BD%AE"><span class="toc-text">4. 环境变量配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%88Vite%EF%BC%89"><span class="toc-text">示例（Vite）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E9%AA%8C%E8%AF%81%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-text">5. 验证服务端配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C%E9%97%AE%E9%A2%98%E4%BB%8D%E7%84%B6%E5%AD%98%E5%9C%A8%EF%BC%8C%E5%8F%AF%E4%BB%A5%E6%8F%90%E4%BE%9B%E6%9B%B4%E5%A4%9A%E5%85%B7%E4%BD%93%E4%BF%A1%E6%81%AF%EF%BC%88%E5%A6%82%E9%94%99%E8%AF%AF%E6%97%A5%E5%BF%97%EF%BC%89%EF%BC%8C%E4%BB%A5%E4%BE%BF%E8%BF%9B%E4%B8%80%E6%AD%A5%E8%AF%8A%E6%96%AD%E3%80%82date-2025-01-20-00-14-28"><span class="toc-text">  如果问题仍然存在，可以提供更多具体信息（如错误日志），以便进一步诊断。date: 2025-01-20 00:14:28</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-text">路由的目录结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E9%A1%B9%E7%9B%AE%E9%87%8C%E5%BC%95%E5%85%A5%E8%B7%AF%E7%94%B1"><span class="toc-text">在项目里引入路由</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9B%9E%E9%A1%BE-Vue-2"><span class="toc-text">回顾 Vue 2</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%86%E8%A7%A3-Vue-3"><span class="toc-text">了解 Vue 3</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E6%A0%91%E7%9A%84%E9%85%8D%E7%BD%AE"><span class="toc-text">路由树的配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E6%A0%BC%E5%BC%8F"><span class="toc-text">基础格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%AC%E5%85%B1%E5%9F%BA%E7%A1%80%E8%B7%AF%E5%BE%84"><span class="toc-text">公共基础路径</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E7%BA%A7%E8%B7%AF%E7%94%B1"><span class="toc-text">一级路由</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E7%BB%84%E4%BB%B6"><span class="toc-text">同步组件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%BC%82%E6%AD%A5%E7%BB%84%E4%BB%B6"><span class="toc-text">异步组件</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E7%BA%A7%E8%B7%AF%E7%94%B1"><span class="toc-text">多级路由</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E6%87%92%E5%8A%A0%E8%BD%BD"><span class="toc-text">路由懒加载</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E7%9A%84%E6%B8%B2%E6%9F%93"><span class="toc-text">路由的渲染</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-route-%E8%8E%B7%E5%8F%96%E8%B7%AF%E7%94%B1%E4%BF%A1%E6%81%AF"><span class="toc-text">使用 route 获取路由信息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-router-%E6%93%8D%E4%BD%9C%E8%B7%AF%E7%94%B1"><span class="toc-text">使用 router 操作路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-router-link-%E6%A0%87%E7%AD%BE%E8%B7%B3%E8%BD%AC"><span class="toc-text">使用 router-link 标签跳转</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%B7%B3%E8%BD%AC"><span class="toc-text">基础跳转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E5%8F%82%E6%95%B0%E7%9A%84%E8%B7%B3%E8%BD%AC"><span class="toc-text">带参数的跳转</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%8D%E7%94%9F%E6%88%90-a-%E6%A0%87%E7%AD%BE"><span class="toc-text">不生成 a 标签</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E7%8B%AC%E7%AB%8B-TS-JS-%E6%96%87%E4%BB%B6%E9%87%8C%E4%BD%BF%E7%94%A8%E8%B7%AF%E7%94%B1"><span class="toc-text">在独立 TS&#x2F;JS 文件里使用路由</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%85%83%E4%BF%A1%E6%81%AF%E9%85%8D%E7%BD%AE"><span class="toc-text">路由元信息配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E9%87%8D%E5%AE%9A%E5%90%91"><span class="toc-text">路由重定向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-text">基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%9A%E5%8A%A1%E5%9C%BA%E6%99%AF"><span class="toc-text">业务场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BA-path"><span class="toc-text">配置为 path</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BA-route"><span class="toc-text">配置为 route</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E4%B8%BA-function"><span class="toc-text">配置为 function</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%88%AB%E5%90%8D%E9%85%8D%E7%BD%AE"><span class="toc-text">路由别名配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#404-%E8%B7%AF%E7%94%B1%E9%A1%B5%E9%9D%A2%E9%85%8D%E7%BD%AE"><span class="toc-text">404 路由页面配置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E8%88%AA%E5%AE%88%E5%8D%AB"><span class="toc-text">导航守卫</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%A9%E5%AD%90%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-text">钩子的应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E9%87%8C%E7%9A%84%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90"><span class="toc-text">路由里的全局钩子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#beforeEach"><span class="toc-text">beforeEach</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#beforeResolve"><span class="toc-text">beforeResolve</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#afterEach"><span class="toc-text">afterEach</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9C%A8%E7%BB%84%E4%BB%B6%E5%86%85%E4%BD%BF%E7%94%A8%E5%85%A8%E5%B1%80%E9%92%A9%E5%AD%90"><span class="toc-text">在组件内使用全局钩子</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E9%87%8C%E7%9A%84%E7%8B%AC%E4%BA%AB%E9%92%A9%E5%AD%90"><span class="toc-text">路由里的独享钩子</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#beforeEnte"><span class="toc-text">beforeEnte</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%84%E4%BB%B6%E5%86%85%E5%8D%95%E7%8B%AC%E4%BD%BF%E7%94%A8"><span class="toc-text">组件内单独使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#onBeforeRouteUpdate"><span class="toc-text">onBeforeRouteUpdate</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#onBeforeRouteLeave"><span class="toc-text">onBeforeRouteLeave</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E4%BE%A6%E5%90%AC"><span class="toc-text">路由侦听</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#watch"><span class="toc-text">watch</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%A6%E5%90%AC%E6%95%B4%E4%B8%AA%E8%B7%AF%E7%94%B1"><span class="toc-text">侦听整个路由</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BE%A6%E5%90%AC%E8%B7%AF%E7%94%B1%E7%9A%84%E6%9F%90%E4%B8%AA%E6%95%B0%E6%8D%AE"><span class="toc-text">侦听路由的某个数据</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#watchEffect"><span class="toc-text">watchEffect</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%83%A8%E7%BD%B2%E9%97%AE%E9%A2%98%E4%B8%8E%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE"><span class="toc-text">部署问题与服务端配置</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E8%A7%81%E9%83%A8%E7%BD%B2%E9%97%AE%E9%A2%98"><span class="toc-text">常见部署问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E9%9D%A2%E5%88%B7%E6%96%B0%E5%B0%B1-404"><span class="toc-text">页面刷新就 404</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%8E%9F%E5%9B%A0"><span class="toc-text">问题原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-3"><span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%83%A8%E5%88%86%E8%B7%AF%E7%94%B1%E7%99%BD%E5%B1%8F"><span class="toc-text">部分路由白屏</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%E5%8E%9F%E5%9B%A0-1"><span class="toc-text">问题原因</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-4"><span class="toc-text">解决方案</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%8D%E5%8A%A1%E7%AB%AF%E9%85%8D%E7%BD%AE%E6%96%B9%E6%A1%88"><span class="toc-text">服务端配置方案</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Nginx"><span class="toc-text">Nginx</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Express"><span class="toc-text">Express</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%B4%E5%A4%9A%E6%96%B9%E6%A1%88"><span class="toc-text">更多方案</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/p/b3bc049e" title="Java中的SPI服务发现机制"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/003.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Java中的SPI服务发现机制"/></a><div class="content"><a class="title" href="/p/b3bc049e" title="Java中的SPI服务发现机制">Java中的SPI服务发现机制</a><time datetime="2025-02-16T05:36:57.339Z" title="发表于 2025-02-16 05:36:57">2025-02-16</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/3ca9bef3" title="SpringBoot预览PDF文件"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/001.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="SpringBoot预览PDF文件"/></a><div class="content"><a class="title" href="/p/3ca9bef3" title="SpringBoot预览PDF文件">SpringBoot预览PDF文件</a><time datetime="2025-02-07T10:19:00.000Z" title="发表于 2025-02-07 10:19:00">2025-02-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/9b5fc26a" title="Debain12配置"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/013.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Debain12配置"/></a><div class="content"><a class="title" href="/p/9b5fc26a" title="Debain12配置">Debain12配置</a><time datetime="2025-02-06T16:07:00.000Z" title="发表于 2025-02-06 16:07:00">2025-02-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/42bd8820" title="Docker安装脚本与换源"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/009.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Docker安装脚本与换源"/></a><div class="content"><a class="title" href="/p/42bd8820" title="Docker安装脚本与换源">Docker安装脚本与换源</a><time datetime="2025-02-05T16:00:00.000Z" title="发表于 2025-02-05 16:00:00">2025-02-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/p/c3561f90" title="Nvm包管理器"><img src= "/medias/detail/load.gif" data-lazy-src="/medias/featureimages/007.webp" onerror="this.onerror=null;this.src='/medias/detail/404.jpg'" alt="Nvm包管理器"/></a><div class="content"><a class="title" href="/p/c3561f90" title="Nvm包管理器">Nvm包管理器</a><time datetime="2025-01-22T16:00:55.000Z" title="发表于 2025-01-22 16:00:55">2025-01-22</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2025 By 凉月</div><div class="framework-info"><span>框架 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>主题 </span><a target="_blank" rel="noopener external nofollow noreferrer" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="前往评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.3.2"></script><script src="/js/main.js?v=5.3.2"></script><script src="https://unpkg.com/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const destroyWaline = ele => ele.destroy()
+
+  const initWaline = (Fn, el = document, path = window.location.pathname) => {
+    const waline = Fn({
+      el: el.querySelector('#waline-wrap'),
+      serverURL: 'https://waline-fulsun.netlify.app/.netlify/functions/comment',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      comment: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || path
+    })
+
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyWaline = () => {
+        destroyWaline(waline)
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+  }
+
+  const loadWaline = (el, path) => {
+    if (initFn) initWaline(initFn, el, path)
+    else {
+      btf.getCSS('https://unpkg.com/@waline/client@3.4.3/dist/waline.css')
+        .then(() => import('https://unpkg.com/@waline/client@3.4.3/dist/waline.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn, el, path)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if (isShuoshuo) {
+    'Waline' === 'Waline'
+      ? window.shuoshuoComment = { loadComment: loadWaline } 
+      : window.loadOtherComment = loadWaline
+    return
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="false" src="https://unpkg.com/butterfly-extsrc@1.1.4/dist/canvas-nest.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
